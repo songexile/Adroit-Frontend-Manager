@@ -1,6 +1,6 @@
 import { Payment, columns } from "../app/payments/columns";
 import { DataTable } from "../app/payments/data-table";
-import Header from "./components/Header";
+import Header from "../components/Header";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -25,7 +25,7 @@ export default async function DemoPage() {
   const data = await getData();
 
   return (
-    <div className="container mx-auto py-10">
+    <div className=" ">
       <Header />
       <DataTable columns={columns} data={data} />
     </div>
