@@ -5,10 +5,16 @@ async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
   return [
     {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
+      id: "420",
+      status: "online",
+      location: "South Auckland",
+      timeoffline: new Date(2023, 1, 1, 12, 0, 0),
+    },
+    {
+      id: "200",
+      status: "offline",
+      location: "Onehunga",
+      timeoffline: new Date(2024, 1, 1, 12, 0, 0),
     },
     // ...
   ];
