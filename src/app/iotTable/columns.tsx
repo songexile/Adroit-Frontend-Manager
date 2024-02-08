@@ -17,7 +17,7 @@ import {
 // You can use a Zod schema here if you want.
 export type Payment = {
   id: string;
-  amount: number;
+
   status: "online" | "offline";
   location: string;
   timeoffline: Date;
