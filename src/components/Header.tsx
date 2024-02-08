@@ -24,9 +24,7 @@ const Header: React.FC = () => {
            //  value={searchById}
            //  onChange={(e) => setSearchById(e.target.value)}
            />
-           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded focus:outline-none">
-             Search
-           </button>
+           
          </div>
 
          {/* Search By Location */}

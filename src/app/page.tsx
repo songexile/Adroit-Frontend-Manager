@@ -1,5 +1,5 @@
-import { Payment, columns } from "../app/payments/columns";
-import { DataTable } from "../app/payments/data-table";
+import { Payment, columns } from "./iotTable/columns";
+import { DataTable } from "./iotTable/data-table";
 import Header from "../components/Header";
 
 async function getData(): Promise<Payment[]> {
