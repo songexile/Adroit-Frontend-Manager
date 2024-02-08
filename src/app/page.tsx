@@ -17,6 +17,24 @@ async function getData(): Promise<Payment[]> {
       location: "Onehunga",
       timeoffline: new Date(2024, 1, 1, 12, 0, 0),
     },
+    {
+      id: "400",
+      status: "offline",
+      location: "Onehunga",
+      timeoffline: new Date(2024, 1, 1, 12, 0, 0),
+    },
+    {
+      id: "350",
+      status: "offline",
+      location: "Onehunga",
+      timeoffline: new Date(2024, 1, 1, 12, 0, 0),
+    },
+    {
+      id: "211",
+      status: "offline",
+      location: "Onehunga",
+      timeoffline: new Date(2024, 1, 1, 12, 0, 0),
+    },
     // ...
   ];
 }
