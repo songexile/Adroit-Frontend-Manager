@@ -20,7 +20,7 @@ export type Payment = {
 
   status: "online" | "offline";
   location: string;
-  timeoffline: Date;
+  timeoffline: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
