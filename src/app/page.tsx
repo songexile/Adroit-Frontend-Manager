@@ -14,7 +14,10 @@ async function fetchData() {
       throw new Error("Failed to fetch data");
     }
 
-    return res.json();
+    const jsonData = await res.json();
+    const parsedData = JSON.parse(jsonData.body); //Have to parse data twice because it is stringified twice I think
+
+    return parsedData;
   } catch (error) {
     console.error("Failed to fetch data:", error);
     throw error; // Re-throwing error to handle it in the component
@@ -28,7 +31,11 @@ export default function Page() {
     const fetchDataAndSetData = async () => {
       try {
         const fetchedData = await fetchData();
+        // fetchedData = JSON.parse(fetchedData.body);
         setData(fetchedData);
+
+        // console.log("fetchedData", fetchedData);
+        console.log(fetchedData);
       } catch (error) {
         // Error handling can be done here, e.g., show error message to the user
       }
@@ -37,21 +44,6 @@ export default function Page() {
     fetchDataAndSetData();
 
     // Cleanup function is not necessary in this case
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      fetchData()
-        .then((fetchedData) => {
-          setData(fetchedData);
-        })
-        .catch((error) => {
-          // Error handling can be done here
-        });
-    }, 10000);
-
-    // Cleanup function to clear the interval when component unmounts or when dependencies change
-    return () => clearInterval(timer);
   }, []);
 
   return (
