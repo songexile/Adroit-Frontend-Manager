@@ -16,11 +16,8 @@ import {
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
-  id: string;
-
-  status: "online" | "offline";
-  location: string;
-  timeoffline: string;
+  client_id: number;
+  clientName: string;
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -53,7 +50,7 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "id",
+    accessorKey: "client_id",
     header: ({ column }) => {
       return (
         <Button

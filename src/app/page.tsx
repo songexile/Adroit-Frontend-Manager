@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import { DataTable } from "./iotTable/data-table";
 import { Payment, columns } from "./iotTable/columns";
+import localData from "../adroit_data.json";
 
 async function fetchData() {
   try {
@@ -30,12 +31,12 @@ export default function Page() {
   useEffect(() => {
     const fetchDataAndSetData = async () => {
       try {
-        const fetchedData = await fetchData();
-        // fetchedData = JSON.parse(fetchedData.body);
-        setData(fetchedData);
+        // const fetchedData = await fetchData();
+        const fetchedData = require("../adroit_data.json");
+        const parsedData = JSON.parse(fetchedData.body);
+        setData(parsedData);
 
-        // console.log("fetchedData", fetchedData);
-        console.log(fetchedData);
+        console.log(parsedData);
       } catch (error) {
         // Error handling can be done here, e.g., show error message to the user
       }
