@@ -1,9 +1,8 @@
-"use client";
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, ArrowUpDown } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,38 +10,45 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Payment = {
-  client_id: number;
-  clientName: string;
+  _id: string;
+  title: string;
+  authors: string;
+  journal: string;
+  year: string;
+  volume: string;
+  pages: string;
+  doi: string;
+  claim: string;
+  method: string;
+  agreeDisagree: string;
+  __v: number;
 };
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const payment = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(payment.authors)}
             >
-              View details of device
+              View details of client
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Hide device from Dashboard</DropdownMenuItem>
+            <DropdownMenuItem>Hide client from Dashboard</DropdownMenuItem>
             <DropdownMenuItem>Create ticket</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -50,56 +56,43 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "client_id",
+    accessorKey: '_id', // Assuming _id is the unique identifier for the payment
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Id
-        </Button>
-      );
-    },
-  },
-
-  {
-    accessorKey: "status",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
+          Payment ID
         </Button>
       );
     },
   },
   {
-    accessorKey: "location",
+    accessorKey: 'title',
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Location
+          Title
         </Button>
       );
     },
   },
   {
-    accessorKey: "timeoffline",
+    accessorKey: 'authors',
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Time Offline
+          Authors
         </Button>
       );
     },
   },
+  // Add more columns as needed based on your JSON structure
 ];

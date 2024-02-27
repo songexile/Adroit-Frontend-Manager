@@ -1,0 +1,30 @@
+[
+    {
+        "_id": "652983d68321c7c4eb03a531",
+        "title": "Test 1",
+        "authors": "Test 1",
+        "journal": "Test 1",
+        "year": "2023",
+        "volume": "Test 1",
+        "pages": "Test 1",
+        "doi": "Test 1",
+        "claim": "Claim Test 1",
+        "method": "Waterfall",
+        "agreeDisagree": "Agree",
+        "__v": 0
+    },
+    {
+        "_id": "652983d98321c7c4eb03a536",
+        "title": "Artificial Intelligence in Healthcare",
+        "authors": "John Smith, Sarah Johnson",
+        "journal": "Journal of Advanced Technology",
+        "year": "2023",
+        "volume": "12",
+        "pages": "123-135",
+        "doi": "10.1234/jat.2023.001",
+        "claim": "Claim Test 2",
+        "method": "Agile",
+        "agreeDisagree": "Agree",
+        "__v": 0
+    }
+]
