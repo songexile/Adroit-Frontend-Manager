@@ -44,12 +44,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  // console.log(table.getRowModel().rows?.length);
-  // console.log(data);
-  // console.log(columns);
-  // console.log(table.getRowModel());
-  // console.log(table.getRowModel().rows);
-
   return (
     <div>
       <div className='rounded-md border'>

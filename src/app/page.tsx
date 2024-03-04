@@ -1,8 +1,14 @@
 'use client';
+
+// Page.tsx
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { DataTable } from './iotTable/data-table';
-import { Payment, columns } from './iotTable/columns';
+import { initializeColumns, columns } from './iotTable/columns'; // Import initializeColumns and columns
+
+interface DynamicMetricData {
+  [key: string]: string | number;
+}
 
 async function fetchData() {
   try {
@@ -15,30 +21,73 @@ async function fetchData() {
     }
 
     const jsonData = await res.json();
-    const parsedData = JSON.parse(jsonData.body); //Have to parse data twice because it is stringified twice I think
+    const parsedData = JSON.parse(jsonData.body);
 
     return parsedData;
   } catch (error) {
     console.error('Failed to fetch data:', error);
-    throw error; // Re-throwing error to handle it in the component
+    throw error;
   }
 }
 
+function flattenNestedData(data: any): DynamicMetricData[] {
+  const flattenedData: DynamicMetricData[] = [];
+
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      const client = data[key];
+      const devices = client.devices;
+
+      for (const device of devices) {
+        const flattenedDevice: DynamicMetricData = {
+          client_name: client.client_name,
+          client_id: client.client_id,
+          device_id: device.device_id,
+          device_key: device.device_key,
+        };
+
+        const metrics = device.metrics;
+
+        let metricIndex = 0;
+        for (const metricKey in metrics) {
+          if (metrics.hasOwnProperty(metricKey)) {
+            flattenedDevice[`metric_${metricIndex}_${metricKey}`] =
+              metrics[metricKey].value;
+            metricIndex++;
+          }
+        }
+
+        flattenedData.push(flattenedDevice);
+      }
+    }
+  }
+
+  return flattenedData;
+}
+
 export default function Page() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<DynamicMetricData[]>([]);
 
   useEffect(() => {
     const fetchDataAndSetData = async () => {
       try {
-        // const fetchedData = await fetchData();
-        // const fetchedData = require('../adroit_data.json')
+        // Replace with the path to your test.json file
         const fetchedData = require('../test.json');
-        // const parsedData = JSON.parse(fetchedData.body);
 
-        setData(fetchedData);
-        console.log(fetchedData);
+        const flattenedData = flattenNestedData(fetchedData);
+        setData(flattenedData);
+
+        // Get the dynamic metric names
+        const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter(
+          (key) => key.startsWith('metric_')
+        );
+
+        // Initialize columns with dynamic metrics
+        initializeColumns(dynamicMetricColumns);
+
+        console.log(flattenedData);
       } catch (error) {
-        // Error handling can be done here, e.g., show error message to the user
+        console.error('Failed to fetch data:', error);
       }
     };
 
