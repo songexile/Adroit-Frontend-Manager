@@ -1,16 +1,15 @@
-'use client';
-
+// data-table.tsx
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
-
 import {
+  useReactTable,
+  getPaginationRowModel,
+  flexRender,
+  getCoreRowModel,
   ColumnDef,
   SortingState,
   getSortedRowModel,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
+  TableState,
 } from '@tanstack/react-table';
 
 import {
@@ -32,6 +31,7 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
   const table = useReactTable({
     data,
     columns,
@@ -43,6 +43,9 @@ export function DataTable<TData, TValue>({
       sorting,
     },
   });
+
+  // Access pageIndex from table.state
+  const pageIndex = table.state ? table.state.pageIndex : 0;
 
   return (
     <div>
@@ -97,6 +100,7 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
+      {/* Pagination Controls */}
       <div className='flex items-center justify-end space-x-2 py-4'>
         <Button
           variant='outline'
@@ -106,6 +110,14 @@ export function DataTable<TData, TValue>({
         >
           Previous
         </Button>
+        {table.getPageCount() > 1 && (
+          <span className='text-sm'>
+            Page{' '}
+            <strong>
+              {pageIndex + 1} of {table.getPageCount()}
+            </strong>
+          </span>
+        )}
         <Button
           variant='outline'
           size='sm'
