@@ -77,13 +77,13 @@ export const initializeColumns = (metrics: string[]) => {
     },
   ];
 
-  // Dynamic metric columns
-  columns.push(
-    ...metrics.map((metric, index) => ({
-      accessorKey: metric,
-      header: metric,
-    }))
-  );
+  // // Dynamic metric columns
+  // columns.push(
+  //   ...metrics.map((metric, index) => ({
+  //     accessorKey: metric,
+  //     header: metric,
+  //   }))
+  // );
 };
 
 // Initialize columns (pass an empty array initially, it will be populated later)

@@ -46,16 +46,16 @@ function flattenNestedData(data: any): DynamicMetricData[] {
           device_key: device.device_key,
         };
 
-        const metrics = device.metrics;
+        // const metrics = device.metrics;
 
-        let metricIndex = 0;
-        for (const metricKey in metrics) {
-          if (metrics.hasOwnProperty(metricKey)) {
-            flattenedDevice[`metric_${metricIndex}_${metricKey}`] =
-              metrics[metricKey].value;
-            metricIndex++;
-          }
-        }
+        // let metricIndex = 0;
+        // for (const metricKey in metrics) {
+        //   if (metrics.hasOwnProperty(metricKey)) {
+        //     flattenedDevice[`metric_${metricIndex}_${metricKey}`] =
+        //       metrics[metricKey].value;
+        //     metricIndex++;
+        //   }
+        // }
 
         flattenedData.push(flattenedDevice);
       }
@@ -73,6 +73,7 @@ export default function Page() {
       try {
         // Replace with the path to your test.json file
         const fetchedData = require('../test.json');
+        // const fetchedData = await fetchData();
 
         const flattenedData = flattenNestedData(fetchedData);
         setData(flattenedData);
