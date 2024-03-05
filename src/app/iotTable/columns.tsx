@@ -1,8 +1,8 @@
 // columns.tsx
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,19 +61,61 @@ export const initializeColumns = (metrics: string[]) => {
     },
     {
       accessorKey: 'client_name',
-      header: 'Client Name',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Client Name
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
+
     {
       accessorKey: 'client_id',
-      header: 'Client ID',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Client ID
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
     {
       accessorKey: 'device_id',
-      header: 'Device ID',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Device ID
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
+
     {
       accessorKey: 'device_key',
-      header: 'Device Key',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Device Key
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
     },
   ];
 
