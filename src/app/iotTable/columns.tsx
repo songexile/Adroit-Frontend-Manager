@@ -17,13 +17,19 @@ interface FlattenedJson {
   client_id: string;
   device_id: string;
   device_key: string;
-  [key: string]: string; // Dynamic metrics
+  [key: string]: string | { timestamp: number; value: string };
 }
 
 // Declare an empty array initially
 let columns: ColumnDef<FlattenedJson>[] = [];
 
 export const initializeColumns = (metrics: string[]) => {
+  // Extract timestamp from the first metric
+  const firstMetric = metrics.length > 0 ? metrics[0] : null;
+
+   // Sorting state for timestamp column
+   let timestampSorting: 'asc' | 'desc' | undefined = undefined;
+
   // Initialize columns with the static columns
   columns = [
     {
@@ -56,6 +62,35 @@ export const initializeColumns = (metrics: string[]) => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        );
+      },
+    },
+    // Temp solution
+    {
+      accessorKey: 'Timestamp',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant='ghost'
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Timestamp nih
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const device = row.original;
+        const firstMetricKey = Object.keys(device)[4]; // Assuming the first metric key is at index 4
+        const timestampData = device[firstMetricKey] as {
+          timestamp: number;
+          value: string;
+        };
+        const timestamp = timestampData ? timestampData.timestamp : undefined;
+
+        // Render the timestamp
+        return (
+          <span>{timestamp ? new Date(timestamp).toLocaleString() : ''}</span>
         );
       },
     },

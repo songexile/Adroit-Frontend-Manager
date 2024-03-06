@@ -46,16 +46,9 @@ function flattenNestedData(data: any): DynamicMetricData[] {
           device_key: device.device_key,
         };
 
-        // const metrics = device.metrics;
-
-        // let metricIndex = 0;
-        // for (const metricKey in metrics) {
-        //   if (metrics.hasOwnProperty(metricKey)) {
-        //     flattenedDevice[`metric_${metricIndex}_${metricKey}`] =
-        //       metrics[metricKey].value;
-        //     metricIndex++;
-        //   }
-        // }
+        for (const metricName in device.metrics) {
+          flattenedDevice[`metric_${metricName}`] = device.metrics[metricName];
+        }
 
         flattenedData.push(flattenedDevice);
       }
