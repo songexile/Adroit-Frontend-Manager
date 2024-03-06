@@ -9,7 +9,6 @@ import {
   ColumnDef,
   SortingState,
   getSortedRowModel,
-  TableState,
 } from '@tanstack/react-table';
 
 import {
@@ -43,9 +42,6 @@ export function DataTable<TData, TValue>({
       sorting,
     },
   });
-
-  // Access pageIndex from table.state
-  const pageIndex = table.state ? table.state.pageIndex : 0;
 
   return (
     <div>
@@ -111,13 +107,41 @@ export function DataTable<TData, TValue>({
           Previous
         </Button>
         {table.getPageCount() > 1 && (
-          <span className='text-sm'>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {table.getPageCount()}
-            </strong>
-          </span>
+          <div className='flex items-center text-sm'>
+            <span>
+              Page{' '}
+              <strong>
+                {table.getState().pagination.pageIndex + 1} of{' '}
+                {table.getPageCount().toLocaleString()}
+              </strong>
+            </span>
+            <span className='flex items-center gap-1'>
+              | Go to page:
+              <input
+                type='number'
+                defaultValue={table.getState().pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
+                  table.setPageIndex(page);
+                }}
+                className='border p-1 rounded w-16'
+              />
+            </span>
+            <select
+              value={table.getState().pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
         )}
+
         <Button
           variant='outline'
           size='sm'
