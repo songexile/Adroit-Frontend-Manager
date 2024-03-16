@@ -1,6 +1,6 @@
 // data-table.tsx
-import { Button } from '@/components/ui/button';
-import * as React from 'react';
+import { Button } from "@/components/ui/button";
+import * as React from "react";
 import {
   useReactTable,
   getPaginationRowModel,
@@ -9,7 +9,7 @@ import {
   ColumnDef,
   SortingState,
   getSortedRowModel,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -18,7 +18,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,11 +41,16 @@ export function DataTable<TData, TValue>({
     state: {
       sorting,
     },
+    defaultColumn: {
+      size: 200, //starting column size
+      minSize: 50, //enforced during column resizing
+      maxSize: 500, //enforced during column resizing
+    },
   });
 
   return (
     <div>
-      <div className='rounded-md border'>
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -70,7 +75,7 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -86,7 +91,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -97,34 +102,34 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* Pagination Controls */}
-      <div className='flex items-center justify-end space-x-2 py-4'>
+      <div className="flex items-center justify-end space-x-2 py-4">
         <Button
-          variant='outline'
-          size='sm'
+          variant="outline"
+          size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           Previous
         </Button>
         {table.getPageCount() > 1 && (
-          <div className='flex items-center text-sm'>
+          <div className="flex items-center text-sm">
             <span>
-              Page{' '}
+              Page{" "}
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{' '}
+                {table.getState().pagination.pageIndex + 1} of{" "}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
-            <span className='flex items-center gap-1'>
+            <span className="flex items-center gap-1">
               | Go to page:
               <input
-                type='number'
+                type="number"
                 defaultValue={table.getState().pagination.pageIndex + 1}
                 onChange={(e) => {
                   const page = e.target.value ? Number(e.target.value) - 1 : 0;
                   table.setPageIndex(page);
                 }}
-                className='border p-1 rounded w-16'
+                className="border p-1 rounded w-16"
               />
             </span>
             <select
@@ -143,8 +148,8 @@ export function DataTable<TData, TValue>({
         )}
 
         <Button
-          variant='outline'
-          size='sm'
+          variant="outline"
+          size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >

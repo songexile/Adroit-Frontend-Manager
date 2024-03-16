@@ -1,8 +1,8 @@
 // columns.tsx
-import React from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import React from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 
 interface FlattenedJson {
   client_name: string;
@@ -27,37 +27,37 @@ export const initializeColumns = (metrics: string[]) => {
   // Extract timestamp from the first metric
   const firstMetric = metrics.length > 0 ? metrics[0] : null;
 
-   // Sorting state for timestamp column
-   let timestampSorting: 'asc' | 'desc' | undefined = undefined;
+  // Sorting state for timestamp column
+  let timestampSorting: "asc" | "desc" | undefined = undefined;
 
   // Initialize columns with the static columns
   columns = [
     {
-      id: 'actions',
+      id: "actions",
       cell: ({ row }) => {
         const device = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant='ghost' className='h-8 w-8 p-0'>
-                <span className='sr-only'>Open menu</span>
-                <MoreHorizontal className='h-4 w-4' />
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align='end'>
+            <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => console.log('View details of client')}
+                onClick={() => console.log("View details of client")}
               >
                 View details of client
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => console.log('Hide client from Dashboard')}
+                onClick={() => console.log("Hide client from Dashboard")}
               >
                 Hide client from Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log('Create ticket')}>
+              <DropdownMenuItem onClick={() => console.log("Create ticket")}>
                 Create ticket
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -67,15 +67,15 @@ export const initializeColumns = (metrics: string[]) => {
     },
     // Temp solution
     {
-      accessorKey: 'Timestamp',
+      accessorKey: "Timestamp",
       header: ({ column }) => {
         return (
           <Button
-            variant='ghost'
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Timestamp nih
-            <ArrowUpDown className='ml-2 h-4 w-4' />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
@@ -90,64 +90,65 @@ export const initializeColumns = (metrics: string[]) => {
 
         // Render the timestamp
         return (
-          <span>{timestamp ? new Date(timestamp).toLocaleString() : ''}</span>
+          <span>{timestamp ? new Date(timestamp).toLocaleString() : ""}</span>
         );
       },
     },
     {
-      accessorKey: 'client_name',
+      accessorKey: "client_name",
+
       header: ({ column }) => {
         return (
           <Button
-            variant='ghost'
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Client Name
-            <ArrowUpDown className='ml-2 h-4 w-4' />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
     },
 
     {
-      accessorKey: 'client_id',
+      accessorKey: "client_id",
       header: ({ column }) => {
         return (
           <Button
-            variant='ghost'
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Client ID
-            <ArrowUpDown className='ml-2 h-4 w-4' />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
     },
     {
-      accessorKey: 'device_id',
+      accessorKey: "device_id",
       header: ({ column }) => {
         return (
           <Button
-            variant='ghost'
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Device ID
-            <ArrowUpDown className='ml-2 h-4 w-4' />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
     },
 
     {
-      accessorKey: 'device_key',
+      accessorKey: "device_key",
       header: ({ column }) => {
         return (
           <Button
-            variant='ghost'
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Device Key
-            <ArrowUpDown className='ml-2 h-4 w-4' />
+            <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         );
       },
