@@ -1,0 +1,43 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set working directory
+        run: cd iot-backend
+
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: cd iot-backend && pnpm install
+
+      - name: Run Tests
+        run: cd iot-backend && pnpm run test:ci
+
+      # - name: Run E2E Tests
+      #   run: cd iot-backend && pnpm run test:e2e
+
+      - name: Build
+        run: cd iot-backend && pnpm run build
