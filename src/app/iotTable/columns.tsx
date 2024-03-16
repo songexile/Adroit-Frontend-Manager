@@ -68,6 +68,7 @@ export const initializeColumns = (metrics: string[]) => {
     // Temp solution
     {
       accessorKey: "Timestamp",
+
       header: ({ column }) => {
         return (
           <Button
@@ -112,6 +113,7 @@ export const initializeColumns = (metrics: string[]) => {
 
     {
       accessorKey: "client_id",
+
       header: ({ column }) => {
         return (
           <Button
@@ -141,6 +143,8 @@ export const initializeColumns = (metrics: string[]) => {
 
     {
       accessorKey: "device_key",
+      size: 10,
+
       header: ({ column }) => {
         return (
           <Button

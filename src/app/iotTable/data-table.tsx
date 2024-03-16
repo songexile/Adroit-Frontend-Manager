@@ -42,9 +42,9 @@ export function DataTable<TData, TValue>({
       sorting,
     },
     defaultColumn: {
-      size: 200, //starting column size
-      minSize: 50, //enforced during column resizing
-      maxSize: 500, //enforced during column resizing
+      size: 5, //starting column size
+      minSize: 5, //enforced during column resizing
+      maxSize: 50, //enforced during column resizing
     },
   });
 
@@ -57,7 +57,14 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      style={{
+                        width: header.getSize(),
+
+                        border: "1px solid black",
+                      }} //Sizes the table head (each column)
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(

@@ -96,7 +96,7 @@ export default function Page() {
       <Header />
 
       {loading && (
-        <div className="mt-32 flex flex-col items-center justify-center">
+        <div className="mt-64 gap-2 flex flex-col items-center justify-center">
           {" "}
           <LoadingSpinner className={"h-32 w-32"} />
           <h1>Loading the data for you.</h1>
