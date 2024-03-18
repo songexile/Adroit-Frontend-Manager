@@ -34,7 +34,10 @@ export const initializeColumns = () => {
   columns = [
     {
       id: 'actions',
-      cell: ({}) => {
+      cell: ({ row }) => {
+        const rowData = row.original
+        const deviceID = rowData.device_id
+
         // const device = row.original
         return (
           <DropdownMenu>
@@ -46,14 +49,14 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => console.log('View details of client')}>
+              <DropdownMenuItem onClick={() => console.log(deviceID)}>
                 View details of client
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
                 Hide client from Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log('Create ticket')}>
+              <DropdownMenuItem onClick={() => console.log(deviceID)}>
                 Create ticket
               </DropdownMenuItem>
             </DropdownMenuContent>
