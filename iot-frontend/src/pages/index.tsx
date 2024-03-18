@@ -68,13 +68,13 @@ export default function Page() {
         setData(flattenedData)
         setLoading(false)
 
-        // Get the dynamic metric names
-        const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
-          key.startsWith('metric_')
-        )
+        // // Get the dynamic metric names
+        // const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
+        //   key.startsWith('metric_')
+        // )
 
         // Initialize columns with dynamic metrics
-        initializeColumns(dynamicMetricColumns)
+        initializeColumns()
 
         console.log(flattenedData)
       } catch (error) {

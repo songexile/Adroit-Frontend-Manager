@@ -23,19 +23,19 @@ interface FlattenedJson {
 // Declare an empty array initially
 let columns: ColumnDef<FlattenedJson>[] = []
 
-export const initializeColumns = (metrics: string[]) => {
+export const initializeColumns = () => {
   // Extract timestamp from the first metric
-  const firstMetric = metrics.length > 0 ? metrics[0] : null
+  // const firstMetric = metrics.length > 0 ? metrics[0] : null
 
   // Sorting state for timestamp column
-  let timestampSorting: 'asc' | 'desc' | undefined = undefined
+  // let timestampSorting: 'asc' | 'desc' | undefined = undefined
 
   // Initialize columns with the static columns
   columns = [
     {
       id: 'actions',
-      cell: ({ row }) => {
-        const device = row.original
+      cell: ({}) => {
+        // const device = row.original
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -78,11 +78,11 @@ export const initializeColumns = (metrics: string[]) => {
       },
       cell: ({ row }) => {
         const device = row.original
-        const firstMetricKey = Object.keys(device)[4] // Assuming the first metric key is at index 4
-        const timestampData = device[firstMetricKey] as {
-          timestamp: number
-          value: string
-        }
+        const firstMetricKey = Object.keys(device).find((key) => key.startsWith('metric_'))
+        const timestampData =
+          firstMetricKey !== undefined
+            ? (device[firstMetricKey] as { timestamp: number; value: string })
+            : undefined
         const timestamp = timestampData ? timestampData.timestamp : undefined
 
         // Render the timestamp
@@ -163,6 +163,6 @@ export const initializeColumns = (metrics: string[]) => {
 }
 
 // Initialize columns (pass an empty array initially, it will be populated later)
-initializeColumns([])
+initializeColumns()
 
 export { columns }
