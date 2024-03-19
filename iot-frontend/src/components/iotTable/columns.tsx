@@ -46,15 +46,15 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => console.log('View details of client')}>
-                View details of client
+              <DropdownMenuItem onClick={() => console.log('View More Device Info')}>
+                View More Device Info
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
-                Hide client from Dashboard
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => console.log('Create ticket')}>
-                Create ticket
+                Create a ticket
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
+                Hide Device
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
