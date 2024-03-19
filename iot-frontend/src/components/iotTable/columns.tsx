@@ -11,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 interface FlattenedJson {
   client_name: string
@@ -24,7 +26,6 @@ interface FlattenedJson {
 let columns: ColumnDef<FlattenedJson>[] = []
 
 export const initializeColumns = () => {
-  // Extract timestamp from the first metric
   // const firstMetric = metrics.length > 0 ? metrics[0] : null
 
   // Sorting state for timestamp column
@@ -49,16 +50,15 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => console.log(deviceID)}>
-                View details of client
+              <DropdownMenuItem>
+                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
                 Hide client from Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log(deviceID)}>
-                Create ticket
-              </DropdownMenuItem>
+
+              <DropdownMenuItem>Create ticket</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
