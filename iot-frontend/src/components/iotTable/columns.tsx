@@ -2,7 +2,7 @@
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { ArrowUpDown, MoreHorizontal, Ticket } from 'lucide-react'
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 interface FlattenedJson {
   client_name: string
@@ -24,7 +26,6 @@ interface FlattenedJson {
 let columns: ColumnDef<FlattenedJson>[] = []
 
 export const initializeColumns = () => {
-  // Extract timestamp from the first metric
   // const firstMetric = metrics.length > 0 ? metrics[0] : null
 
   // Sorting state for timestamp column
@@ -34,7 +35,10 @@ export const initializeColumns = () => {
   columns = [
     {
       id: 'actions',
-      cell: ({}) => {
+      cell: ({ row }) => {
+        const rowData = row.original
+        const deviceID = rowData.device_id
+
         // const device = row.original
         return (
           <DropdownMenu>
@@ -46,16 +50,15 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => console.log('View details of client')}>
-                View details of client
+              <DropdownMenuItem>
+                <Link href={`/view-more-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
                 Hide client from Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log('Create ticket')}>
-                Create ticket
-              </DropdownMenuItem>
+
+              <DropdownMenuItem>Create ticket</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
