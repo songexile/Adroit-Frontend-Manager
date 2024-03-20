@@ -5,7 +5,7 @@ interface DynamicMetricData {
   client_id: string;
   device_id: string;
   device_key: string;
-  [key: string]: string | { timestamp: number; value: string };
+  [key: string]: string | { timestamp: number; value: string } | undefined;
 }
 
 interface SpinnerProps {
