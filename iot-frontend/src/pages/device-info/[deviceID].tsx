@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 interface Props {
@@ -6,9 +7,11 @@ interface Props {
   }
 }
 
-function Page() {
+function Page(data: any) {
+  console.log(data)
   return (
     <div>
+      <Link href="/">HOme</Link>
       <h1>Device: yo</h1>
     </div>
   )

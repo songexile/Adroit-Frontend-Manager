@@ -38,6 +38,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const fetchDataAndSetData = async () => {
       try {
+        console.log('fetching data')
         // Replace with the path to your test.json file
         const fetchedData = require('@/public/full_device_stats.json')
         // const fetchedData = await fetchData();
@@ -59,7 +60,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }
-      ;[loading]
     }
 
     fetchDataAndSetData()

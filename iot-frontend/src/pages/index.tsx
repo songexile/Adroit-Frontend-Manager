@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import Link from 'next/link'
 
 // async function fetchData() {
 //   try {
@@ -58,8 +59,8 @@ export default function Page(data: any) {
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     if (data != null) {
-      setLoading(false)
       initializeColumns()
+      setLoading(false)
       console.log(data)
     }
   }, [data])
@@ -99,6 +100,7 @@ export default function Page(data: any) {
   return (
     <div className="">
       <Header />
+      <Link href="/device-info/yo">Device info temp</Link>
 
       {loading && (
         <div className="mt-64 gap-2 flex flex-col items-center justify-center">
