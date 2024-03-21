@@ -6,57 +6,9 @@ import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import Link from 'next/link'
 
-// async function fetchData() {
-//   try {
-//     const res = await fetch(
-//       'https://eq1n7rs483.execute-api.ap-southeast-2.amazonaws.com/Prod/hello'
-//     )
-
-//     if (!res.ok) {
-//       throw new Error('Failed to fetch data')
-//     }
-
-//     const jsonData = await res.json()
-//     const parsedData = JSON.parse(jsonData.body)
-
-//     return parsedData
-//   } catch (error) {
-//     console.error('Failed to fetch data:', error)
-//     throw error
-//   }
-// }
-
-// function flattenNestedData(data: any): DynamicMetricData[] {
-//   const flattenedData: DynamicMetricData[] = []
-
-//   for (const key in data) {
-//     if (data.hasOwnProperty(key)) {
-//       const client = data[key]
-//       const devices = client.devices
-
-//       for (const device of devices) {
-//         const flattenedDevice: DynamicMetricData = {
-//           client_name: client.client_name,
-//           client_id: client.client_id,
-//           device_id: device.device_id,
-//           device_key: device.device_key,
-//         }
-
-//         for (const metricName in device.metrics) {
-//           flattenedDevice[`metric_${metricName}`] = device.metrics[metricName]
-//         }
-
-//         flattenedData.push(flattenedDevice)
-//       }
-//     }
-//   }
-
-//   return flattenedData
-// }
-
-export default function Page(data: any) {
-  // const [data, setData] = useState<DynamicMetricData[]>([])
+export default function Page({ data }: { data?: DynamicMetricData[] }) {
   const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     if (data != null) {
       initializeColumns()
@@ -64,38 +16,6 @@ export default function Page(data: any) {
       console.log(data)
     }
   }, [data])
-
-  // if (data) {
-  //   setLoading(false)
-  // }
-
-  // useEffect(() => {
-  //   const fetchDataAndSetData = async () => {
-  //     try {
-  //       // Replace with the path to your test.json file
-  //       const fetchedData = require('@/public/full_device_stats.json')
-  //       // const fetchedData = await fetchData();
-
-  //       const flattenedData = flattenNestedData(fetchedData)
-  //       setData(flattenedData)
-  //       setLoading(false)
-
-  //       // // Get the dynamic metric names
-  //       // const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
-  //       //   key.startsWith('metric_')
-  //       // )
-
-  //       // Initialize columns with dynamic metrics
-  //       initializeColumns()
-
-  //       console.log(flattenedData)
-  //     } catch (error) {
-  //       console.error('Failed to fetch data:', error)
-  //     }
-  //   }
-
-  //   fetchDataAndSetData()
-  // }, [])
 
   return (
     <div className="">
@@ -110,7 +30,8 @@ export default function Page(data: any) {
         </div>
       )}
 
-      {!loading && <DataTable columns={columns} data={data} />}
+      {/* provide a default value for data when it's undefined */}
+      {!loading && <DataTable columns={columns} data={data || []} />}
     </div>
   )
 }

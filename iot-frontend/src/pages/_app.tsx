@@ -1,7 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
-import { initializeColumns, columns } from '@/components/iotTable/columns'
+import { initializeColumns } from '@/components/iotTable/columns'
 
 function flattenNestedData(data: any): DynamicMetricData[] {
   const flattenedData: DynamicMetricData[] = []
@@ -45,18 +45,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
         const flattenedData = flattenNestedData(fetchedData)
         setData(flattenedData)
-        // console.log('data set')
         setLoading(false)
-
-        // // Get the dynamic metric names
-        // const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
-        //   key.startsWith('metric_')
-        // )
 
         // Initialize columns with dynamic metrics
         initializeColumns()
-
-        // console.log(flattenedData)
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }

@@ -12,18 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
-
-interface FlattenedJson {
-  client_name: string
-  client_id: string
-  device_id: string
-  device_key: string
-  [key: string]: string | { timestamp: number; value: string }
-}
 
 // Declare an empty array initially
-let columns: ColumnDef<FlattenedJson>[] = []
+let columns: ColumnDef<DynamicMetricData>[] = []
 
 export const initializeColumns = () => {
   // const firstMetric = metrics.length > 0 ? metrics[0] : null
