@@ -25,65 +25,76 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 //   }
 // }
 
-function flattenNestedData(data: any): DynamicMetricData[] {
-  const flattenedData: DynamicMetricData[] = []
+// function flattenNestedData(data: any): DynamicMetricData[] {
+//   const flattenedData: DynamicMetricData[] = []
 
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      const client = data[key]
-      const devices = client.devices
+//   for (const key in data) {
+//     if (data.hasOwnProperty(key)) {
+//       const client = data[key]
+//       const devices = client.devices
 
-      for (const device of devices) {
-        const flattenedDevice: DynamicMetricData = {
-          client_name: client.client_name,
-          client_id: client.client_id,
-          device_id: device.device_id,
-          device_key: device.device_key,
-        }
+//       for (const device of devices) {
+//         const flattenedDevice: DynamicMetricData = {
+//           client_name: client.client_name,
+//           client_id: client.client_id,
+//           device_id: device.device_id,
+//           device_key: device.device_key,
+//         }
 
-        for (const metricName in device.metrics) {
-          flattenedDevice[`metric_${metricName}`] = device.metrics[metricName]
-        }
+//         for (const metricName in device.metrics) {
+//           flattenedDevice[`metric_${metricName}`] = device.metrics[metricName]
+//         }
 
-        flattenedData.push(flattenedDevice)
-      }
-    }
-  }
+//         flattenedData.push(flattenedDevice)
+//       }
+//     }
+//   }
 
-  return flattenedData
-}
+//   return flattenedData
+// }
 
-export default function Page() {
-  const [data, setData] = useState<DynamicMetricData[]>([])
+export default function Page(data: any) {
+  // const [data, setData] = useState<DynamicMetricData[]>([])
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
-    const fetchDataAndSetData = async () => {
-      try {
-        // Replace with the path to your test.json file
-        const fetchedData = require('@/public/full_device_stats.json')
-        // const fetchedData = await fetchData();
-
-        const flattenedData = flattenNestedData(fetchedData)
-        setData(flattenedData)
-        setLoading(false)
-
-        // // Get the dynamic metric names
-        // const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
-        //   key.startsWith('metric_')
-        // )
-
-        // Initialize columns with dynamic metrics
-        initializeColumns()
-
-        console.log(flattenedData)
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
+    if (data != null) {
+      setLoading(false)
+      initializeColumns()
+      console.log(data)
     }
+  }, [data])
 
-    fetchDataAndSetData()
-  }, [])
+  // if (data) {
+  //   setLoading(false)
+  // }
+
+  // useEffect(() => {
+  //   const fetchDataAndSetData = async () => {
+  //     try {
+  //       // Replace with the path to your test.json file
+  //       const fetchedData = require('@/public/full_device_stats.json')
+  //       // const fetchedData = await fetchData();
+
+  //       const flattenedData = flattenNestedData(fetchedData)
+  //       setData(flattenedData)
+  //       setLoading(false)
+
+  //       // // Get the dynamic metric names
+  //       // const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
+  //       //   key.startsWith('metric_')
+  //       // )
+
+  //       // Initialize columns with dynamic metrics
+  //       initializeColumns()
+
+  //       console.log(flattenedData)
+  //     } catch (error) {
+  //       console.error('Failed to fetch data:', error)
+  //     }
+  //   }
+
+  //   fetchDataAndSetData()
+  // }, [])
 
   return (
     <div className="">
