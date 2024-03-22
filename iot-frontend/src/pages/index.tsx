@@ -20,7 +20,6 @@ export default function Page({ data }: { data?: DynamicMetricData[] }) {
   return (
     <div className="">
       <Header />
-      <Link href="/device-info/yo">Device info temp</Link>
 
       {loading && (
         <div className="mt-64 gap-2 flex flex-col items-center justify-center">
