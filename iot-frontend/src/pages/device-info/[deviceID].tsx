@@ -2,11 +2,39 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { usePathname } from 'next/navigation'
+import Header from '@/components/Header'
 
 interface Props {
   device: {
     name: string
   }
+}
+
+function flattenNestedData(data: any, targetDeviceId: number): DynamicMetricData[] {
+  const flattenedData: DynamicMetricData[] = []
+
+  // Assuming "data" is the top-level object containing the devices array
+  const devices = data.data // Access the devices array
+
+  for (const device of devices) {
+    // Check if device_id matches the target ID
+    if (device.device_id === targetDeviceId) {
+      const flattenedDevice: { [key: string]: any } = {}
+      for (const key in device) {
+        if (device.hasOwnProperty(key)) {
+          flattenedDevice[key] = device[key]
+        }
+      }
+      flattenedData.push(flattenedDevice)
+
+      // ... rest of the logic to process metrics remains the same
+      // (assuming device.metrics is an object containing metrics)
+
+      break // Optional: Exit after finding the first matching device
+    }
+  }
+
+  return flattenedData
 }
 
 function Page(data: any) {
@@ -18,8 +46,12 @@ function Page(data: any) {
 
   console.log(data)
 
+  const filteredData = flattenNestedData(data, deviceId) // Replace 255 with your target ID
+  console.log(filteredData) // This will contain an array with objects for the device with ID 255 (or the first matching device if the break line is uncommented)
+
   return (
-    <div className="max-w-3xl mx-auto p-6 border rounded-lg shadow-md">
+    <div className="max-w-3xl mx-auto p-6 border rounded-lg mt-8 shadow-md">
+      <Header />
       <p>Current pathname: {pathname}</p>
       {/* Header */}
       <div className="mb-6">
