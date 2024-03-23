@@ -1,6 +1,4 @@
 // columns.tsx
-import { useRouter } from 'next/router';
-
 import React from 'react'
 import { ColumnDef, Row } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
@@ -13,16 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-
-interface FlattenedJson {
-  client_name: string
-  client_id: string
-  device_id: string
-  device_key: string
-  [key: string]: string | { timestamp: number; value: string }
-}
 
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = []
@@ -38,46 +27,14 @@ const extractTimestampFromJson = (device: DynamicMetricData) => {
 }
 
 export const initializeColumns = () => {
-  // const firstMetric = metrics.length > 0 ? metrics[0] : null
-
-  // Sorting state for timestamp column
-  // let timestampSorting: 'asc' | 'desc' | undefined = undefined
-
   // Initialize columns with the static columns
   columns = [
     {
       id: 'actions',
-      cell: ({ row }) => {
-        const rowData = row.original
-        const deviceID = rowData.device_id
-
-        // const device = row.original
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Link href={`/view-more-info/${deviceID}`}>View device stats</Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
-                Hide client from Dashboard
-              </DropdownMenuItem>
-
-              <DropdownMenuItem>Create ticket</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )
-      },
+      cell: ({ row }: { row: Row<DynamicMetricData> }) => <ActionsCell row={row} />,
     },
-    // Temp solution
     {
+      // Temp solution
       accessorKey: 'Timestamp',
       header: ({ column }) => {
         return (
