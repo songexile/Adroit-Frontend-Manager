@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react'
 import { ColumnDef, Row } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { ArrowUpDown, MoreHorizontal, Ticket } from 'lucide-react'
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,6 +38,11 @@ const extractTimestampFromJson = (device: DynamicMetricData) => {
 }
 
 export const initializeColumns = () => {
+  // const firstMetric = metrics.length > 0 ? metrics[0] : null
+
+  // Sorting state for timestamp column
+  // let timestampSorting: 'asc' | 'desc' | undefined = undefined
+
   // Initialize columns with the static columns
   columns = [
     {
@@ -58,7 +63,7 @@ export const initializeColumns = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
-                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
+                <Link href={`/view-more-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
