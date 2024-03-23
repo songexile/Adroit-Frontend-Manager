@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 const Header: React.FC = () => {
@@ -7,7 +8,9 @@ const Header: React.FC = () => {
         {/* Top Blue Header */}
         <div className="bg-blue-800 text-white py-2 px-4">
           <div className="container mx-auto flex justify-between items-center">
-            <span className="font-bold">Adroit</span>
+            <Link href="/">
+              <span className="font-bold">Adroit</span>
+            </Link>
           </div>
         </div>
 

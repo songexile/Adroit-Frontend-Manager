@@ -2,7 +2,7 @@
 import { useRouter } from 'next/router';
 
 import React from 'react'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Row } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { ArrowUpDown, MoreHorizontal, Ticket } from 'lucide-react'
 import {
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 interface FlattenedJson {
   client_name: string
@@ -24,26 +25,26 @@ interface FlattenedJson {
 }
 
 // Declare an empty array initially
-let columns: ColumnDef<FlattenedJson>[] = []
+let columns: ColumnDef<DynamicMetricData>[] = []
+
+const extractTimestampFromJson = (device: DynamicMetricData) => {
+  const firstMetricKey = Object.keys(device).find((key) => key.startsWith('metric_'))
+  const timestampData =
+    firstMetricKey !== undefined
+      ? (device[firstMetricKey] as { timestamp: number; value: string })
+      : undefined
+  const timestamp = timestampData ? timestampData.timestamp : undefined
+  return timestamp ? new Date(timestamp).toLocaleString() : ''
+}
 
 export const initializeColumns = () => {
-  // const firstMetric = metrics.length > 0 ? metrics[0] : null
-
-  // Sorting state for timestamp column
-  // let timestampSorting: 'asc' | 'desc' | undefined = undefined
-
   // Initialize columns with the static columns
   columns = [
     {
       id: 'actions',
       cell: ({ row }) => {
         const rowData = row.original
-
-        const clientName = rowData.client_name
-        const clientID = rowData.client_id
         const deviceID = rowData.device_id
-        const deviceKey = rowData.device_key
-        const router = useRouter();
 
         // const device = row.original
         return (
@@ -57,19 +58,14 @@ export const initializeColumns = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
-                
+                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() =>  router.push(`/view-more-info/$${clientName}/${clientID}/${deviceID}/${deviceKey}`)}>View more stats</DropdownMenuItem>
-                                             
               <DropdownMenuSeparator />
-
-              <DropdownMenuItem onClick={() => console.log('Create ticket')}>
-                Create a ticket
-              </DropdownMenuItem>
-
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
-                Hide Device
+                Hide client from Dashboard
               </DropdownMenuItem>
+
+              <DropdownMenuItem>Create ticket</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )
@@ -78,7 +74,6 @@ export const initializeColumns = () => {
     // Temp solution
     {
       accessorKey: 'Timestamp',
-
       header: ({ column }) => {
         return (
           <Button
@@ -92,15 +87,8 @@ export const initializeColumns = () => {
       },
       cell: ({ row }) => {
         const device = row.original
-        const firstMetricKey = Object.keys(device).find((key) => key.startsWith('metric_'))
-        const timestampData =
-          firstMetricKey !== undefined
-            ? (device[firstMetricKey] as { timestamp: number; value: string })
-            : undefined
-        const timestamp = timestampData ? timestampData.timestamp : undefined
-
-        // Render the timestamp
-        return <span>{timestamp ? new Date(timestamp).toLocaleString() : ''}</span>
+        const timestamp = extractTimestampFromJson(device)
+        return <span>{timestamp}</span>
       },
     },
     {
@@ -166,14 +154,45 @@ export const initializeColumns = () => {
       },
     },
   ]
+}
 
-  // // Dynamic metric columns
-  // columns.push(
-  //   ...metrics.map((metric, index) => ({
-  //     accessorKey: metric,
-  //     header: metric,
-  //   }))
-  // );
+const ActionsCell = ({ row }: { row: Row<DynamicMetricData> }) => {
+  const router = useRouter()
+  const deviceID = row.original.device_id
+
+  const handleViewDeviceStats = () => {
+    const { client_name, device_key } = row.original
+    const timestamp = extractTimestampFromJson(row.original)
+    router.push({
+      pathname: `/device-info/${deviceID}`,
+      query: {
+        clientName: client_name,
+        lastOnline: timestamp,
+        deviceKey: device_key,
+        data: JSON.stringify(row.original), // Pass the entire row data as a stringified JSON
+      },
+    })
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem onClick={handleViewDeviceStats}>View device stats</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
+          Hide client from Dashboard
+        </DropdownMenuItem>
+        <DropdownMenuItem>Create ticket</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }
 
 // Initialize columns (pass an empty array initially, it will be populated later)
