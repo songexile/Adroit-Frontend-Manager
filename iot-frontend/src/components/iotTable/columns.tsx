@@ -1,4 +1,6 @@
 // columns.tsx
+import { useRouter } from 'next/router';
+
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
@@ -11,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import Link from 'next/link'
 
 interface FlattenedJson {
   client_name: string
@@ -24,7 +27,6 @@ interface FlattenedJson {
 let columns: ColumnDef<FlattenedJson>[] = []
 
 export const initializeColumns = () => {
-  // Extract timestamp from the first metric
   // const firstMetric = metrics.length > 0 ? metrics[0] : null
 
   // Sorting state for timestamp column
@@ -34,7 +36,15 @@ export const initializeColumns = () => {
   columns = [
     {
       id: 'actions',
-      cell: ({}) => {
+      cell: ({ row }) => {
+        const rowData = row.original
+
+        const clientName = rowData.client_name
+        const clientID = rowData.client_id
+        const deviceID = rowData.device_id
+        const deviceKey = rowData.device_key
+        const router = useRouter();
+
         // const device = row.original
         return (
           <DropdownMenu>
@@ -46,13 +56,17 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => console.log('View More Device Info')}>
-                View More Device Info
+              <DropdownMenuItem>
+                
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() =>  router.push(`/view-more-info/$${clientName}/${clientID}/${deviceID}/${deviceKey}`)}>View more stats</DropdownMenuItem>
+                                             
               <DropdownMenuSeparator />
+
               <DropdownMenuItem onClick={() => console.log('Create ticket')}>
                 Create a ticket
               </DropdownMenuItem>
+
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
                 Hide Device
               </DropdownMenuItem>

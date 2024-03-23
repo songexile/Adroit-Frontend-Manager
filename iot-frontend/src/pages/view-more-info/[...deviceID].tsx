@@ -1,6 +1,14 @@
 import React from 'react'
+import { useRouter } from 'next/router';
 
 const ViewMatric = () => {
+  const router = useRouter();
+  const { clientName } = router.query;
+  const { clientID } = router.query;
+  const { deviceID } = router.query;
+  const { deviceKey } = router.query;
+
+
   return (
     <div className="max-w-3xl mx-auto p-6 border rounded-lg shadow-md">
       {/* Header */}
@@ -35,7 +43,13 @@ const ViewMatric = () => {
       </div>
 
       {/* Metrics */}
-      <div className="font-bold mt-6">Metrics</div>
+      <div className="font-bold mt-6">
+        <h1>Device ID: {deviceID}</h1>
+        <h1>Client name: {clientName}</h1>
+        <h1>Client ID: {clientID}</h1>
+        <h1>Client Key: {deviceKey}</h1>
+
+      </div>
     </div>
   )
 }
