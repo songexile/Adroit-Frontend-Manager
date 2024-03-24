@@ -2,33 +2,50 @@ import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
 import { initializeColumns } from '@/components/iotTable/columns'
-import { flattenNestedData } from '@/utils/flattenData'
+import { fetchDataAndSetData } from '@/utils'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [data, setData] = useState<DynamicMetricData[]>([])
   const [loading, setLoading] = useState(true)
+  const [hasFetchedData, setHasFetchedData] = useState(false)
 
   useEffect(() => {
-    const fetchDataAndSetData = async () => {
-      try {
-        console.log('fetching data')
-        // Replace with the path to your test.json file
-        const fetchedData = require('@/public/full_device_stats.json')
-        // const fetchedData = await fetchData();
+    const fetchedDataFromStorage = localStorage.getItem('fetchedData')
+    const hasDataFetched = localStorage.getItem('hasDataFetched') === 'true'
 
-        const flattenedData = flattenNestedData(fetchedData)
-        setData(flattenedData)
-        setLoading(false)
-
-        // Initialize columns with dynamic metrics
-        initializeColumns()
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
+    if (!hasDataFetched) {
+      fetchDataAndUpdate()
+    } else if (fetchedDataFromStorage) {
+      setData(JSON.parse(fetchedDataFromStorage))
+      setLoading(false)
     }
-
-    fetchDataAndSetData()
   }, [])
+
+  const fetchDataAndUpdate = async () => {
+    try {
+      setLoading(true)
+      const fetchedData = await fetchDataAndSetData()
+      setData(fetchedData)
+      setLoading(false)
+
+      // Save the fetched data and set the flag in localStorage
+      localStorage.setItem('fetchedData', JSON.stringify(fetchedData))
+      localStorage.setItem('hasDataFetched', 'true')
+
+      // Initialize columns with dynamic metrics
+      initializeColumns()
+
+      if (!hasFetchedData) {
+        console.log('fetching data for the first time')
+        setHasFetchedData(true)
+      } else {
+        console.log('fetching data for the second time')
+      }
+    } catch (error) {
+      console.error('Failed to fetch data:', error)
+    }
+  }
+
   return (
     <div>
       {loading ? (
@@ -36,7 +53,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <p>Loading data...</p>
       ) : (
         // Data has been fetched, pass it as a prop to the child component
-        <Component data={data} {...pageProps} />
+        <Component data={data} {...pageProps} fetchDataAndUpdate={fetchDataAndUpdate} />
       )}
     </div>
   )

@@ -1,7 +1,13 @@
 import Link from 'next/link'
 import React from 'react'
 
-const Header: React.FC = () => {
+const Header = ({ fetchDataAndUpdate }: { fetchDataAndUpdate?: () => Promise<void> }) => {
+  const handleFetchAndUpdate = async () => {
+    if (fetchDataAndUpdate !== undefined) {
+      await fetchDataAndUpdate()
+    }
+  }
+
   return (
     <main>
       <>
@@ -41,6 +47,13 @@ const Header: React.FC = () => {
                 Search
               </button>
             </div>
+
+            <button
+              onClick={handleFetchAndUpdate}
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+            >
+              Fetch New Data
+            </button>
           </div>
         </div>
       </>

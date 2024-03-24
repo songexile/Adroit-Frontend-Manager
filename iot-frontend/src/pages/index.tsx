@@ -5,7 +5,13 @@ import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
-export default function Page({ data }: { data?: DynamicMetricData[] }) {
+export default function Page({
+  data,
+  fetchDataAndUpdate,
+}: {
+  data?: DynamicMetricData[]
+  fetchDataAndUpdate: () => Promise<void>
+}) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -18,7 +24,7 @@ export default function Page({ data }: { data?: DynamicMetricData[] }) {
 
   return (
     <div className="">
-      <Header />
+      <Header fetchDataAndUpdate={fetchDataAndUpdate} />
 
       {loading && (
         <div className="mt-64 gap-2 flex flex-col items-center justify-center">
