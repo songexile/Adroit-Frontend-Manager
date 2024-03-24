@@ -4,7 +4,6 @@ import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import Link from 'next/link'
 
 export default function Page({ data }: { data?: DynamicMetricData[] }) {
   const [loading, setLoading] = useState(true)
