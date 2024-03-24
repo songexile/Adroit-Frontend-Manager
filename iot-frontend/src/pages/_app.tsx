@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import { SessionProvider } from 'next-auth/react'
 import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
 import { initializeColumns } from '@/components/iotTable/columns'
@@ -47,14 +48,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <div>
-      {loading ? (
-        // Show a loading indicator while data is being fetched
-        <p>Loading data...</p>
-      ) : (
-        // Data has been fetched, pass it as a prop to the child component
-        <Component data={data} {...pageProps} fetchDataAndUpdate={fetchDataAndUpdate} />
-      )}
-    </div>
+    <>
+      <SessionProvider session={pageProps.session}>
+        {loading ? (
+          // Show a loading indicator while data is being fetched
+          <p>Loading data...</p>
+        ) : (
+          // Data has been fetched, pass it as a prop to the child component
+          <Component data={data} {...pageProps} fetchDataAndUpdate={fetchDataAndUpdate} />
+        )}
+      </SessionProvider>
+    </>
   )
 }
