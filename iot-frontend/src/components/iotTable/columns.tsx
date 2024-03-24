@@ -136,6 +136,22 @@ const ActionsCell = ({ row }: { row: Row<DynamicMetricData> }) => {
     })
   }
 
+    const createTicket = row.original.device_id
+
+  const handleCreateTicket = () => {
+    const { client_name, device_key } = row.original
+    const timestamp = extractTimestampFromJson(row.original)
+    router.push({
+      pathname: `/create-ticket/${createTicket}`,
+      query: {
+        clientName: client_name,
+        lastOnline: timestamp,
+        deviceKey: device_key,
+        data: JSON.stringify(row.original), // Pass the entire row data as a stringified JSON
+      },
+    })
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -151,7 +167,7 @@ const ActionsCell = ({ row }: { row: Row<DynamicMetricData> }) => {
         <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
           Hide client from Dashboard
         </DropdownMenuItem>
-        <DropdownMenuItem>Create ticket</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleCreateTicket}>Create ticket</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
