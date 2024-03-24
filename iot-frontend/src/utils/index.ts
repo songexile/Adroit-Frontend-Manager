@@ -57,3 +57,14 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
 
   return flattenedData
 }
+
+export const fetchDataAndSetData = async () => {
+  try {
+    const fetchedData = require('@/public/full_device_stats.json');
+    const flattenedData = flattenNestedData(fetchedData);
+    return flattenedData;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    throw error;
+  }
+};

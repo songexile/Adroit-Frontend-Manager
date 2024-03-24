@@ -1,7 +1,7 @@
 import React from 'react'
 import { usePathname } from 'next/navigation'
 import Header from '@/components/Header'
-import { flattenNestedData } from '@/utils/flattenData'
+import { flattenNestedData } from '@/utils'
 
 function fetchDeviceId() {
   //Fetches deviceId from Url
