@@ -1,6 +1,6 @@
 // Home Page
 import React, { useState, useEffect } from 'react'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'

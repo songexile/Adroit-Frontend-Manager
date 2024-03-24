@@ -22,6 +22,7 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
       logo: "https://assets.adroit.nz/wp-content/uploads/2022/03/01113543/Adroit-environmental-monitoring.png", // Absolute URL to image
       buttonText: "#fff" // Hex color code
     },
+    secret: process.env.NEXT_PUBLIC_SECRET,
     // Enable debug messages in the console if you are having problems
     debug: process.env.NODE_ENV === 'development',
   });
