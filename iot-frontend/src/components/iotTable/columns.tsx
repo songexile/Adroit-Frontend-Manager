@@ -29,6 +29,7 @@ export const initializeColumns = () => {
       cell: ({ row }) => {
         const rowData = row.original
         const deviceID = rowData.device_id
+        const createTicket = rowData.device_id
 
         // const device = row.original
         return (
@@ -49,7 +50,9 @@ export const initializeColumns = () => {
                 Hide client from Dashboard
               </DropdownMenuItem>
 
-              <DropdownMenuItem>Create ticket</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         )

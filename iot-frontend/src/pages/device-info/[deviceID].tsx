@@ -1,7 +1,7 @@
 import React from 'react'
 import { usePathname } from 'next/navigation'
-import Header from '@/components/Header'
 import { flattenNestedData } from '@/utils'
+import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
 function fetchDeviceId() {
@@ -25,9 +25,6 @@ function Page(data: any) {
         {/* Device Info */}
         <div className="mx-auto">
           <div className="text-xl font-bold mb-2">Device Info</div>
-          <div className="mb-2 italic">
-            <span className="font-semibold">Water Device</span>
-          </div>
           <div className="mb-2">
             <span className="font-semibold">Device ID:</span> {deviceData?.device_id}
           </div>
@@ -38,7 +35,10 @@ function Page(data: any) {
             <span className="font-semibold">Client Name:</span> {deviceData?.client_name}
           </div>
           <div className="mb-2">
-            <span className="font-semibold">Last Online:</span> 14/01/2023 11:13
+            <span className="font-semibold">Last Online:</span>{' '}
+            {typeof deviceData?.last_online === 'string'
+              ? deviceData.last_online
+              : deviceData?.last_online?.value || 'N/A'}
           </div>
           <div className="mb-2">
             <span className="font-semibold">Last ticket created:</span> Never
