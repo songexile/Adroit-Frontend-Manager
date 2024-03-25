@@ -1,46 +1,50 @@
-import Header from '@/components/Header'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react';
-import emailjs from 'emailjs-com';
-
+import Header from '@/components/Header';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { Resend } from 'resend';
 
 const Devices = () => {
-  const router = useRouter()
-  const { deviceID, clientName, deviceKey, lastOnline, data } = router.query
-  const deviceData = data ? JSON.parse(data as string) : null
+  const router = useRouter();
+  const { deviceID, clientName, deviceKey, lastOnline, data } = router.query;
+  const deviceData = data ? JSON.parse(data as string) : null;
 
-  console.log(deviceData)
+  const [message, setMessage] = useState('');
 
   // Temp Data
   const statusData = [
     { type: 'Scan', status: 'ONLINE' },
     { type: 'Battery', status: 'OFFLINE' },
     { type: 'Insitu', status: 'ERROR' },
-  ]
+  ];
 
-  useEffect(() => {
-    // SMTPJS script
-    const script = document.createElement('script');
-    script.src = 'https://smtpjs.com/v3/smtp.js';
-    script.async = true;
-    document.body.appendChild(script);
+  const resend = new Resend("re_DkWgqBEQ_8m2JGCHeztZWUZRrZc1BBuwE");
 
-   
+  const sendEmail = async () => {
+    try {
+      const emaildata = await resend.emails.send({
+        from: 'next@zenorocha.com',
+        to: 'munishk686@gmail.com',
+        subject: 'Hello from Next.js',
+        html: `<h1>${message}</h1>`,
+      });
+      console.log('Email sent successfully:', emaildata);
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+  };
 
-    // Example of calling the sendEmail function
-    //sendEmail();
+  //const handleMessageChange = (e) => {
+    //setMessage(e.target.textContent);
+  //};
 
-    // Clean up function
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  const handleSendMessage = () => {
+    sendEmail();
+  };
 
   return (
     <>
       <Header />
       <div className="min-h-screen bg-gray-100">
-
         <div className="container mx-auto">
           <p className="text-black-600 text-center mt-2 flex justify-center">Email will be sent to support@adroit.co.nz</p>
 
@@ -50,61 +54,25 @@ const Devices = () => {
               <span className="px-4">XXRU2</span>
             </div>
 
-            <p className="mt-2 font-semibold"> Message:</p>
+            <p className="mt-2 font-semibold">Message:</p>
 
             <div
               className="border border-gray-300 p-2 rounded-md bg-white"
               contentEditable="true"
               style={{ outline: 'none', width: '500px', height: '100px', minWidth: '100px', minHeight: '50px' }}
-            >
-            </div>
+             // onInput={handleMessageChange}
+            ></div>
 
             <div className="mt-6 flex justify-center">
-              <button className="bg-green-500 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-green-500 text-white font-bold py-2 px-4 rounded" onClick={handleSendMessage}>
                 Send Message
               </button>
             </div>
-
           </div>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-/**
- * Renders metric data from the provided deviceData object.
- * @param {DynamicMetricData | null} deviceData - The object containing metric data or null if no data is available.
- * @returns {JSX.Element | null} JSX representing the rendered metric data, or null if deviceData is null.
- */
-const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
-  if (!deviceData) return null
-
-  return (
-    <div>
-      {Object.entries(deviceData).map(([key, value]) => {
-        if (typeof value === 'string') {
-          return (
-            <div key={key}>
-              <p>
-                {key}: {value}
-              </p>
-            </div>
-          )
-        } else if (value && typeof value === 'object' && 'value' in value) {
-          return (
-            <div key={key}>
-              <p>
-                {key}: {value.value}
-              </p>
-            </div>
-          )
-        } else {
-          return null
-        }
-      })}
-    </div>
-  )
-}
-
-export default Devices
+export default Devices;
