@@ -2,6 +2,7 @@ import React from 'react'
 import { usePathname } from 'next/navigation'
 import Header from '@/components/Header'
 import { flattenNestedData } from '@/utils'
+import Footer from '@/components/Footer'
 
 function fetchDeviceId() {
   //Fetches deviceId from Url
@@ -79,6 +80,7 @@ function Page(data: any) {
           {deviceData && renderMetrics(deviceData)}
         </div>
       </div>
+      <Footer />
     </>
   )
 }

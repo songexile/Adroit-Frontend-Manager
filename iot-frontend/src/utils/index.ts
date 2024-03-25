@@ -58,9 +58,30 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
   return flattenedData
 }
 
+// Function to fetch data from AWS API
+async function fetchData() {
+  try {
+    const res = await fetch('https://eq1n7rs483.execute-api.ap-southeast-2.amazonaws.com/Prod/hello');
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch data');
+    }
+
+    const jsonData = await res.json();
+    const parsedData = JSON.parse(jsonData.body);
+
+    return parsedData;
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    throw error;
+  }
+}
+
+// Modified function to fetch data and set it
 export const fetchDataAndSetData = async () => {
   try {
-    const fetchedData = require('@/public/full_device_stats.json');
+    // const fetchedData = require('@/public/full_device_stats.json');
+    const fetchedData = await fetchData(); // Call the fetchData function instead of loading local data
     const flattenedData = flattenNestedData(fetchedData);
     return flattenedData;
   } catch (error) {

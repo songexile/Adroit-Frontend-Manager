@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import Footer from '@/components/Footer'
 
 export default function Page({
   data,
@@ -36,6 +37,7 @@ export default function Page({
 
       {/* provide a default value for data when it's undefined */}
       {!loading && <DataTable columns={columns} data={data || []} />}
+      <Footer />
     </div>
   )
 }

@@ -1,11 +1,17 @@
 import React from 'react'
 import Header from '@/components/Header'
-function Page() {
+import Footer from '@/components/Footer'
+
+const createTicket = () => {
   return (
-    <div>
+    <>
       <Header />
-    </div>
+      <div className="container">
+        <p>Create Ticket Page</p>
+      </div>
+      <Footer />
+    </>
   )
 }
 
-export default Page
+export default createTicket
