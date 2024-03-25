@@ -33,7 +33,7 @@ HeaderProps) => {
               <input
                 className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 type="text"
-                placeholder="Search by ID"
+                placeholder="Search by Device ID"
                 value={searchById}
                 onChange={(e) => setSearchById(e.target.value)}
               />

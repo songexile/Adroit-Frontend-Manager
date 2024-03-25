@@ -53,7 +53,7 @@ const CreateTicket = (data: any) => {
                 <span className="font-semibold">Client Name:</span> {deviceData?.client_name}
               </div>
               <div className="mb-2">
-                <span className="font-semibold">Last Online:</span>
+                <span className="font-semibold">Last Online: </span>
                 {typeof deviceData?.last_online === 'string' ? deviceData.last_online : deviceData?.last_online?.value || 'N/A'}
               </div>
               <div className="mb-2">
