@@ -6,7 +6,9 @@ const Header = ({
   setSearchById,
   searchByClientName,
   setSearchByClientName,
-}: HeaderProps) => {
+}: // recentlyOfflineCount,
+// totalDevicesOfflineCount,
+HeaderProps) => {
   const handleFetchAndUpdate = async () => {
     if (fetchDataAndUpdate) {
       await fetchDataAndUpdate()
@@ -50,16 +52,28 @@ const Header = ({
             )}
           </div>
           {/* Fetch New Data Button */}
-          {fetchDataAndUpdate && (
-            <button
-              onClick={handleFetchAndUpdate}
-              className="bg-blue-500 text-white font-bold py-2 px-4 rounded md:mt-0 mt-3"
-            >
-              Fetch New Data
-            </button>
-          )}
+          <div className="flex items-center space-x-2 mt-3 md:mt-0">
+            {fetchDataAndUpdate && (
+              <button
+                onClick={handleFetchAndUpdate}
+                className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+              >
+                Fetch New Data
+              </button>
+            )}
+            {/* {recentlyOfflineCount !== undefined && totalDevicesOfflineCount !== undefined && (
+              <span className="text-sm text-gray-600">
+                Recently Offline (within 48 hours): {recentlyOfflineCount} | Total Devices Offline:{' '}
+                {totalDevicesOfflineCount} | Clients Offline:{' '}
+                {totalDevicesOfflineCount - recentlyOfflineCount}
+              </span>
+            )} */}
+          </div>
         </div>
       </div>
+      <span className="text-sm text-gray-600 flex justify-center">
+        Recently Offline (within 48 hours): 2 | Total Devices Offline: 450 | Clients Offline: 400
+      </span>
     </>
   )
 }
