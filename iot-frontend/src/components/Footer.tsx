@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="bg-blue-800 text-white py-2 px-4">
       <div className="container mx-auto flex items-center justify-center">
-        <p className="text-sm">
+        <p className="text-sm text-center">
           Copyright © Adroit {establishedYear} - {currentYear}. All rights reserved.
         </p>
       </div>

@@ -1,8 +1,9 @@
 import React from 'react'
 import { usePathname } from 'next/navigation'
-import Header from '@/components/Header'
 import { flattenNestedData } from '@/utils'
+import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Link from 'next/link'
 
 function fetchDeviceId() {
   //Fetches deviceId from Url
@@ -25,9 +26,6 @@ function Page(data: any) {
         {/* Device Info */}
         <div className="mx-auto">
           <div className="text-xl font-bold mb-2">Device Info</div>
-          <div className="mb-2 italic">
-            <span className="font-semibold">Water Device</span>
-          </div>
           <div className="mb-2">
             <span className="font-semibold">Device ID:</span> {deviceData?.device_id}
           </div>
@@ -38,7 +36,10 @@ function Page(data: any) {
             <span className="font-semibold">Client Name:</span> {deviceData?.client_name}
           </div>
           <div className="mb-2">
-            <span className="font-semibold">Last Online:</span> 14/01/2023 11:13
+            <span className="font-semibold">Last Online:</span>{' '}
+            {typeof deviceData?.last_online === 'string'
+              ? deviceData.last_online
+              : deviceData?.last_online?.value || 'N/A'}
           </div>
           <div className="mb-2">
             <span className="font-semibold">Last ticket created:</span> Never
@@ -68,10 +69,14 @@ function Page(data: any) {
         </div>
 
         <div className="flex flex-col py-5">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-4">
-            Create Ticket
-          </button>
-          <div>No ticket currently active.</div>
+          <div className="flex justify-center">
+            <Link href={`/create-ticket/${deviceData?.device_id}`}>
+              <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 mb-4 text-xl">
+                Create Ticket
+              </button>
+            </Link>
+          </div>
+          <p className="text-center">No ticket currently active.</p>
         </div>
 
         {/* Metrics */}
