@@ -5,9 +5,17 @@ interface DynamicMetricData {
   client_id: string;
   device_id: string;
   device_key: string;
-  [key: string]: string | { timestamp: number; value: string };
+  [key: string]: string | { timestamp: number; value: string } | undefined;
 }
 
 interface SpinnerProps {
   className?: string; // Optional string prop
+}
+
+interface HeaderProps {
+  fetchDataAndUpdate?: () => Promise<void>;
+  searchById?: string;
+  setSearchById?: (value: string) => void;
+  searchByClientName?: string;
+  setSearchByClientName?: (value: string) => void;
 }

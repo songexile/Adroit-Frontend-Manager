@@ -11,20 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-
-interface FlattenedJson {
-  client_name: string
-  client_id: string
-  device_id: string
-  device_key: string
-  [key: string]: string | { timestamp: number; value: string }
-}
+import Link from 'next/link'
 
 // Declare an empty array initially
-let columns: ColumnDef<FlattenedJson>[] = []
+let columns: ColumnDef<DynamicMetricData>[] = []
 
 export const initializeColumns = () => {
-  // Extract timestamp from the first metric
   // const firstMetric = metrics.length > 0 ? metrics[0] : null
 
   // Sorting state for timestamp column
@@ -34,7 +26,11 @@ export const initializeColumns = () => {
   columns = [
     {
       id: 'actions',
-      cell: ({}) => {
+      cell: ({ row }) => {
+        const rowData = row.original
+        const deviceID = rowData.device_id
+        const createTicket = rowData.device_id
+
         // const device = row.original
         return (
           <DropdownMenu>
@@ -46,15 +42,16 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => console.log('View details of client')}>
-                View details of client
+              <DropdownMenuItem>
+                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
                 Hide client from Dashboard
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log('Create ticket')}>
-                Create ticket
+
+              <DropdownMenuItem>
+                <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
