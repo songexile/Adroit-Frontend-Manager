@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
 import { initializeColumns } from '@/components/iotTable/columns'
 import { fetchDataAndSetData } from '@/utils'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [data, setData] = useState<DynamicMetricData[]>([])
@@ -50,7 +51,12 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <div>
       {loading ? (
         // Show a loading indicator while data is being fetched
-        <p>Loading data...</p>
+
+        <div className="mt-64 gap-2 flex flex-col items-center justify-center">
+          {' '}
+          <LoadingSpinner className={'h-32 w-32'} />
+          <h1>Loading the data for you.</h1>
+        </div>
       ) : (
         // Data has been fetched, pass it as a prop to the child component
         <Component data={data} {...pageProps} fetchDataAndUpdate={fetchDataAndUpdate} />
