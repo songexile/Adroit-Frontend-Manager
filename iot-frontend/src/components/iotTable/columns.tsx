@@ -131,23 +131,6 @@ export const initializeColumns = () => {
         )
       },
     },
-
-    {
-      accessorKey: 'device_key',
-      size: 10,
-
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            Device Key
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        )
-      },
-    },
   ]
 
   // // Dynamic metric columns
