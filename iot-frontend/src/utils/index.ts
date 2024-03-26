@@ -1,3 +1,9 @@
+/**
+ * Flattens nested data into an array of DynamicMetricData objects.
+ * @param {any} data - The nested data object containing device and metric information.
+ * @param {number | undefined} targetDeviceId - (Optional) The ID of the target device to retrieve.
+ * @returns {DynamicMetricData[]} An array of flattened DynamicMetricData objects.
+ */
 export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMetricData[] {
   const flattenedData: DynamicMetricData[] = [];
 
@@ -37,13 +43,14 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           flattenedDevice.last_online = extractedTimestamp ? new Date(extractedTimestamp).toLocaleString() : '';
         }
 
-
+        // Log extracted timestamp and flattened device
         console.log("Extracted Timestamp:", extractedTimestamp);
         console.log("Flattened Device:", flattenedDevice);
 
+        // Push the flattened device to the array
         flattenedData.push(flattenedDevice);
 
-        // Exit after finding the first matching device
+        // Exit loop after finding the first matching device
         break;
       }
     }
@@ -66,6 +73,7 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           flattenedDevice[`metric_${metricName}`] = device.metrics[metricName];
         }
 
+        // Push the flattened device to the array
         flattenedData.push(flattenedDevice);
       }
     }
@@ -74,12 +82,11 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
   return flattenedData;
 }
 
-
-
-
-
-// Function to fetch data from AWS API
-async function fetchData() {
+/**
+ * Fetches data from an AWS API endpoint.
+ * @returns {Promise<any>} A promise that resolves to the fetched data.
+ */
+async function fetchData(): Promise<any> {
   try {
     const res = await fetch('https://eq1n7rs483.execute-api.ap-southeast-2.amazonaws.com/Prod/hello');
 
@@ -97,11 +104,13 @@ async function fetchData() {
   }
 }
 
-// Modified function to fetch data and set it
-export const fetchDataAndSetData = async () => {
+/**
+ * Fetches data and sets it, then flattens the data.
+ * @returns {Promise<DynamicMetricData[]>} A promise that resolves to the flattened data.
+ */
+export const fetchDataAndSetData = async (): Promise<DynamicMetricData[]> => {
   try {
-    // const fetchedData = require('@/public/full_device_stats.json');
-    const fetchedData = await fetchData(); // Call the fetchData function instead of loading local data
+    const fetchedData = await fetchData(); // Call the fetchData function to get data from API
     const flattenedData = flattenNestedData(fetchedData);
     return flattenedData;
   } catch (error) {
@@ -110,12 +119,29 @@ export const fetchDataAndSetData = async () => {
   }
 };
 
-export const extractTimestampFromJson = (device: DynamicMetricData) => {
+/**
+ * Extracts the timestamp from the provided device object.
+ * @param {DynamicMetricData} device - The device object containing metric data.
+ * @returns {string} The timestamp in a human-readable format, or 'N/A' if no timestamp is available.
+ */
+export const extractTimestampFromJson = (device: DynamicMetricData): string => {
   const firstMetricKey = Object.keys(device).find((key) => key.startsWith('metric_'))
   const timestampData =
     firstMetricKey !== undefined
       ? (device[firstMetricKey] as { timestamp: number; value: string })
       : undefined
   const timestamp = timestampData ? timestampData.timestamp : undefined
-  return timestamp ? new Date(timestamp).toLocaleString() : ''
+  return timestamp ? new Date(timestamp).toLocaleString() : 'N/A';
+}
+
+/**
+ * Retrieves timestamp data from the provided device object.
+ * @param {DynamicMetricData} device - The device object containing metric data.
+ * @returns {{ timestamp: number; value: string } | undefined} The timestamp data if available, otherwise undefined.
+ */
+export const getTimestampData = (device: any): { timestamp: number; value: string } | undefined => {
+  const firstMetricKey = Object.keys(device).find((key) => key.startsWith('metric_'))
+  return firstMetricKey !== undefined
+    ? (device[firstMetricKey] as { timestamp: number; value: string })
+    : undefined
 }
