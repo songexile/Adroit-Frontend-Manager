@@ -13,7 +13,9 @@ function fetchDeviceId() {
 }
 
 const Devices = (data: any) => {
-  const [message, setMessage] = useState('')
+  const [to, setTo] = useState('')
+  const [subject, setSubject] = useState('')
+  const [message, setMessage] = useState(`Hi team there is something wrong with...`)
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
@@ -29,7 +31,7 @@ const Devices = (data: any) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message, deviceData }),
+        body: JSON.stringify({ to, subject, message, deviceData }),
       })
 
       if (response.ok) {
@@ -81,22 +83,65 @@ const Devices = (data: any) => {
               </div>
             </div>
 
-            <p className="mt-4 font-semibold">Message:</p>
-
-            <textarea
-              className="border border-gray-300 p-2 rounded-md bg-white w-full h-40"
-              placeholder="Enter your message here..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            ></textarea>
-
-            <div className="mt-6 flex justify-center">
-              <button
-                className="bg-green-500 text-white font-bold py-2 px-4 rounded"
-                onClick={handleSendMessage}
-              >
-                Send Message
-              </button>
+            <div className="mx-auto py-8">
+              <div className="flex justify-center mb-4 bg-white text-black px-3 py-1 rounded-lg items-center">
+                <span className="text-4xl font-semibold mr-2">Email</span>
+              </div>
+              <div className="mb-4">
+                <label htmlFor="from" className="font-semibold">
+                  From:
+                </label>
+                <input
+                  id="from"
+                  type="text"
+                  value="support@adroit.co.nz"
+                  readOnly
+                  disabled
+                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
+                  focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
+                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
+                  invalid:border-pink-500 invalid:text-pink-600
+                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="to" className="font-semibold">
+                  To:
+                </label>
+                <input
+                  id="to"
+                  type="text"
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                  className="border border-gray-300 p-2 rounded-md bg-white w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="subject" className="font-semibold">
+                  Subject:
+                </label>
+                <input
+                  id="subject"
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="border border-gray-300 p-2 rounded-md bg-white w-full"
+                />
+              </div>
+              <p className="mt-4 font-semibold">Message:</p>
+              <textarea
+                className="border border-gray-300 p-2 rounded-md bg-white w-full h-40"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              ></textarea>
+              <div className="mt-6 flex justify-center">
+                <button
+                  className="bg-green-500 text-white font-bold py-2 px-4 rounded"
+                  onClick={handleSendMessage}
+                >
+                  Send Message
+                </button>
+              </div>
             </div>
           </div>
         </div>
