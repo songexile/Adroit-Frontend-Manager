@@ -43,9 +43,9 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           flattenedDevice.last_online = extractedTimestamp ? new Date(extractedTimestamp).toLocaleString() : '';
         }
 
-        // Log extracted timestamp and flattened device
-        console.log("Extracted Timestamp:", extractedTimestamp);
-        console.log("Flattened Device:", flattenedDevice);
+        // TEST - Log extracted timestamp and flattened device
+        // console.log("Extracted Timestamp:", extractedTimestamp);
+        // console.log("Flattened Device:", flattenedDevice);
 
         // Push the flattened device to the array
         flattenedData.push(flattenedDevice);

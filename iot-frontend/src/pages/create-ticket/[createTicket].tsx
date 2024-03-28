@@ -3,7 +3,6 @@ import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { Resend } from 'resend'
 
 function fetchDeviceId() {
   //Fetches deviceId from Url
@@ -19,28 +18,28 @@ const Devices = (data: any) => {
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
 
-  const resend = new Resend(process.env.RESEND_API_KEY)
-
-  const sendEmail = async () => {
-    try {
-      const emaildata = await resend.emails.send({
-        from: 'next@zenorocha.com',
-        to: 'munishk686@gmail.com',
-        subject: 'Hello from Next.js',
-        html: `<h1>${message}</h1>`,
-      })
-      console.log('Email sent successfully:', emaildata)
-    } catch (error) {
-      console.error('Error sending email:', error)
-    }
-  }
-
   //const handleMessageChange = (e) => {
   //setMessage(e.target.textContent);
   //};
 
-  const handleSendMessage = () => {
-    sendEmail()
+  const handleSendMessage = async () => {
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message, deviceData }),
+      })
+
+      if (response.ok) {
+        console.log('Email sent successfully')
+      } else {
+        console.error('Error sending email')
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+    }
   }
 
   return (
