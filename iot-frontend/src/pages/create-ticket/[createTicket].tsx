@@ -12,6 +12,8 @@ function fetchDeviceId() {
   return deviceId
 }
 
+const isEmail = (email: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)
+
 const CreateTicket = (data: any) => {
   const [to, setTo] = useState('')
   const [subject, setSubject] = useState('')
@@ -28,9 +30,9 @@ const CreateTicket = (data: any) => {
     // Validate fields
     const validationErrors: { [key: string]: string } = {}
     if (!to) validationErrors.to = 'To field is required'
-    if (!subject) validationErrors.subject = 'Subject field is required'
-    if (!message) validationErrors.message = 'Message field is required'
-    // Add other validation rules as needed
+    if (!subject.trim()) validationErrors.subject = 'Subject field is required'
+    if (!message.trim()) validationErrors.message = 'Message field is required'
+    if (!isEmail(to)) validationErrors.to = 'Invalid email format'
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
