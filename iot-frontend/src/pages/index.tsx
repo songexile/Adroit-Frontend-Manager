@@ -1,103 +1,82 @@
 // Home Page
 import React, { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import Footer from '@/components/Footer'
+import LoginScreen from './login'
 
-// async function fetchData() {
-//   try {
-//     const res = await fetch(
-//       'https://eq1n7rs483.execute-api.ap-southeast-2.amazonaws.com/Prod/hello'
-//     )
+export default function Page({
+  data,
+  fetchDataAndUpdate,
+}: {
+  data?: DynamicMetricData[]
+  fetchDataAndUpdate: () => Promise<void>
+}) {
+  const { data: session } = useSession()
+  const [loading, setLoading] = useState(true)
+  const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([])
 
-//     if (!res.ok) {
-//       throw new Error('Failed to fetch data')
-//     }
+  const [searchById, setSearchById] = useState('')
+  const [searchByClientName, setSearchByClientName] = useState('')
 
-//     const jsonData = await res.json()
-//     const parsedData = JSON.parse(jsonData.body)
-
-//     return parsedData
-//   } catch (error) {
-//     console.error('Failed to fetch data:', error)
-//     throw error
-//   }
-// }
-
-function flattenNestedData(data: any): DynamicMetricData[] {
-  const flattenedData: DynamicMetricData[] = []
-
-  for (const key in data) {
-    if (data.hasOwnProperty(key)) {
-      const client = data[key]
-      const devices = client.devices
-
-      for (const device of devices) {
-        const flattenedDevice: DynamicMetricData = {
-          client_name: client.client_name,
-          client_id: client.client_id,
-          device_id: device.device_id,
-          device_key: device.device_key,
-        }
-
-        for (const metricName in device.metrics) {
-          flattenedDevice[`metric_${metricName}`] = device.metrics[metricName]
-        }
-
-        flattenedData.push(flattenedDevice)
-      }
-    }
+  const filterData = (
+    data: DynamicMetricData[],
+    searchById: string,
+    searchByClientName: string
+  ) => {
+    return data.filter((item) => {
+      const deviceIdMatch = (item.device_id + '').toLowerCase().includes(searchById.toLowerCase())
+      const clientNameMatch = (item.client_name + '')
+        .toLowerCase()
+        .includes(searchByClientName.toLowerCase())
+      return deviceIdMatch && clientNameMatch
+    })
   }
 
-  return flattenedData
-}
-
-export default function Page() {
-  const [data, setData] = useState<DynamicMetricData[]>([])
-  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    if (data != null) {
+      initializeColumns()
+      setFilteredData(data)
+      setLoading(false)
+      console.log(data)
+    }
+  }, [data])
 
   useEffect(() => {
-    const fetchDataAndSetData = async () => {
-      try {
-        // Replace with the path to your test.json file
-        const fetchedData = require('@/public/full_device_stats.json')
-        // const fetchedData = await fetchData();
-
-        const flattenedData = flattenNestedData(fetchedData)
-        setData(flattenedData)
-        setLoading(false)
-
-        // // Get the dynamic metric names
-        // const dynamicMetricColumns = Object.keys(flattenedData[0] || {}).filter((key) =>
-        //   key.startsWith('metric_')
-        // )
-
-        // Initialize columns with dynamic metrics
-        initializeColumns()
-
-        console.log(flattenedData)
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
+    if (data) {
+      const filtered = filterData(data, searchById, searchByClientName)
+      setFilteredData(filtered)
     }
+  }, [searchById, searchByClientName, data])
 
-    fetchDataAndSetData()
-  }, [])
+  if (session) {
+    return (
+      <div className="">
+        <Header
+          fetchDataAndUpdate={fetchDataAndUpdate}
+          searchById={searchById}
+          setSearchById={setSearchById}
+          searchByClientName={searchByClientName}
+          setSearchByClientName={setSearchByClientName}
+        />
 
-  return (
-    <div className="">
-      <Header />
+        {loading && (
+          <div className="mt-64 gap-2 flex flex-col items-center justify-center">
+            {' '}
+            <LoadingSpinner className={'h-32 w-32'} />
+            <h1>Loading the data for you.</h1>
+          </div>
+        )}
 
-      {loading && (
-        <div className="mt-64 gap-2 flex flex-col items-center justify-center">
-          {' '}
-          <LoadingSpinner className={'h-32 w-32'} />
-          <h1>Loading the data for you.</h1>
-        </div>
-      )}
-
-      {!loading && <DataTable columns={columns} data={data} />}
-    </div>
-  )
+        {/* provide a default value for data when it's undefined */}
+        {!loading && <DataTable columns={columns} data={filteredData || []} />}
+        <Footer />
+      </div>
+    )
+  } else {
+    return <LoginScreen />
+  }
 }
