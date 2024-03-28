@@ -3,6 +3,7 @@ import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { Resend } from 'resend'
 
 function fetchDeviceId() {
   //Fetches deviceId from Url
@@ -12,17 +13,34 @@ function fetchDeviceId() {
   return deviceId
 }
 
-const CreateTicket = (data: any) => {
-  // const [subject, setSubject] = useState('')
+const Devices = (data: any) => {
   const [message, setMessage] = useState('')
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
-  console.log(deviceData)
 
-  const handleSubmit = () => {
-    // Handle ticket submission here
-    // Display confirmation modal or error message based on submission result and confirmation
+  const resend = new Resend(process.env.RESEND_API_KEY)
+
+  const sendEmail = async () => {
+    try {
+      const emaildata = await resend.emails.send({
+        from: 'next@zenorocha.com',
+        to: 'munishk686@gmail.com',
+        subject: 'Hello from Next.js',
+        html: `<h1>${message}</h1>`,
+      })
+      console.log('Email sent successfully:', emaildata)
+    } catch (error) {
+      console.error('Error sending email:', error)
+    }
+  }
+
+  //const handleMessageChange = (e) => {
+  //setMessage(e.target.textContent);
+  //};
+
+  const handleSendMessage = () => {
+    sendEmail()
   }
 
   return (
@@ -54,7 +72,9 @@ const CreateTicket = (data: any) => {
               </div>
               <div className="mb-2">
                 <span className="font-semibold">Last Online: </span>
-                {typeof deviceData?.last_online === 'string' ? deviceData.last_online : deviceData?.last_online?.value || 'N/A'}
+                {typeof deviceData?.last_online === 'string'
+                  ? deviceData.last_online
+                  : deviceData?.last_online?.value || 'N/A'}
               </div>
               <div className="mb-2">
                 <span className="font-semibold">Last ticket created:</span>{' '}
@@ -74,7 +94,7 @@ const CreateTicket = (data: any) => {
             <div className="mt-6 flex justify-center">
               <button
                 className="bg-green-500 text-white font-bold py-2 px-4 rounded"
-                onClick={handleSubmit}
+                onClick={handleSendMessage}
               >
                 Send Message
               </button>
@@ -87,4 +107,4 @@ const CreateTicket = (data: any) => {
   )
 }
 
-export default CreateTicket
+export default Devices

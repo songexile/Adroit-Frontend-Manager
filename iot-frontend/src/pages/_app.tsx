@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { initializeColumns } from '@/components/iotTable/columns'
 import { fetchDataAndSetData } from '@/utils'
 
+
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [data, setData] = useState<DynamicMetricData[]>([])
   const [loading, setLoading] = useState(true)
