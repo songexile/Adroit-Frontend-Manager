@@ -1,12 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Resend } from 'resend'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  const { to, subject, message, deviceData } = req.body
+  const { to, subject, message, deviceData }: RequestBody = req.body
+
+  // Validate required fields
+  if (!to || !subject || !message) {
+    return res.status(400).json({ message: 'To, Subject, and Message are required' })
+  }
 
   const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY_MINE)
 

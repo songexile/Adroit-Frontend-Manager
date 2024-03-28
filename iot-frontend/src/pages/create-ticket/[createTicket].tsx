@@ -12,19 +12,31 @@ function fetchDeviceId() {
   return deviceId
 }
 
-const Devices = (data: any) => {
+const CreateTicket = (data: any) => {
   const [to, setTo] = useState('')
   const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState(`Hi team there is something wrong with...`)
+  const [message, setMessage] = useState(`Hi team, There is something wrong with...`)
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
 
-  //const handleMessageChange = (e) => {
-  //setMessage(e.target.textContent);
-  //};
+  const handleCreateTicket = async () => {
+    // Reset errors
+    setErrors({})
 
-  const handleSendMessage = async () => {
+    // Validate fields
+    const validationErrors: { [key: string]: string } = {}
+    if (!to) validationErrors.to = 'To field is required'
+    if (!subject) validationErrors.subject = 'Subject field is required'
+    if (!message) validationErrors.message = 'Message field is required'
+    // Add other validation rules as needed
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      return
+    }
+
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
@@ -35,12 +47,12 @@ const Devices = (data: any) => {
       })
 
       if (response.ok) {
-        console.log('Email sent successfully')
+        console.log('Ticket created successfully')
       } else {
-        console.error('Error sending email')
+        console.error('Error creating ticket')
       }
     } catch (error) {
-      console.error('Error sending email:', error)
+      console.error('Error creating ticket:', error)
     }
   }
 
@@ -50,14 +62,12 @@ const Devices = (data: any) => {
       <div className="min-h-screen bg-gray-100">
         <div className="container mx-auto">
           <p className="text-black-600 text-center mt-2 flex justify-center">
-            Email will be sent to support@adroit.co.nz
+            Ticket will be sent to support@adroit.co.nz
           </p>
 
           <div className="mx-auto py-8">
             <div className="flex justify-center mb-4 bg-white text-black px-3 py-1 rounded-lg items-center">
-              <span className="text-4xl font-semibold mr-2">
-                Subject: Device Issue Insitu Error
-              </span>
+              <span className="text-4xl font-semibold mr-2">Create Ticket</span>
             </div>
 
             <p className="mt-2 font-semibold">Device Information:</p>
@@ -83,9 +93,10 @@ const Devices = (data: any) => {
               </div>
             </div>
 
+            {/* Email Start */}
             <div className="mx-auto py-8">
               <div className="flex justify-center mb-4 bg-white text-black px-3 py-1 rounded-lg items-center">
-                <span className="text-4xl font-semibold mr-2">Email</span>
+                <span className="text-4xl font-semibold mr-2">Ticket</span>
               </div>
               <div className="mb-4">
                 <label htmlFor="from" className="font-semibold">
@@ -113,8 +124,10 @@ const Devices = (data: any) => {
                   type="text"
                   value={to}
                   onChange={(e) => setTo(e.target.value)}
+                  required
                   className="border border-gray-300 p-2 rounded-md bg-white w-full"
                 />
+                {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
               </div>
               <div className="mb-4">
                 <label htmlFor="subject" className="font-semibold">
@@ -125,21 +138,25 @@ const Devices = (data: any) => {
                   type="text"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
+                  required
                   className="border border-gray-300 p-2 rounded-md bg-white w-full"
                 />
+                {errors.subject && <p className="text-red-500 mt-1">{errors.subject}</p>}
               </div>
               <p className="mt-4 font-semibold">Message:</p>
               <textarea
                 className="border border-gray-300 p-2 rounded-md bg-white w-full h-40"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                required
               ></textarea>
+              {errors.message && <p className="text-red-500 mt-1">{errors.message}</p>}
               <div className="mt-6 flex justify-center">
                 <button
                   className="bg-green-500 text-white font-bold py-2 px-4 rounded"
-                  onClick={handleSendMessage}
+                  onClick={handleCreateTicket}
                 >
-                  Send Message
+                  Create Ticket
                 </button>
               </div>
             </div>
@@ -151,4 +168,4 @@ const Devices = (data: any) => {
   )
 }
 
-export default Devices
+export default CreateTicket

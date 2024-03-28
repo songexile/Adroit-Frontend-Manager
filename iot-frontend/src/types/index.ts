@@ -19,3 +19,10 @@ interface HeaderProps {
   searchByClientName?: string;
   setSearchByClientName?: (value: string) => void;
 }
+
+interface RequestBody {
+  to: string
+  subject: string
+  message: string
+  deviceData: DynamicMetricData
+}
