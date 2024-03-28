@@ -36,14 +36,14 @@ export default function Page({
     })
   }
 
-  // useEffect(() => {
-  //   if (data != null) {
-  //     initializeColumns()
-  //     setFilteredData(data)
-  //     setLoading(false)
-  //     console.log(data)
-  //   }
-  // }, [data])
+  useEffect(() => {
+    if (data != null) {
+      initializeColumns()
+      setFilteredData(data)
+      setLoading(false)
+      console.log(data)
+    }
+  }, [data])
 
   useEffect(() => {
     if (data) {
@@ -72,7 +72,7 @@ export default function Page({
         )}
 
         {/* provide a default value for data when it's undefined */}
-        {!loading && <DataTable columns={columns} data={data || []} />}
+        {!loading && <DataTable columns={columns} data={filteredData || []} />}
         <Footer />
       </div>
     )
