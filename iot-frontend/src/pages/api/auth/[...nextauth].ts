@@ -11,9 +11,9 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
   const handler = await NextAuth(req, res, {
     providers: [
       CognitoProvider({
-        clientId: process.env.COGNITO_CLIENT_ID as string,
-        clientSecret: process.env.COGNITO_CLIENT_SECRET as string,
-        issuer: process.env.COGNITO_ISSUER,
+        clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID as string,
+        clientSecret: process.env.NEXT_PUBLIC_COGNITO_CLIENT_SECRET as string,
+        issuer: process.env.NEXT_PUBLIC_COGNITO_ISSUER,
       })
     ],
     theme: {
