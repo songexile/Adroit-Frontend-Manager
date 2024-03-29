@@ -44,14 +44,6 @@ export default function Page({
       console.log(data)
     }
   }, [data])
-  useEffect(() => {
-    if (data != null) {
-      initializeColumns()
-      setFilteredData(data)
-      setLoading(false)
-      console.log(data)
-    }
-  }, [data])
 
   useEffect(() => {
     if (data) {
@@ -87,9 +79,4 @@ export default function Page({
   } else {
     return <LoginScreen />
   }
-      {/* provide a default value for data when it's undefined */}
-      {!loading && <DataTable columns={columns} data={filteredData} />}
-      <Footer />
-    </div>
-  )
 }
