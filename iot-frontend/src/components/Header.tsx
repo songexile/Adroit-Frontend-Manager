@@ -65,10 +65,14 @@ HeaderProps) => {
           </div>
         </div>
       </div>
-      <span className="text-sm text-center text-gray-600 mx-auto flex items-center justify-center">
-        Recently Offline (within 48 hours): 2 | Total Devices Offline: {totalDevicesOfflineCount} |
-        Clients Offline: {clientsOfflineCount}
-      </span>
+
+      {/* Quick Info */}
+      {totalDevicesOfflineCount && (
+        <span className="text-sm text-center text-gray-600 mx-auto flex items-center justify-center">
+          Recently Offline (within 48 hours): 2 | Total Devices Offline: {totalDevicesOfflineCount}{' '}
+          | Clients Offline: {clientsOfflineCount}
+        </span>
+      )}
     </>
   )
 }
