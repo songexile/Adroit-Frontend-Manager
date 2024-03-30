@@ -40,7 +40,7 @@ const CreateTicket = (data: any) => {
     }
 
     try {
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('/api/sendEmail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
