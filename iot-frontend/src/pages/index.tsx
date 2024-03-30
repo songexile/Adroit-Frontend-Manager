@@ -1,14 +1,13 @@
-// Home Page
 import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Footer from '@/components/Footer'
 import LoginScreen from './login'
 
-export default function Page({
+export default function Home({
   data,
   fetchDataAndUpdate,
 }: {

@@ -1,11 +1,11 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
-import Page from '../../src/pages/index'
+import Home from '../../src/pages/index'
 // import fullDeviceStats from '@/public/full_device_stats.json'
 
 describe('Page', () => {
   it('renders the Loading spinner initially', () => {
-    render(<Page />)
+    render(<Home />)
     // const loadingSpinner = screen.getByRole('img', { name: /loading spinner/i })
     // expect(loadingSpinner).toBeInTheDocument()
   })

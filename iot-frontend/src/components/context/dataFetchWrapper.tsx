@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react'
 
 const DataContext = createContext({})
 
-const DataProvider = ({ children }: { children: React.ReactNode }) => {
+const DataFetchWrapper = ({ children }: { children: React.ReactNode }) => {
   const [data] = useState('hi')
 
   //   useEffect(() => {
@@ -23,4 +23,4 @@ const DataProvider = ({ children }: { children: React.ReactNode }) => {
   return <DataContext.Provider value={{ data }}>{children}</DataContext.Provider>
 }
 
-export default DataProvider
+export default DataFetchWrapper
