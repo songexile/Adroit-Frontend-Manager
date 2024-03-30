@@ -18,6 +18,8 @@ interface HeaderProps {
   setSearchById?: (value: string) => void;
   searchByClientName?: string;
   setSearchByClientName?: (value: string) => void;
+  totalDevicesOfflineCount?: number;
+  clientsOfflineCount?: number;
 }
 
 interface RequestBody {
