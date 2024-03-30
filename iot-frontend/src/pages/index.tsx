@@ -6,6 +6,7 @@ import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Footer from '@/components/Footer'
 import LoginScreen from './login'
+import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils'
 
 export default function Home({
   data,
@@ -17,9 +18,15 @@ export default function Home({
   const { data: session } = useSession()
   const [loading, setLoading] = useState(true)
   const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([])
-
   const [searchById, setSearchById] = useState('')
   const [searchByClientName, setSearchByClientName] = useState('')
+
+  const [totalDevicesOfflineCount, setTotalDevicesOfflineCount] = useState(
+    data ? getTotalDevicesOfflineCount(data) : 0
+  )
+  const [clientsOfflineCount, setClientsOfflineCount] = useState(
+    data ? getClientsOfflineCount(data) : 0
+  )
 
   const filterData = (
     data: DynamicMetricData[],
@@ -41,6 +48,8 @@ export default function Home({
       setFilteredData(data)
       setLoading(false)
       console.log(data)
+      setTotalDevicesOfflineCount(getTotalDevicesOfflineCount(data))
+      setClientsOfflineCount(getClientsOfflineCount(data))
     }
   }, [data])
 
@@ -60,8 +69,9 @@ export default function Home({
           setSearchById={setSearchById}
           searchByClientName={searchByClientName}
           setSearchByClientName={setSearchByClientName}
+          totalDevicesOfflineCount={totalDevicesOfflineCount}
+          clientsOfflineCount={clientsOfflineCount}
         />
-
         {loading && (
           <div className="mt-64 gap-2 flex flex-col items-center justify-center">
             {' '}
@@ -69,7 +79,6 @@ export default function Home({
             <h1>Loading the data for you.</h1>
           </div>
         )}
-
         {/* provide a default value for data when it's undefined */}
         {!loading && <DataTable columns={columns} data={filteredData || []} />}
         <Footer />

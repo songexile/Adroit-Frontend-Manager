@@ -145,3 +145,25 @@ export const getTimestampData = (device: any): { timestamp: number; value: strin
     ? (device[firstMetricKey] as { timestamp: number; value: string })
     : undefined
 }
+
+/**
+ * Calculates the total number of devices offline based on the provided data.
+ * @param {any} data - The data object containing client and device information.
+ * @returns {number} The total number of devices offline.
+ */
+export const getTotalDevicesOfflineCount = (flattenedData: DynamicMetricData[]): number => {
+  return flattenedData.length;
+};
+
+/**
+ * Calculates the number of clients with offline devices based on the provided data.
+ * @param {any} data - The data object containing client and device information.
+ * @returns {number} The number of clients with offline devices.
+ */
+export const getClientsOfflineCount = (flattenedData: DynamicMetricData[]): number => {
+  const uniqueClients = new Set();
+  for (const device of flattenedData) {
+    uniqueClients.add(device.client_id);
+  }
+  return uniqueClients.size;
+};
