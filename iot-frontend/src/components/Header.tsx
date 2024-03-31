@@ -6,8 +6,9 @@ const Header = ({
   setSearchById,
   searchByClientName,
   setSearchByClientName,
+  totalDevicesOfflineCount,
+  clientsOfflineCount,
 }: // recentlyOfflineCount,
-// totalDevicesOfflineCount,
 HeaderProps) => {
   const handleFetchAndUpdate = async () => {
     if (fetchDataAndUpdate) {
@@ -61,19 +62,17 @@ HeaderProps) => {
                 Fetch New Data
               </button>
             )}
-            {/* {recentlyOfflineCount !== undefined && totalDevicesOfflineCount !== undefined && (
-              <span className="text-sm text-gray-600">
-                Recently Offline (within 48 hours): {recentlyOfflineCount} | Total Devices Offline:{' '}
-                {totalDevicesOfflineCount} | Clients Offline:{' '}
-                {totalDevicesOfflineCount - recentlyOfflineCount}
-              </span>
-            )} */}
           </div>
         </div>
       </div>
-      <span className="text-sm text-gray-600 flex justify-center">
-        Recently Offline (within 48 hours): 2 | Total Devices Offline: 450 | Clients Offline: 400
-      </span>
+
+      {/* Quick Info */}
+      {totalDevicesOfflineCount && (
+        <span className="text-sm text-center text-gray-600 mx-auto flex items-center justify-center">
+          Recently Offline (within 48 hours): 2 | Total Devices Offline: {totalDevicesOfflineCount}{' '}
+          | Clients Offline: {clientsOfflineCount}
+        </span>
+      )}
     </>
   )
 }

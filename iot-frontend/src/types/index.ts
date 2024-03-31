@@ -18,4 +18,13 @@ interface HeaderProps {
   setSearchById?: (value: string) => void;
   searchByClientName?: string;
   setSearchByClientName?: (value: string) => void;
+  totalDevicesOfflineCount?: number;
+  clientsOfflineCount?: number;
+}
+
+interface RequestBody {
+  to: string
+  subject: string
+  message: string
+  deviceData: DynamicMetricData
 }

@@ -10,6 +10,10 @@ const Footer = () => {
           Copyright © Adroit {establishedYear} - {currentYear}. All rights reserved.
         </p>
       </div>
+
+      <div className="container mx-auto flex items-center justify-center">
+        <p className="text-sm text-center">v0.0.6</p>
+      </div>
     </footer>
   )
 }

@@ -1,6 +1,5 @@
-// data-table.tsx
-import { Button } from "@/components/ui/button";
-import * as React from "react";
+import { Button } from '@/components/ui/button'
+import * as React from 'react'
 import {
   useReactTable,
   getPaginationRowModel,
@@ -9,7 +8,7 @@ import {
   ColumnDef,
   SortingState,
   getSortedRowModel,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
 
 import {
   Table,
@@ -18,18 +17,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -43,10 +39,10 @@ export function DataTable<TData, TValue>({
     },
     defaultColumn: {
       size: 5, //starting column size
-      minSize: 5, //enforced during column resizing
-      maxSize: 50, //enforced during column resizing
+      minSize: 80, //enforced during column resizing
+      maxSize: 100, //enforced during column resizing
     },
-  });
+  })
 
   return (
     <div>
@@ -62,17 +58,14 @@ export function DataTable<TData, TValue>({
                       style={{
                         width: header.getSize(),
 
-                        border: "1px solid black",
+                        border: '1px solid black',
                       }} //Sizes the table head (each column)
                     >
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -82,24 +75,19 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
+                  className="table-row" // Add CSS class for row height
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -121,9 +109,9 @@ export function DataTable<TData, TValue>({
         {table.getPageCount() > 1 && (
           <div className="flex items-center text-sm">
             <span>
-              Page{" "}
+              Page{' '}
               <strong>
-                {table.getState().pagination.pageIndex + 1} of{" "}
+                {table.getState().pagination.pageIndex + 1} of{' '}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
@@ -133,8 +121,8 @@ export function DataTable<TData, TValue>({
                 type="number"
                 defaultValue={table.getState().pagination.pageIndex + 1}
                 onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0;
-                  table.setPageIndex(page);
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  table.setPageIndex(page)
                 }}
                 className="border p-1 rounded w-16"
               />
@@ -142,7 +130,7 @@ export function DataTable<TData, TValue>({
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => {
-                table.setPageSize(Number(e.target.value));
+                table.setPageSize(Number(e.target.value))
               }}
             >
               {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -164,5 +152,5 @@ export function DataTable<TData, TValue>({
         </Button>
       </div>
     </div>
-  );
+  )
 }

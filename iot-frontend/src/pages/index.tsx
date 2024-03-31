@@ -1,23 +1,32 @@
-// Home Page
 import React, { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
 import { initializeColumns, columns } from '@/components/iotTable/columns'
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Footer from '@/components/Footer'
+import LoginScreen from './login'
+import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils'
 
-export default function Page({
+export default function Home({
   data,
   fetchDataAndUpdate,
 }: {
   data?: DynamicMetricData[]
   fetchDataAndUpdate: () => Promise<void>
 }) {
+  const { data: session } = useSession()
   const [loading, setLoading] = useState(true)
   const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([])
-
   const [searchById, setSearchById] = useState('')
   const [searchByClientName, setSearchByClientName] = useState('')
+
+  const [totalDevicesOfflineCount, setTotalDevicesOfflineCount] = useState(
+    data ? getTotalDevicesOfflineCount(data) : 0
+  )
+  const [clientsOfflineCount, setClientsOfflineCount] = useState(
+    data ? getClientsOfflineCount(data) : 0
+  )
 
   const filterData = (
     data: DynamicMetricData[],
@@ -39,6 +48,8 @@ export default function Page({
       setFilteredData(data)
       setLoading(false)
       console.log(data)
+      setTotalDevicesOfflineCount(getTotalDevicesOfflineCount(data))
+      setClientsOfflineCount(getClientsOfflineCount(data))
     }
   }, [data])
 
@@ -49,27 +60,31 @@ export default function Page({
     }
   }, [searchById, searchByClientName, data])
 
-  return (
-    <div className="">
-      <Header
-        fetchDataAndUpdate={fetchDataAndUpdate}
-        searchById={searchById}
-        setSearchById={setSearchById}
-        searchByClientName={searchByClientName}
-        setSearchByClientName={setSearchByClientName}
-      />
-
-      {loading && (
-        <div className="mt-64 gap-2 flex flex-col items-center justify-center">
-          {' '}
-          <LoadingSpinner className={'h-32 w-32'} />
-          <h1>Loading the data for you.</h1>
-        </div>
-      )}
-
-      {/* provide a default value for data when it's undefined */}
-      {!loading && <DataTable columns={columns} data={filteredData} />}
-      <Footer />
-    </div>
-  )
+  if (session) {
+    return (
+      <div className="">
+        <Header
+          fetchDataAndUpdate={fetchDataAndUpdate}
+          searchById={searchById}
+          setSearchById={setSearchById}
+          searchByClientName={searchByClientName}
+          setSearchByClientName={setSearchByClientName}
+          totalDevicesOfflineCount={totalDevicesOfflineCount}
+          clientsOfflineCount={clientsOfflineCount}
+        />
+        {loading && (
+          <div className="mt-64 gap-2 flex flex-col items-center justify-center">
+            {' '}
+            <LoadingSpinner className={'h-32 w-32'} />
+            <h1>Loading the data for you.</h1>
+          </div>
+        )}
+        {/* provide a default value for data when it's undefined */}
+        {!loading && <DataTable columns={columns} data={filteredData || []} />}
+        <Footer />
+      </div>
+    )
+  } else {
+    return <LoginScreen />
+  }
 }
