@@ -68,7 +68,7 @@ HeaderProps) => {
 
       {/* Quick Info */}
       {totalDevicesOfflineCount && (
-        <span className="text-sm text-center text-gray-600 mx-auto flex items-center justify-center">
+        <span className="text-md text-center py-4  text-gray-600 mx-auto flex items-center justify-center">
           Recently Offline (within 48 hours): 2 | Total Devices Offline: {totalDevicesOfflineCount}{' '}
           | Clients Offline: {clientsOfflineCount}
         </span>
