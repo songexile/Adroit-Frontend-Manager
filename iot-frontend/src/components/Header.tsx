@@ -1,4 +1,6 @@
+import Image from 'next/image'
 import Link from 'next/link'
+import sparkAdroit from '@/public/assets/img/Adroit-environmental-monitoring2.png'
 
 const Header = ({
   fetchDataAndUpdate,
@@ -19,10 +21,11 @@ HeaderProps) => {
   return (
     <>
       {/* Top Blue Header */}
-      <div className="bg-blue-800 text-white py-2 px-4">
+      <div className="bg-gradient-to-b from-cyan-500 to-blue-500  text-white py-2 px-4">
         <div className="container mx-auto flex justify-between items-center">
           <Link href={'/'} className="font-bold">
-            Adroit
+            <Image alt="Logo of Spark x Adroit" src={sparkAdroit} width={120} height={120} />
+            <h1 className="font-thin text-sm">Frontend Manager</h1>
           </Link>
         </div>
       </div>
