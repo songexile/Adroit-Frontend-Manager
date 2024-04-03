@@ -7,7 +7,7 @@
 export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMetricData[] {
   const flattenedData: DynamicMetricData[] = []
 
-  // Check if targetDeviceId is provided
+  // Check if targetDeviceId is provided (e.g. device stat page)
   if (targetDeviceId !== undefined) {
     // Assuming "data" is the top-level object containing the devices array
     const devices = data.data
@@ -59,7 +59,7 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
 
     return flattenedData
   } else {
-    // If targetDeviceId is not provided
+    // If targetDeviceId is not provided (e.g. Homepage)
     for (const clientKey in data) {
       const client = data[clientKey]
       for (const device of client.devices) {
@@ -70,8 +70,7 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           device_key: device.device_key,
         }
 
-        // Copy over metric properties
-
+        // Copy over battery metric properties
         const batteryMetrics: { [key: string]: string } = {
           BATP: 'battery_percentage',
           BattP: 'battery_percentage',
@@ -81,8 +80,13 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
         }
 
         for (const metricName in device.metrics) {
-          const standardizedName = batteryMetrics[metricName] || `metric_${metricName}`
-          flattenedDevice[standardizedName] = device.metrics[metricName]
+          const metricValue = device.metrics[metricName];
+          if (metricName in batteryMetrics) {
+            const batteryMetricName = batteryMetrics[metricName];
+            flattenedDevice[`metric_${batteryMetricName}`] = metricValue;
+          } else {
+            flattenedDevice[`metric_${metricName}`] = metricValue;
+          }
         }
 
         // Push the flattened device to the array

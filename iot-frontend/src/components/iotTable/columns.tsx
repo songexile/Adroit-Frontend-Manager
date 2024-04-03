@@ -145,10 +145,8 @@ export const initializeColumns = () => {
         )
       },
     },
-
     {
-      accessorKey: 'battery_percentage.value',
-      size: 10,
+      accessorKey: 'metric_battery_percentage',
 
       header: ({ column }) => {
         return (
@@ -165,9 +163,11 @@ export const initializeColumns = () => {
         // Extract battery percentage value and color based on the value
         let battery = null
         let color = 'inherit'
+        const batteryPercentage = row.original.metric_battery_percentage
 
-        if (row.original.battery_percentage) {
-          const batteryValue = row.original.battery_percentage.value
+        if (batteryPercentage && typeof batteryPercentage !== 'string') {
+          // batteryPercentage is an object with a value property
+          const batteryValue = batteryPercentage.value
           battery = typeof batteryValue === 'string' ? parseFloat(batteryValue) : null
 
           if (battery !== null) {
@@ -188,15 +188,28 @@ export const initializeColumns = () => {
         )
       },
     },
-  ]
+    {
+      accessorKey: 'metric_battery_voltage',
+      size: 10,
 
-  // // Dynamic metric columns
-  // columns.push(
-  //   ...metrics.map((metric, index) => ({
-  //     accessorKey: metric,
-  //     header: metric,
-  //   }))
-  // );
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Battery Voltage
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+
+      cell: ({ row }) => {
+        const batteryVoltage = row.original.metric_battery_voltage
+        return <span>{typeof batteryVoltage === 'object' ? batteryVoltage.value : 'N/A'}</span>
+      },
+    },
+  ]
 }
 
 // Initialize columns (pass an empty array initially, it will be populated later)
