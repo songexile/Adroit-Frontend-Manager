@@ -31,8 +31,8 @@ HeaderProps) => {
       </div>
       <div className="bg-gray-200 py-2 px-4">
         <div className="container mx-auto md:flex items-center justify-between">
-          {/* Search By ID */}
-          <div className="flex items-center space-x-2">
+          {/* Search By ID and Client Name */}
+          <div className="flex items-center gap-x-8 ">
             {setSearchById && (
               <input
                 className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
@@ -42,9 +42,6 @@ HeaderProps) => {
                 onChange={(e) => setSearchById(e.target.value)}
               />
             )}
-          </div>
-          {/* Search By ClientName */}
-          <div className="flex items-center space-x-2 mt-3 md:mt-0">
             {setSearchByClientName && (
               <input
                 className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
@@ -55,8 +52,9 @@ HeaderProps) => {
               />
             )}
           </div>
+
           {/* Fetch New Data Button */}
-          <div className="flex items-center space-x-2 mt-3 md:mt-0">
+          <div className="flex items-center space-x-2">
             {fetchDataAndUpdate && (
               <button
                 onClick={handleFetchAndUpdate}
