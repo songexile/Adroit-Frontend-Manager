@@ -23,6 +23,9 @@ function Page(data: any) {
     <>
       <Header />
       <div className="container min-h-screen max-w-3xl mx-auto p-6 py-5 border rounded-lg mt-8 shadow-md">
+        <div className="font-bold text-xl text-blue-500 mb-4">
+          <Link href={'/'}>home/{deviceData?.device_id}</Link>
+        </div>
         {/* Device Info */}
         <div className="mx-auto">
           <div className="text-xl font-bold mb-2">Device Info</div>
