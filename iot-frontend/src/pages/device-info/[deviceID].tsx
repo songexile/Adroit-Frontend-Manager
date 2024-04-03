@@ -3,10 +3,10 @@ import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import Link from 'next/link'
+import Breadcrumb from '@/components/Breadcrumb'
 
 function fetchDeviceId() {
-  //Fetches deviceId from Url
+  // Fetches deviceId from Url
   const pathname = usePathname()
   const parts = pathname ? pathname.split('/') : []
   const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
@@ -17,15 +17,20 @@ function Page(data: any) {
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
-  console.log(deviceData) //Returns the array of the device.
+  console.log(deviceData) // Returns the array of the device.
+
+  // Breadcrumb items
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
+  ]
 
   return (
     <>
       <Header />
+      <Breadcrumb breadcrumbs={breadcrumbs} />
+
       <div className="container min-h-screen max-w-3xl mx-auto p-6 py-5 border rounded-lg mt-8 shadow-md">
-        <div className="font-bold text-xl text-blue-500 mb-4">
-          <Link href={'/'}>home/{deviceData?.device_id}</Link>
-        </div>
         {/* Device Info */}
         <div className="mx-auto">
           <div className="text-xl font-bold mb-2">Device Info</div>
@@ -69,17 +74,6 @@ function Page(data: any) {
               ERROR
             </button>
           </div>
-        </div>
-
-        <div className="flex flex-col py-5">
-          <div className="flex justify-center">
-            <Link href={`/create-ticket/${deviceData?.device_id}`}>
-              <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 mb-4 text-xl">
-                Create Ticket
-              </button>
-            </Link>
-          </div>
-          <p className="text-center">No ticket currently active.</p>
         </div>
 
         {/* Metrics */}
