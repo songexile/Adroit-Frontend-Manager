@@ -161,6 +161,32 @@ export const initializeColumns = () => {
           </Button>
         )
       },
+      cell: ({ row }) => {
+        // Extract battery percentage value and color based on the value
+        let battery = null
+        let color = 'inherit'
+
+        if (row.original.battery_percentage) {
+          const batteryValue = row.original.battery_percentage.value
+          battery = typeof batteryValue === 'string' ? parseFloat(batteryValue) : null
+
+          if (battery !== null) {
+            if (battery < 20) {
+              color = 'red'
+            } else if (battery < 50) {
+              color = 'orange'
+            } else {
+              color = 'green'
+            }
+          }
+        }
+
+        return (
+          <div className=" ">
+            <h1 style={{ color }}>{battery !== null ? battery : 'N/A'}</h1>
+          </div>
+        )
+      },
     },
   ]
 
