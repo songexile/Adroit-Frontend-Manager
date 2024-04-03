@@ -147,7 +147,7 @@ export const initializeColumns = () => {
     },
 
     {
-      accessorKey: 'device_key',
+      accessorKey: 'battery_percentage.value',
       size: 10,
 
       header: ({ column }) => {
@@ -156,7 +156,7 @@ export const initializeColumns = () => {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Device Key
+            Battery Percentage
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
