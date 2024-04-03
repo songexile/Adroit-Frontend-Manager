@@ -1,6 +1,5 @@
-// columns.tsx
 import React from 'react'
-import { ColumnDef, Row } from '@tanstack/react-table'
+import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import {
@@ -11,46 +10,94 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { getTimestampData } from '@/utils'
 
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = []
-
-const extractTimestampFromJson = (device: DynamicMetricData) => {
-  const firstMetricKey = Object.keys(device).find((key) => key.startsWith('metric_'))
-  const timestampData =
-    firstMetricKey !== undefined
-      ? (device[firstMetricKey] as { timestamp: number; value: string })
-      : undefined
-  const timestamp = timestampData ? timestampData.timestamp : undefined
-  return timestamp ? new Date(timestamp).toLocaleString() : ''
-}
 
 export const initializeColumns = () => {
   // Initialize columns with the static columns
   columns = [
     {
       id: 'actions',
-      cell: ({ row }: { row: Row<DynamicMetricData> }) => <ActionsCell row={row} />,
-    },
-    {
-      // Temp solution
-      accessorKey: 'Timestamp',
-      header: ({ column }) => {
+      cell: ({ row }) => {
+        const rowData = row.original
+        const deviceID = rowData.device_id
+        const createTicket = rowData.device_id
+
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          >
-            Timestamp
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
+                Hide client from Dashboard
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )
       },
+    },
+    // Timestamp column with sorting function
+    {
+      accessorKey: 'Timestamp',
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          Timestamp
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
       cell: ({ row }) => {
-        const device = row.original
-        const timestamp = extractTimestampFromJson(device)
-        return <span>{timestamp}</span>
+        const timestampData = getTimestampData(row.original)
+        const timestamp = timestampData ? timestampData.timestamp : undefined
+
+        // Render the timestamp
+        return <span>{timestamp ? new Date(timestamp).toLocaleString() : 'N/A'}</span>
+      },
+      /**
+       * Sorts rows based on the timestamp data of their original data.
+       * Accessing the timestamp value using the same logic as in the cell renderer.
+       * We're finding the first key that starts with metric_ and retrieving the timestamp value from the corresponding object.
+       * @param {Row} rowA - The first row to compare.
+       * @param {Row} rowB - The second row to compare.
+       * @returns {number} A negative number if rowA's timestamp is earlier than rowB's, 0 if they are equal,
+       * or a positive number if rowA's timestamp is later than rowB's.
+       */
+      sortingFn: (rowA, rowB) => {
+        const timestampDataA = getTimestampData(rowA.original)
+        const timestampDataB = getTimestampData(rowB.original)
+
+        // Extract timestamps if available
+        const timestampA = timestampDataA ? timestampDataA.timestamp : undefined
+        const timestampB = timestampDataB ? timestampDataB.timestamp : undefined
+
+        // Handle cases where one or both timestamps are undefined
+        if (timestampA === undefined && timestampB === undefined) {
+          return 0
+        } else if (timestampA === undefined) {
+          return 1
+        } else if (timestampB === undefined) {
+          return -1
+        } else {
+          return timestampA - timestampB
+        }
       },
     },
     {
@@ -116,61 +163,14 @@ export const initializeColumns = () => {
       },
     },
   ]
-}
 
-const ActionsCell = ({ row }: { row: Row<DynamicMetricData> }) => {
-  const router = useRouter()
-  const deviceID = row.original.device_id
-
-  const handleViewDeviceStats = () => {
-    const { client_name, device_key } = row.original
-    const timestamp = extractTimestampFromJson(row.original)
-    router.push({
-      pathname: `/device-info/${deviceID}`,
-      query: {
-        clientName: client_name,
-        lastOnline: timestamp,
-        deviceKey: device_key,
-        data: JSON.stringify(row.original), // Pass the entire row data as a stringified JSON
-      },
-    })
-  }
-
-    const createTicket = row.original.device_id
-
-  const handleCreateTicket = () => {
-    const { client_name, device_key } = row.original
-    const timestamp = extractTimestampFromJson(row.original)
-    router.push({
-      pathname: `/create-ticket/${createTicket}`,
-      query: {
-        clientName: client_name,
-        lastOnline: timestamp,
-        deviceKey: device_key,
-        data: JSON.stringify(row.original), // Pass the entire row data as a stringified JSON
-      },
-    })
-  }
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={handleViewDeviceStats}>View device stats</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
-          Hide client from Dashboard
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleCreateTicket}>Create ticket</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
+  // // Dynamic metric columns
+  // columns.push(
+  //   ...metrics.map((metric, index) => ({
+  //     accessorKey: metric,
+  //     header: metric,
+  //   }))
+  // );
 }
 
 // Initialize columns (pass an empty array initially, it will be populated later)

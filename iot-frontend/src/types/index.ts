@@ -11,3 +11,20 @@ interface DynamicMetricData {
 interface SpinnerProps {
   className?: string; // Optional string prop
 }
+
+interface HeaderProps {
+  fetchDataAndUpdate?: () => Promise<void>;
+  searchById?: string;
+  setSearchById?: (value: string) => void;
+  searchByClientName?: string;
+  setSearchByClientName?: (value: string) => void;
+  totalDevicesOfflineCount?: number;
+  clientsOfflineCount?: number;
+}
+
+interface RequestBody {
+  to: string
+  subject: string
+  message: string
+  deviceData: DynamicMetricData
+}
