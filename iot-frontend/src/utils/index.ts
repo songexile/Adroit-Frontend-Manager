@@ -74,9 +74,9 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
         const batteryMetrics: { [key: string]: string } = {
           BATP: 'battery_percentage',
           BattP: 'battery_percentage',
-          'BATV ': 'battery_voltage',
+          BATV: 'battery_voltage',
           BattV: 'battery_voltage',
-          'BAT ': 'battery_voltage',
+          BAT: 'battery_voltage',
         }
 
         for (const metricName in device.metrics) {
