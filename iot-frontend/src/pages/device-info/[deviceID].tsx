@@ -4,6 +4,7 @@ import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
+import Link from 'next/link'
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -74,6 +75,18 @@ function Page(data: any) {
               ERROR
             </button>
           </div>
+        </div>
+
+        {/* Create Ticket */}
+        <div className="flex flex-col py-5">
+          <div className="flex justify-center">
+            <Link href={`/create-ticket/${deviceData?.device_id}`}>
+              <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 mb-4 text-xl">
+                Create Ticket
+              </button>
+            </Link>
+          </div>
+          <p className="text-center">No ticket currently active.</p>
         </div>
 
         {/* Metrics */}

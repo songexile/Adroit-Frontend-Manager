@@ -1,3 +1,5 @@
+import { showToast } from "@/components/Toast"
+
 /**
  * Flattens nested data into an array of DynamicMetricData objects.
  * @param {any} data - The nested data object containing device and metric information.
@@ -117,7 +119,7 @@ async function fetchData(): Promise<any> {
 
     return parsedData
   } catch (error) {
-    console.error('Failed to fetch data:', error)
+    showToast({ message: 'Failed to fetch data: ', type: 'error' })
     throw error
   }
 }
@@ -132,7 +134,7 @@ export const fetchDataAndSetData = async (): Promise<DynamicMetricData[]> => {
     const flattenedData = flattenNestedData(fetchedData)
     return flattenedData
   } catch (error) {
-    console.error('Failed to fetch data:', error)
+    showToast({ message: 'Failed to fetch data: ', type: 'error' })
     throw error
   }
 }
