@@ -145,9 +145,51 @@ export const initializeColumns = () => {
         )
       },
     },
-
     {
-      accessorKey: 'device_key',
+      accessorKey: 'metric_battery_percentage',
+
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Battery Percentage
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        // Extract battery percentage value and color based on the value
+        let battery = null
+        let color = 'inherit'
+        const batteryPercentage = row.original.metric_battery_percentage
+
+        if (batteryPercentage && typeof batteryPercentage !== 'string') {
+          // batteryPercentage is an object with a value property
+          const batteryValue = batteryPercentage.value
+          battery = typeof batteryValue === 'string' ? parseFloat(batteryValue) : null
+
+          if (battery !== null) {
+            if (battery < 20) {
+              color = 'red'
+            } else if (battery < 50) {
+              color = 'orange'
+            } else {
+              color = 'green'
+            }
+          }
+        }
+
+        return (
+          <div className=" ">
+            <h1 style={{ color }}>{battery !== null ? battery : 'N/A'}</h1>
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: 'metric_battery_voltage',
       size: 10,
 
       header: ({ column }) => {
@@ -156,21 +198,18 @@ export const initializeColumns = () => {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Device Key
+            Battery Voltage
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
+
+      cell: ({ row }) => {
+        const batteryVoltage = row.original.metric_battery_voltage
+        return <span>{typeof batteryVoltage === 'object' ? batteryVoltage.value : 'N/A'}</span>
+      },
     },
   ]
-
-  // // Dynamic metric columns
-  // columns.push(
-  //   ...metrics.map((metric, index) => ({
-  //     accessorKey: metric,
-  //     header: metric,
-  //   }))
-  // );
 }
 
 // Initialize columns (pass an empty array initially, it will be populated later)

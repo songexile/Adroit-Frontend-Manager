@@ -57,8 +57,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                       key={header.id}
                       style={{
                         width: header.getSize(),
-
-                        border: '1px solid black',
                       }} //Sizes the table head (each column)
                     >
                       {header.isPlaceholder
