@@ -6,6 +6,7 @@ import { JWT } from "next-auth/jwt";
 export interface CustomUser extends User {
   given_name: string;
   family_name: string;
+  email: string;
 }
 
 export interface CustomSession extends Session {

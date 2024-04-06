@@ -7,6 +7,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Link from 'next/link'
 import LoginScreen from '../login'
 import { useSession } from 'next-auth/react'
+import { DynamicMetricData } from '@/types'
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
