@@ -1,3 +1,5 @@
+import { SpinnerProps } from "@/types"
+
 export const LoadingSpinner = ({ className }: SpinnerProps) => {
   return (
     <svg

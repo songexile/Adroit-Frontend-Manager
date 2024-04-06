@@ -1,32 +1,63 @@
-// /pages/api/auth/[...nextauth].ts
 import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
+import { CustomUser, CustomSession, CustomToken } from "@/types/index";
+
+const authOptions: NextAuthOptions = {
+  providers: [
+    CognitoProvider({
+      clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID as string,
+      clientSecret: process.env.NEXT_PUBLIC_COGNITO_CLIENT_SECRET as string,
+      issuer: process.env.NEXT_PUBLIC_COGNITO_ISSUER,
+      idToken: true,
+      authorization: {
+        params: {
+          scope: "openid",
+        },
+      },
+    }),
+  ],
+  callbacks: {
+    async signIn({ user, profile }) {
+      if (profile && typeof profile === 'object') {
+        (user as CustomUser).given_name = (profile as any).given_name;
+        (user as CustomUser).family_name = (profile as any).family_name;
+      }
+      return true;
+    },
+    async session({ session, token }): Promise<CustomSession> {
+      if (token) {
+        (session.user as CustomUser).given_name = (token as CustomToken).given_name;
+        (session.user as CustomUser).family_name = (token as CustomToken).family_name;
+      }
+      return session as CustomSession;
+    },
+    async jwt({ token, user }): Promise<CustomToken> {
+      if (user) {
+        (token as CustomToken).given_name = (user as CustomUser).given_name;
+        (token as CustomToken).family_name = (user as CustomUser).family_name;
+      }
+      return token as CustomToken;
+    },
+  },
+  theme: {
+    colorScheme: "dark",
+    brandColor: "#000",
+    logo: "https://assets.adroit.nz/wp-content/uploads/2022/03/01113543/Adroit-environmental-monitoring.png",
+    buttonText: "#fff",
+  },
+  secret: process.env.NEXT_PUBLIC_SECRET,
+  debug: process.env.NODE_ENV === "development",
+};
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  // Pre-processing, if needed
-  console.log("Received request:", req.method, req.url);
-
-  // Initialize NextAuth with your options
-  const handler = await NextAuth(req, res, {
-    providers: [
-      CognitoProvider({
-        clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID as string,
-        clientSecret: process.env.NEXT_PUBLIC_COGNITO_CLIENT_SECRET as string,
-        issuer: process.env.NEXT_PUBLIC_COGNITO_ISSUER,
-      })
-    ],
-    theme: {
-      colorScheme: "dark", // "auto" | "dark" | "light"
-      brandColor: "#000", // Hex color code
-      logo: "https://assets.adroit.nz/wp-content/uploads/2022/03/01113543/Adroit-environmental-monitoring.png", // Absolute URL to image
-      buttonText: "#fff" // Hex color code
-    },
-    secret: process.env.NEXT_PUBLIC_SECRET,
-    // Enable debug messages in the console if you are having problems
-    debug: process.env.NODE_ENV === 'development',
-  });
-
-  // Return the handler
-  return handler;
+  try {
+    console.log("Received request:", req.method, req.url);
+    const session = await NextAuth(req, res, authOptions);
+    return session;
+  } catch (error) {
+    console.error("An error occurred during authentication:", error);
+    throw error;
+  }
 }
+
