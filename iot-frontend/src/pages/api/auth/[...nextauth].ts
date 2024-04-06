@@ -1,22 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CognitoProvider from "next-auth/providers/cognito";
-import { JWT } from "next-auth/jwt";
-
-// Define custom types
-interface CustomUser extends User {
-  given_name: string;
-  family_name: string;
-}
-
-interface CustomSession extends Session {
-  user: CustomUser;
-}
-
-interface CustomToken extends JWT {
-  given_name: string;
-  family_name: string;
-}
+import { CustomUser, CustomSession, CustomToken } from "@/types/index";
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -66,7 +51,13 @@ const authOptions: NextAuthOptions = {
 };
 
 export default async function auth(req: NextApiRequest, res: NextApiResponse) {
-  console.log("Received request:", req.method, req.url);
-  const session = await NextAuth(req, res, authOptions);
-  return session;
+  try {
+    console.log("Received request:", req.method, req.url);
+    const session = await NextAuth(req, res, authOptions);
+    return session;
+  } catch (error) {
+    console.error("An error occurred during authentication:", error);
+    throw error;
+  }
 }
+

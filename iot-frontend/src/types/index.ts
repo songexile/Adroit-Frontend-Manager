@@ -1,5 +1,22 @@
 // TypeScript type definitions can be placed here to ensure type safety throughout the codebase.
 
+import { User, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
+
+export interface CustomUser extends User {
+  given_name: string;
+  family_name: string;
+}
+
+export interface CustomSession extends Session {
+  user: CustomUser;
+}
+
+export interface CustomToken extends JWT {
+  given_name: string;
+  family_name: string;
+}
+
 export interface DynamicMetricData {
   client_name: string;
   client_id: string;
@@ -27,26 +44,4 @@ export interface RequestBody {
   subject: string
   message: string
   deviceData: DynamicMetricData
-}
-
-export interface User {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  [key: string]: any; // Allow for additional properties
-}
-
-export interface CustomUser extends User {
-  given_name: string
-  family_name: string
-  email: string
-}
-
-export interface CustomUsers {
-  name?: string;
-  email?: string;
-  image?: string;
-  given_name?: string;
-  family_name?: string;
 }
