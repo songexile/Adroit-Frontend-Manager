@@ -1,8 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import sparkAdroit from '@/public/assets/img/Adroit-environmental-monitoring2.png'
+import { CustomUser, HeaderProps } from '@/types'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
+import LoginScreen from '@/pages/login'
 
 const Header = ({
   fetchDataAndUpdate,
@@ -20,9 +22,15 @@ HeaderProps) => {
     }
   }
 
-  const { data: session } = useSession()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const { data: session } = useSession()
+
+  if (!session || !session.user) {
+    return <LoginScreen />
+  }
+  const { given_name } = session.user as CustomUser
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen)
@@ -76,7 +84,7 @@ HeaderProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="font-medium">{session?.user?.name}</span>
+              <span className="font-medium">{given_name}</span>
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
