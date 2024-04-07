@@ -1,40 +1,30 @@
-import React from 'react'
-import { usePathname } from 'next/navigation'
-import { flattenNestedData } from '@/utils'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Breadcrumb from '@/components/Breadcrumb'
-import Link from 'next/link'
-import LoginScreen from '../login'
-import { useSession } from 'next-auth/react'
-import { DynamicMetricData } from '@/types'
+import React from 'react';
+import VerticalBarChart from '@/components/charts/BarChart'; // Path to your VerticalBarChart component
+import { flattenNestedData } from '@/utils';
+import { DynamicMetricData } from '@/types';
+import { usePathname } from 'next/navigation';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
 
 function fetchDeviceId() {
-  // Fetches deviceId from Url
-  const pathname = usePathname()
-  const parts = pathname ? pathname.split('/') : []
-  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
-  return deviceId
+  //Fetches deviceId from Url
+  const pathname = usePathname();
+  const parts = pathname ? pathname.split('/') : [];
+  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0; // Parse the deviceId as an integer, defaulting to 0 if it is undefined
+  return deviceId;
 }
 
-function DeviceID(data: any) {
-  const { data: session } = useSession()
-  const deviceId = fetchDeviceId()
-  const filteredData = flattenNestedData(data, deviceId)
-  const deviceData = filteredData[0]
-  console.log(deviceData) // Returns the array of the device.
+function Page(data: any) {
+  const deviceId = fetchDeviceId();
+  const filteredData = flattenNestedData(data, deviceId);
+  const deviceData = filteredData[0];
+  console.log(deviceData); //Returns the array of the device.
 
-  // Breadcrumb items
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
-  ]
-
-  if (session) {
-    return (
-      <>
+  return (
+    <>
+      <div className="flex flex-col min-h-screen bg-gray-100">
         <Header />
-        <Breadcrumb breadcrumbs={breadcrumbs} />
 
         <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden animate-slide-in border-2 border-blue-500">
@@ -95,21 +85,26 @@ function DeviceID(data: any) {
                       </span>
                     </div>
                   </div>
-                  <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
-                    {deviceData && renderMetrics(deviceData)}
-                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
+            {deviceData && renderMetrics(deviceData)}
+          </div>
+
+          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Bar Chart:</h2>
+            <VerticalBarChart data={deviceData} />
+          </div>
         </div>
+
         <Footer />
-      </>
-    )
-  } else {
-    return <LoginScreen />
-  }
+      </div>
+    </>
+  );
 }
 
 /**
@@ -118,7 +113,7 @@ function DeviceID(data: any) {
  * @returns {JSX.Element | null} JSX representing the rendered metric data, or null if deviceData is null.
  */
 const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
-  if (!deviceData) return null
+  if (!deviceData) return null;
 
   return (
     <div>
@@ -135,7 +130,7 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
                 {key}: {value}
               </p>
             </div>
-          )
+          );
         } else if (value && typeof value === 'object' && 'value' in value) {
           return (
             <div key={key}>
@@ -143,13 +138,13 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
                 {key}: {value.value}
               </p>
             </div>
-          )
+          );
         } else {
-          return null // handle undefined or unexpected value
+          return null; // handle undefined or unexpected value
         }
       })}
     </div>
-  )
-}
+  );
+};
 
-export default DeviceID
+export default Page;
