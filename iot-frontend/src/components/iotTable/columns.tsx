@@ -16,6 +16,7 @@ import { getTimestampData } from '@/utils'
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = []
 
+//Modifed Sorting function to handle undefined values
 function createSortingFn<T>(getValueFromRow: (row: T) => number | null | undefined) {
   return (rowA: { original: T }, rowB: { original: T }) => {
     const valueA = getValueFromRow(rowA.original)
@@ -174,7 +175,6 @@ export const initializeColumns = () => {
     },
     {
       accessorKey: 'metric_battery_percentage',
-
       header: ({ column }) => {
         return (
           <Button
@@ -199,23 +199,28 @@ export const initializeColumns = () => {
 
           if (battery !== null) {
             if (battery < 20) {
-              color = 'red'
+              color = 'bg-red-500'
             } else if (battery < 50) {
-              color = 'orange'
+              color = 'bg-orange-500'
             } else {
-              color = 'green'
+              color = 'bg-green-500'
             }
           }
         }
 
         return (
-          <div className=" ">
-            <h1 style={{ color }}>{battery !== null ? battery : 'N/A'}</h1>
+          <div className="flex justify-center">
+            <span
+              className={`px-2 py-1 rounded-md text-white font-medium ${
+                battery !== null ? 'inline-block ' + color : 'hidden'
+              }`}
+            >
+              {battery !== null ? battery.toFixed(2) : 'N/A'}
+            </span>
           </div>
         )
       },
       sortingFn: createSortingFn((row) => {
-        //On click of sorting we can sort by battery percentage
         const batteryPercentage = row.metric_battery_percentage
         if (typeof batteryPercentage === 'object' && typeof batteryPercentage.value === 'string') {
           return parseFloat(batteryPercentage.value)
@@ -226,7 +231,6 @@ export const initializeColumns = () => {
     {
       accessorKey: 'metric_battery_voltage',
       size: 10,
-
       header: ({ column }) => {
         return (
           <Button
@@ -238,10 +242,36 @@ export const initializeColumns = () => {
           </Button>
         )
       },
-
       cell: ({ row }) => {
         const batteryVoltage = row.original.metric_battery_voltage
-        return <span>{typeof batteryVoltage === 'object' ? batteryVoltage.value : 'N/A'}</span>
+        let color = 'inherit'
+
+        if (typeof batteryVoltage === 'object' && typeof batteryVoltage.value === 'string') {
+          const voltage = parseFloat(batteryVoltage.value)
+
+          if (voltage >= 3.6 && voltage <= 3.7) {
+            color = 'bg-green-500'
+          } else if (voltage >= 3.5 && voltage <= 3.8) {
+            color = 'bg-orange-500'
+          } else {
+            color = 'bg-red-500'
+          }
+
+          return (
+            <div className="flex justify-center">
+              <span
+                className={`px-2 py-1 rounded-md text-white font-medium ${
+                  voltage !== null ? 'inline-block ' + color : 'hidden'
+                }`}
+              >
+                {voltage.toFixed(2)}
+              </span>
+            </div>
+          )
+        }
+
+        // Don't render anything if the value is 'N/A'
+        return null
       },
       sortingFn: createSortingFn((row) => {
         const batteryVoltage = row.metric_battery_voltage
