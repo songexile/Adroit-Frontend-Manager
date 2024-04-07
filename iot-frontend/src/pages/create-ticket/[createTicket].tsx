@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { showToast } from '@/components/Toast'
 import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
@@ -50,13 +51,21 @@ const CreateTicket = (data: any) => {
       })
 
       if (response.ok) {
-        console.log('Ticket created successfully')
-        setTicketCreated(true) // Set ticket created state to true
+        showToast({ message: 'Ticket created successfully!', type: 'success' })
       } else {
-        console.error('Error creating ticket')
+        const data = await response.json()
+        if (data.message === 'Invalid API key') {
+          showToast({ message: 'Invalid API key', type: 'error' })
+        } else {
+          showToast({ message: `Error creating ticket: ${data.message}`, type: 'error' })
+        }
       }
     } catch (error) {
-      console.error('Error creating ticket:', error)
+      if (error instanceof Error) {
+        showToast({ message: `Error creating ticket: ${error.message}`, type: 'error' })
+      } else {
+        showToast({ message: 'Unknown error occurred while creating ticket', type: 'error' })
+      }
     }
   }
 

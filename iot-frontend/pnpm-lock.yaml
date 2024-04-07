@@ -53,9 +53,12 @@ dependencies:
   react-toastify:
     specifier: ^10.0.5
     version: 10.0.5(react-dom@18.2.0)(react@18.2.0)
+<<<<<<< HEAD
   recharts:
     specifier: ^2.12.4
     version: 2.12.4(react-dom@18.2.0)(react@18.2.0)
+=======
+>>>>>>> addafe5ec5764ef8588f56ab6cee3070d92ecc28
   resend:
     specifier: ^3.2.0
     version: 3.2.0

@@ -4,6 +4,9 @@ import type { AppProps } from 'next/app'
 import { useState, useEffect } from 'react'
 import { initializeColumns } from '@/components/iotTable/columns'
 import { fetchDataAndSetData } from '@/utils'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { showToast } from '@/components/Toast'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [data, setData] = useState<DynamicMetricData[]>([])
@@ -37,19 +40,34 @@ export default function MyApp({ Component, pageProps }: AppProps) {
       initializeColumns()
 
       if (!hasFetchedData) {
-        console.log('fetching data for the first time')
         setHasFetchedData(true)
-      } else {
-        console.log('fetching data for the second time')
       }
+
+      console.log('fetching data for the ' + (hasFetchedData ? 'second' : 'first') + ' time')
+      showToast({ message: 'Data Fetched!', type: 'success' })
     } catch (error) {
-      console.error('Failed to fetch data:', error)
+      showToast({
+        message: 'Failed to fetch data: ' + error,
+        type: 'error',
+      })
     }
   }
 
   return (
     <>
       <SessionProvider session={pageProps.session}>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
         {loading ? (
           // Show a loading indicator while data is being fetched
           <div className="flex justify-center items-center h-screen">

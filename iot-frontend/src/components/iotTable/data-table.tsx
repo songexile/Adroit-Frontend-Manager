@@ -25,7 +25,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'Timestamp', desc: false }])
 
   const table = useReactTable({
     data,
@@ -37,6 +37,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     state: {
       sorting,
     },
+
     defaultColumn: {
       size: 5, //starting column size
       minSize: 80, //enforced during column resizing
@@ -57,8 +58,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                       key={header.id}
                       style={{
                         width: header.getSize(),
-
-                        border: '1px solid black',
                       }} //Sizes the table head (each column)
                     >
                       {header.isPlaceholder
