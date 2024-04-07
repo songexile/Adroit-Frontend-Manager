@@ -13,7 +13,12 @@ Amplify.configure({
   Auth: {
     ...awsConfig.Auth,
   },
+  // @ts-ignore
+  ssr: true // Adding SSR configuration
 });
+
+
+// Amplify.configure({ ...awsExports, ssr: true });
 
 const Profile = () => {
   const { data: session } = useSession()
