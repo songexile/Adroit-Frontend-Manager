@@ -71,6 +71,12 @@ function DeviceID(data: any) {
                   <div className="mb-4">
                     <span className="font-semibold text-gray-600">Last ticket created:</span> Never
                   </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">
+                      {' '}
+                      {deviceData && debugMetrics(deviceData)}{' '}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
@@ -146,6 +152,53 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
           )
         } else {
           return null // handle undefined or unexpected value
+        }
+      })}
+    </div>
+  )
+}
+
+//**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
+
+const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
+  if (!deviceData) return null
+
+  const relevantKeys = [
+    'signal quality',
+    'MESSAGE',
+    'scanStatus',
+    'insituStatus',
+    'solar volt',
+    'batt status',
+    'DIAGNOSTICS',
+  ]
+  const prefix = 'metric_'
+
+  const errorKeys = relevantKeys.map((key) => prefix + key) // Concatenate prefix to each key
+
+  return (
+    <div className="flex flex-col gap-4 text-red-500">
+      {Object.entries(deviceData).map(([key, value]) => {
+        if (errorKeys.includes(key)) {
+          if (typeof value === 'string') {
+            return (
+              <div className="" key={key}>
+                <p>
+                  {key}: {value}
+                </p>
+              </div>
+            )
+          } else if (value && typeof value === 'object' && 'value' in value) {
+            return (
+              <div className="" key={key}>
+                <p>
+                  {key}: {value.value}
+                </p>
+              </div>
+            )
+          } else {
+            return null // handle undefined or unexpected value
+          }
         }
       })}
     </div>

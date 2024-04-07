@@ -79,3 +79,9 @@
 .table-row {
   height: 100px; /* Set the desired height */
 }
+
+@layer components {
+  .glass {
+    background: rgba(0, 0, 0, 0.01);
+  }
+}
