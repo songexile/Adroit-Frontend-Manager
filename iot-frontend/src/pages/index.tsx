@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Footer from '@/components/Footer'
 import LoginScreen from './login'
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils'
+import { DynamicMetricData } from '@/types'
 
 export default function Home({
   data,

@@ -7,6 +7,7 @@ import { fetchDataAndSetData } from '@/utils'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { showToast } from '@/components/Toast'
+import { DynamicMetricData } from '@/types'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [data, setData] = useState<DynamicMetricData[]>([])

@@ -5,6 +5,9 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
 import Link from 'next/link'
+import LoginScreen from '../login'
+import { useSession } from 'next-auth/react'
+import { DynamicMetricData } from '@/types'
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -14,7 +17,8 @@ function fetchDeviceId() {
   return deviceId
 }
 
-function Page(data: any) {
+function DeviceID(data: any) {
+  const { data: session } = useSession()
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
@@ -26,11 +30,13 @@ function Page(data: any) {
     { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
   ]
 
-  return (
-    <>
-      <Header />
-      <Breadcrumb breadcrumbs={breadcrumbs} />
-      <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
+  if (session) {
+    return (
+      <>
+        <Header />
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+
+        <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden animate-slide-in border-2 border-blue-500">
           <div className="p-8">
             <div className="flex justify-between items-center mb-8">
@@ -99,10 +105,12 @@ function Page(data: any) {
           {deviceData && renderMetrics(deviceData)}
         </div>
       </div>
-
-      <Footer />
-    </>
-  )
+        <Footer />
+      </>
+    )
+  } else {
+    return <LoginScreen />
+  }
 }
 
 /**
@@ -145,4 +153,4 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
   )
 }
 
-export default Page
+export default DeviceID

@@ -1,6 +1,24 @@
 // TypeScript type definitions can be placed here to ensure type safety throughout the codebase.
 
-interface DynamicMetricData {
+import { User, Session } from "next-auth";
+import { JWT } from "next-auth/jwt";
+
+export interface CustomUser extends User {
+  given_name: string;
+  family_name: string;
+  email: string;
+}
+
+export interface CustomSession extends Session {
+  user: CustomUser;
+}
+
+export interface CustomToken extends JWT {
+  given_name: string;
+  family_name: string;
+}
+
+export interface DynamicMetricData {
   client_name: string;
   client_id: string;
   device_id: string;
@@ -8,11 +26,11 @@ interface DynamicMetricData {
   [key: string]: string | { timestamp: number; value: string } | undefined;
 }
 
-interface SpinnerProps {
+export interface SpinnerProps {
   className?: string; // Optional string prop
 }
 
-interface HeaderProps {
+export interface HeaderProps {
   fetchDataAndUpdate?: () => Promise<void>;
   searchById?: string;
   setSearchById?: (value: string) => void;
@@ -22,7 +40,7 @@ interface HeaderProps {
   clientsOfflineCount?: number;
 }
 
-interface RequestBody {
+export interface RequestBody {
   to: string
   subject: string
   message: string

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { getTimestampData } from '@/utils'
+import { DynamicMetricData } from '@/types'
 
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = []
