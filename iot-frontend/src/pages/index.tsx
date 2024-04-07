@@ -63,7 +63,7 @@ export default function Home({
 
   if (session) {
     return (
-      <div className="h-screen flex flex-col">
+      <div className=" w-full flex flex-col">
         <Header
           fetchDataAndUpdate={fetchDataAndUpdate}
           searchById={searchById}

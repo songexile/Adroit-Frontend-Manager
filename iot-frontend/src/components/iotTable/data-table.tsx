@@ -96,7 +96,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex sticky glass w-full bottom-0   items-center justify-end space-x-2 py-4">
+      <div className="flex sm:sticky glass w-full bottom-0   items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
