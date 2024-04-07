@@ -197,8 +197,16 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               </div>
             )
           } else {
-            return null // handle undefined or unexpected value
+            // Handle undefined or unexpected value
+            return (
+              <div className="" key={key}>
+                <p>{key}: N/A</p>
+              </div>
+            )
           }
+        } else {
+          // Key is not in errorKeys, return an empty fragment
+          return <></>
         }
       })}
     </div>

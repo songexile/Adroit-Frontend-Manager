@@ -24,7 +24,7 @@ const CreateTicket = (data: any) => {
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('Hi team, There is something wrong with...')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [ticketCreated, setTicketCreated] = useState(false) // State to track if ticket is successfully created
+  const [ticketCreated] = useState(false) // State to track if ticket is successfully created
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
