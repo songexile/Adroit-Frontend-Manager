@@ -57,7 +57,7 @@ HeaderProps) => {
   return (
     <>
       {/* Top Blue Header */}
-      <div className="bg-gradient-to-b from-cyan-500 to-blue-500 text-white py-2 px-4">
+      <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white py-2 px-4">
         <div className="container mx-auto flex justify-between items-center">
           <Link href={'/'} className="font-bold">
             <Image
@@ -106,45 +106,46 @@ HeaderProps) => {
             )}
           </div>
         </div>
-      </div>
-      {(setSearchById || setSearchByClientName || fetchDataAndUpdate) && (
-        <div className={`${setSearchById && setSearchByClientName ? 'bg-gray-200 py-2 px-4' : ''}`}>
-          <div className="container mx-auto md:flex items-center justify-between">
-            {(setSearchById || setSearchByClientName) && (
-              <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
-                {setSearchById && (
-                  <input
-                    className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                    type="text"
-                    placeholder="Search by Device ID"
-                    value={searchById}
-                    onChange={(e) => setSearchById(e.target.value)}
-                  />
-                )}
-                {setSearchByClientName && (
-                  <input
-                    className="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                    type="text"
-                    placeholder="Search by Client Name"
-                    value={searchByClientName}
-                    onChange={(e) => setSearchByClientName(e.target.value)}
-                  />
-                )}
-              </div>
-            )}
-            {fetchDataAndUpdate && (
-              <div className="flex items-center space-x-2 mt-3 md:mt-0">
-                <button
-                  onClick={handleFetchAndUpdate}
-                  className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-                >
-                  Fetch New Data
-                </button>
-              </div>
-            )}
+
+        {(setSearchById || setSearchByClientName || fetchDataAndUpdate) && (
+          <div className={`${setSearchById && setSearchByClientName ? '   py-2 px-4' : ''}`}>
+            <div className="container mx-auto md:flex items-center justify-between">
+              {(setSearchById || setSearchByClientName) && (
+                <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
+                  {setSearchById && (
+                    <input
+                      className="border-b-4 border-gray-100  text-black font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
+                      type="text"
+                      placeholder="Search by Device ID"
+                      value={searchById}
+                      onChange={(e) => setSearchById(e.target.value)}
+                    />
+                  )}
+                  {setSearchByClientName && (
+                    <input
+                      className="    border-b-4 border-gray-100  text-black font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
+                      type="text"
+                      placeholder="Search by Client Name"
+                      value={searchByClientName}
+                      onChange={(e) => setSearchByClientName(e.target.value)}
+                    />
+                  )}
+                </div>
+              )}
+              {fetchDataAndUpdate && (
+                <div className="flex items-center space-x-2 mt-3 md:mt-0">
+                  <button
+                    onClick={handleFetchAndUpdate}
+                    className=" bg-white border-b-4 border-gray-100 text-gray-400   font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
+                  >
+                    Fetch New Data
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Quick Info */}
       {totalDevicesOfflineCount && (
