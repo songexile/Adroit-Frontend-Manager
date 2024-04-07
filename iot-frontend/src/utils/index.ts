@@ -1,4 +1,4 @@
-import { showToast } from "@/components/Toast"
+import { showToast } from '@/components/Toast'
 
 /**
  * Flattens nested data into an array of DynamicMetricData objects.
@@ -82,12 +82,12 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
         }
 
         for (const metricName in device.metrics) {
-          const metricValue = device.metrics[metricName];
+          const metricValue = device.metrics[metricName]
           if (metricName in batteryMetrics) {
-            const batteryMetricName = batteryMetrics[metricName];
-            flattenedDevice[`metric_${batteryMetricName}`] = metricValue;
+            const batteryMetricName = batteryMetrics[metricName]
+            flattenedDevice[`metric_${batteryMetricName}`] = metricValue
           } else {
-            flattenedDevice[`metric_${metricName}`] = metricValue;
+            flattenedDevice[`metric_${metricName}`] = metricValue
           }
         }
 

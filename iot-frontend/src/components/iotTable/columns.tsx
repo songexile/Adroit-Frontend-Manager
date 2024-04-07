@@ -16,6 +16,32 @@ import { getTimestampData } from '@/utils'
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = []
 
+function createSortingFn<T>(getValueFromRow: (row: T) => number | null | undefined) {
+  return (rowA: { original: T }, rowB: { original: T }) => {
+    const valueA = getValueFromRow(rowA.original)
+    const valueB = getValueFromRow(rowB.original)
+
+    // Handle undefined values
+    if (valueA === undefined && valueB === undefined) {
+      return 0 // Both are undefined, so they are equal
+    } else if (valueA === undefined) {
+      return 1 // rowA is undefined, so put it after rowB
+    } else if (valueB === undefined) {
+      return -1 // rowB is undefined, so put it after rowA
+    }
+
+    // Compare the values
+    if (valueA !== null && valueB !== null) {
+      if (valueA < valueB) return -1
+      if (valueA > valueB) return 1
+      return 0
+    }
+
+    // If we reach this point, it means one or both values are not valid numbers
+    return 0 // Consider them equal if we can't compare the values
+  }
+}
+
 export const initializeColumns = () => {
   // Initialize columns with the static columns
   columns = [
@@ -188,6 +214,14 @@ export const initializeColumns = () => {
           </div>
         )
       },
+      sortingFn: createSortingFn((row) => {
+        //On click of sorting we can sort by battery percentage
+        const batteryPercentage = row.metric_battery_percentage
+        if (typeof batteryPercentage === 'object' && typeof batteryPercentage.value === 'string') {
+          return parseFloat(batteryPercentage.value)
+        }
+        return null
+      }),
     },
     {
       accessorKey: 'metric_battery_voltage',
@@ -209,6 +243,13 @@ export const initializeColumns = () => {
         const batteryVoltage = row.original.metric_battery_voltage
         return <span>{typeof batteryVoltage === 'object' ? batteryVoltage.value : 'N/A'}</span>
       },
+      sortingFn: createSortingFn((row) => {
+        const batteryVoltage = row.metric_battery_voltage
+        if (typeof batteryVoltage === 'object' && typeof batteryVoltage.value === 'string') {
+          return parseFloat(batteryVoltage.value)
+        }
+        return null
+      }),
     },
   ]
 }
