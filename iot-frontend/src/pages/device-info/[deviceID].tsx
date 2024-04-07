@@ -158,6 +158,8 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
   )
 }
 
+//**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
+
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
   if (!deviceData) return null
 
@@ -172,15 +174,15 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
   ]
   const prefix = 'metric_'
 
-  return (
-    <div>
-      {Object.entries(deviceData).map(([key, value]) => {
-        const errorKeys = prefix + relevantKeys
+  const errorKeys = relevantKeys.map((key) => prefix + key) // Concatenate prefix to each key
 
+  return (
+    <div className="flex flex-col gap-4 text-red-500">
+      {Object.entries(deviceData).map(([key, value]) => {
         if (errorKeys.includes(key)) {
           if (typeof value === 'string') {
             return (
-              <div className="text-red-500" key={key}>
+              <div className="" key={key}>
                 <p>
                   {key}: {value}
                 </p>
@@ -188,7 +190,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             )
           } else if (value && typeof value === 'object' && 'value' in value) {
             return (
-              <div className="text-red-500" key={key}>
+              <div className="" key={key}>
                 <p>
                   {key}: {value.value}
                 </p>
@@ -197,8 +199,6 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           } else {
             return null // handle undefined or unexpected value
           }
-        } else {
-          return null
         }
       })}
     </div>
