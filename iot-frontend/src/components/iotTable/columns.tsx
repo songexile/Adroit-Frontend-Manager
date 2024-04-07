@@ -60,7 +60,7 @@ export const initializeColumns = () => {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Timestamp
+          Last Online
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -85,18 +85,19 @@ export const initializeColumns = () => {
         const timestampDataB = getTimestampData(rowB.original)
 
         // Extract timestamps if available
-        const timestampA = timestampDataA ? timestampDataA.timestamp : undefined
-        const timestampB = timestampDataB ? timestampDataB.timestamp : undefined
+        const timestampA = timestampDataA ? new Date(timestampDataA.timestamp) : null
+        const timestampB = timestampDataB ? new Date(timestampDataB.timestamp) : null
 
-        // Handle cases where one or both timestamps are undefined
-        if (timestampA === undefined && timestampB === undefined) {
-          return 0
-        } else if (timestampA === undefined) {
-          return 1
-        } else if (timestampB === undefined) {
-          return -1
+        // Sort by actual timestamps if available (newest to oldest)
+        if (timestampA && timestampB) {
+          return timestampB.getTime() - timestampA.getTime() // Reverse order for newest first
+        } else if (!timestampA && !timestampB) {
+          return 0 // Both are missing or N/A, so equal
+        } else if (!timestampA || (timestampDataA && timestampDataA.text === 'N/A')) {
+          // Check for N/A explicitly
+          return 1 // rowA missing/N/A, so put it after rowB
         } else {
-          return timestampA - timestampB
+          return -1 // rowB missing/N/A, so put it after rowA
         }
       },
     },
