@@ -71,6 +71,12 @@ function DeviceID(data: any) {
                   <div className="mb-4">
                     <span className="font-semibold text-gray-600">Last ticket created:</span> Never
                   </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">
+                      {' '}
+                      {deviceData && debugMetrics(deviceData)}{' '}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
@@ -146,6 +152,53 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
           )
         } else {
           return null // handle undefined or unexpected value
+        }
+      })}
+    </div>
+  )
+}
+
+const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
+  if (!deviceData) return null
+
+  const relevantKeys = [
+    'signal quality',
+    'MESSAGE',
+    'scanStatus',
+    'insituStatus',
+    'solar volt',
+    'batt status',
+    'DIAGNOSTICS',
+  ]
+  const prefix = 'metric_'
+
+  return (
+    <div>
+      {Object.entries(deviceData).map(([key, value]) => {
+        const errorKeys = prefix + relevantKeys
+
+        if (errorKeys.includes(key)) {
+          if (typeof value === 'string') {
+            return (
+              <div className="text-red-500" key={key}>
+                <p>
+                  {key}: {value}
+                </p>
+              </div>
+            )
+          } else if (value && typeof value === 'object' && 'value' in value) {
+            return (
+              <div className="text-red-500" key={key}>
+                <p>
+                  {key}: {value.value}
+                </p>
+              </div>
+            )
+          } else {
+            return null // handle undefined or unexpected value
+          }
+        } else {
+          return null
         }
       })}
     </div>
