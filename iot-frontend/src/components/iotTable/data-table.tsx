@@ -25,7 +25,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'Timestamp', desc: false }])
 
   const table = useReactTable({
     data,
@@ -37,6 +37,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     state: {
       sorting,
     },
+
     defaultColumn: {
       size: 5, //starting column size
       minSize: 80, //enforced during column resizing
@@ -45,10 +46,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   })
 
   return (
-    <div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+    <div className="">
+      <div className="rounded-md border min">
+        <Table className="relative">
+          <TableHeader className="sticky top-0 bg-slate-50 shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -95,7 +96,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       </div>
 
       {/* Pagination Controls */}
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex sm:sticky glass w-full bottom-0   items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"

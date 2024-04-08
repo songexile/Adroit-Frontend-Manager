@@ -25,6 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # env files
+*.env*
 .env
 .env.local
 .env.development
@@ -32,6 +33,9 @@ yarn-error.log*
 .env.test.local
 .env.production
 .env.production.local
+
+# Allow .env.example to be tracked
+!.env.example
 
 # vercel
 .vercel
