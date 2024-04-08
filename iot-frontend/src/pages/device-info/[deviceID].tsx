@@ -3,91 +3,119 @@ import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import Breadcrumb from '@/components/Breadcrumb'
 import Link from 'next/link'
+import LoginScreen from '../login'
+import { useSession } from 'next-auth/react'
+import { DynamicMetricData } from '@/types'
 
 function fetchDeviceId() {
-  //Fetches deviceId from Url
+  // Fetches deviceId from Url
   const pathname = usePathname()
   const parts = pathname ? pathname.split('/') : []
   const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
   return deviceId
 }
 
-function Page(data: any) {
+function DeviceID(data: any) {
+  const { data: session } = useSession()
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
-  console.log(deviceData) //Returns the array of the device.
+  console.log(deviceData) // Returns the array of the device.
 
-  return (
-    <>
-      <Header />
-      <div className="container min-h-screen max-w-3xl mx-auto p-6 py-5 border rounded-lg mt-8 shadow-md">
-        {/* Device Info */}
-        <div className="mx-auto">
-          <div className="text-xl font-bold mb-2">Device Info</div>
-          <div className="mb-2">
-            <span className="font-semibold">Device ID:</span> {deviceData?.device_id}
-          </div>
-          <div className="mb-2">
-            <span className="font-semibold">Device Key:</span> {deviceData?.device_key}
-          </div>
-          <div className="mb-2">
-            <span className="font-semibold">Client Name:</span> {deviceData?.client_name}
-          </div>
-          <div className="mb-2">
-            <span className="font-semibold">Last Online:</span>{' '}
-            {typeof deviceData?.last_online === 'string'
-              ? deviceData.last_online
-              : deviceData?.last_online?.value || 'N/A'}
-          </div>
-          <div className="mb-2">
-            <span className="font-semibold">Last ticket created:</span> Never
+  // Breadcrumb items
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
+  ]
+
+  if (session) {
+    return (
+      <>
+        <Header />
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+
+        <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
+          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden animate-slide-in border-2 border-blue-500">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
+                <Link href={`/create-ticket/${deviceData?.device_id}`}>
+                  <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
+                    Create Ticket
+                  </button>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">Device ID:</span>{' '}
+                    {deviceData?.device_id}
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">Device Key:</span>{' '}
+                    {deviceData?.device_key}
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">Client Name:</span>{' '}
+                    {deviceData?.client_name}
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">Last Online:</span>{' '}
+                    {typeof deviceData?.last_online === 'string'
+                      ? deviceData.last_online
+                      : deviceData?.last_online?.value || 'N/A'}
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">Last ticket created:</span> Never
+                  </div>
+                  <div className="mb-4">
+                    <span className="font-semibold text-gray-600">
+                      {' '}
+                      {deviceData && debugMetrics(deviceData)}{' '}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
+                  <h3 className="text-xl font-bold mb-4 text-gray-800">Status</h3>
+                  <div className="flex flex-col space-y-2">
+                    <div className="flex items-center">
+                      <span className="font-semibold text-gray-600 mr-2">Scan:</span>
+                      <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
+                        ONLINE
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="font-semibold text-gray-600 mr-2">Battery:</span>
+                      <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
+                        OFFLINE
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="font-semibold text-gray-600 mr-2">Insitu:</span>
+                      <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
+                        ERROR
+                      </span>
+                    </div>
+                  </div>
+                  <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
+                    {deviceData && renderMetrics(deviceData)}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Status */}
-        <div className="flex items-center py-5">
-          <div className="text-xl font-bold mr-4">
-            Scan:
-            <button className="bg-green-500 text-white font-bold py-2 px-4 rounded ml-1">
-              ONLINE
-            </button>
-          </div>
-          <div className="text-xl font-bold mr-4">
-            Battery:
-            <button className="bg-red-500 text-white font-bold py-2 px-4 rounded ml-1">
-              OFFLINE
-            </button>
-          </div>
-          <div className="text-xl font-bold mr-4">
-            Insitu:
-            <button className="bg-red-500 text-white font-bold py-2 px-4 rounded ml-1">
-              ERROR
-            </button>
-          </div>
-        </div>
-
-        <div className="flex flex-col py-5">
-          <div className="flex justify-center">
-            <Link href={`/create-ticket/${deviceData?.device_id}`}>
-              <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 mb-4 text-xl">
-                Create Ticket
-              </button>
-            </Link>
-          </div>
-          <p className="text-center">No ticket currently active.</p>
-        </div>
-
-        {/* Metrics */}
-        <div className="mb-4">
-          <p className="text-xl font-semibold">Metrics:</p>
-          {deviceData && renderMetrics(deviceData)}
-        </div>
-      </div>
-      <Footer />
-    </>
-  )
+        <Footer />
+      </>
+    )
+  } else {
+    return <LoginScreen />
+  }
 }
 
 /**
@@ -130,4 +158,59 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
   )
 }
 
-export default Page
+//**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
+
+const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
+  if (!deviceData) return null
+
+  const relevantKeys = [
+    'signal quality',
+    'MESSAGE',
+    'scanStatus',
+    'insituStatus',
+    'solar volt',
+    'batt status',
+    'DIAGNOSTICS',
+  ]
+  const prefix = 'metric_'
+
+  const errorKeys = relevantKeys.map((key) => prefix + key) // Concatenate prefix to each key
+
+  return (
+    <div className="flex flex-col gap-4 text-red-500">
+      {Object.entries(deviceData).map(([key, value]) => {
+        if (errorKeys.includes(key)) {
+          if (typeof value === 'string') {
+            return (
+              <div className="" key={key}>
+                <p>
+                  {key}: {value}
+                </p>
+              </div>
+            )
+          } else if (value && typeof value === 'object' && 'value' in value) {
+            return (
+              <div className="" key={key}>
+                <p>
+                  {key}: {value.value}
+                </p>
+              </div>
+            )
+          } else {
+            // Handle undefined or unexpected value
+            return (
+              <div className="" key={key}>
+                <p>{key}: N/A</p>
+              </div>
+            )
+          }
+        } else {
+          // Key is not in errorKeys, return an empty fragment
+          return <></>
+        }
+      })}
+    </div>
+  )
+}
+
+export default DeviceID

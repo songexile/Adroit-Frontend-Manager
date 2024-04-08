@@ -12,9 +12,37 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Link from 'next/link'
 import { getTimestampData } from '@/utils'
+import { DynamicMetricData } from '@/types'
 
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = []
+
+//Modifed Sorting function to handle undefined values
+function createSortingFn<T>(getValueFromRow: (row: T) => number | null | undefined) {
+  return (rowA: { original: T }, rowB: { original: T }) => {
+    const valueA = getValueFromRow(rowA.original)
+    const valueB = getValueFromRow(rowB.original)
+
+    // Handle undefined values
+    if (valueA === undefined && valueB === undefined) {
+      return 0 // Both are undefined, so they are equal
+    } else if (valueA === undefined) {
+      return 1 // rowA is undefined, so put it after rowB
+    } else if (valueB === undefined) {
+      return -1 // rowB is undefined, so put it after rowA
+    }
+
+    // Compare the values
+    if (valueA !== null && valueB !== null) {
+      if (valueA < valueB) return -1
+      if (valueA > valueB) return 1
+      return 0
+    }
+
+    // If we reach this point, it means one or both values are not valid numbers
+    return 0 // Consider them equal if we can't compare the values
+  }
+}
 
 export const initializeColumns = () => {
   // Initialize columns with the static columns
@@ -60,7 +88,7 @@ export const initializeColumns = () => {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
-          Timestamp
+          Last Online
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
@@ -85,18 +113,24 @@ export const initializeColumns = () => {
         const timestampDataB = getTimestampData(rowB.original)
 
         // Extract timestamps if available
-        const timestampA = timestampDataA ? timestampDataA.timestamp : undefined
-        const timestampB = timestampDataB ? timestampDataB.timestamp : undefined
+        const timestampA =
+          timestampDataA && typeof timestampDataA.timestamp === 'number'
+            ? new Date(timestampDataA.timestamp)
+            : null
+        const timestampB =
+          timestampDataB && typeof timestampDataB.timestamp === 'number'
+            ? new Date(timestampDataB.timestamp)
+            : null
 
-        // Handle cases where one or both timestamps are undefined
-        if (timestampA === undefined && timestampB === undefined) {
-          return 0
-        } else if (timestampA === undefined) {
-          return 1
-        } else if (timestampB === undefined) {
-          return -1
+        // Sort by actual timestamps if available (newest to oldest)
+        if (timestampA && timestampB) {
+          return timestampB.getTime() - timestampA.getTime() // Reverse order for newest first
+        } else if (!timestampA && !timestampB) {
+          return 0 // Both are missing or N/A, so equal
+        } else if (!timestampA || (timestampDataA && timestampDataA.value === 'N/A')) {
+          return 1 // rowA missing/N/A, so put it after rowB
         } else {
-          return timestampA - timestampB
+          return -1 // rowB missing/N/A, so put it after rowA
         }
       },
     },
@@ -145,32 +179,115 @@ export const initializeColumns = () => {
         )
       },
     },
-
     {
-      accessorKey: 'device_key',
-      size: 10,
-
+      accessorKey: 'metric_battery_percentage',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Device Key
+            Battery Percentage
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
+      cell: ({ row }) => {
+        // Extract battery percentage value and color based on the value
+        let battery = null
+        let color = 'inherit'
+        const batteryPercentage = row.original.metric_battery_percentage
+
+        if (batteryPercentage && typeof batteryPercentage !== 'string') {
+          // batteryPercentage is an object with a value property
+          const batteryValue = batteryPercentage.value
+          battery = typeof batteryValue === 'string' ? parseFloat(batteryValue) : null
+
+          if (battery !== null) {
+            if (battery < 20) {
+              color = 'bg-red-500'
+            } else if (battery < 50) {
+              color = 'bg-orange-500'
+            } else {
+              color = 'bg-green-500'
+            }
+          }
+        }
+
+        return (
+          <div className="flex justify-center">
+            <span
+              className={`px-2 py-1 rounded-md text-white font-medium ${
+                battery !== null ? 'inline-block ' + color : 'hidden'
+              }`}
+            >
+              {battery !== null ? battery.toFixed(2) : 'N/A'}
+            </span>
+          </div>
+        )
+      },
+      sortingFn: createSortingFn((row) => {
+        const batteryPercentage = row.metric_battery_percentage
+        if (typeof batteryPercentage === 'object' && typeof batteryPercentage.value === 'string') {
+          return parseFloat(batteryPercentage.value)
+        }
+        return null
+      }),
+    },
+    {
+      accessorKey: 'metric_battery_voltage',
+      size: 10,
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Battery Voltage
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+      cell: ({ row }) => {
+        const batteryVoltage = row.original.metric_battery_voltage
+        let color = 'inherit'
+
+        if (typeof batteryVoltage === 'object' && typeof batteryVoltage.value === 'string') {
+          const voltage = parseFloat(batteryVoltage.value)
+
+          if (voltage >= 3.6 && voltage <= 3.7) {
+            color = 'bg-green-500'
+          } else if (voltage >= 3.5 && voltage <= 3.8) {
+            color = 'bg-orange-500'
+          } else {
+            color = 'bg-red-500'
+          }
+
+          return (
+            <div className="flex justify-center">
+              <span
+                className={`px-2 py-1 rounded-md text-white font-medium ${
+                  voltage !== null ? 'inline-block ' + color : 'hidden'
+                }`}
+              >
+                {voltage.toFixed(2)}
+              </span>
+            </div>
+          )
+        }
+
+        // Don't render anything if the value is 'N/A'
+        return null
+      },
+      sortingFn: createSortingFn((row) => {
+        const batteryVoltage = row.metric_battery_voltage
+        if (typeof batteryVoltage === 'object' && typeof batteryVoltage.value === 'string') {
+          return parseFloat(batteryVoltage.value)
+        }
+        return null
+      }),
     },
   ]
-
-  // // Dynamic metric columns
-  // columns.push(
-  //   ...metrics.map((metric, index) => ({
-  //     accessorKey: metric,
-  //     header: metric,
-  //   }))
-  // );
 }
 
 // Initialize columns (pass an empty array initially, it will be populated later)

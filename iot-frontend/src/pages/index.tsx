@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Footer from '@/components/Footer'
 import LoginScreen from './login'
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils'
+import { DynamicMetricData } from '@/types'
 
 export default function Home({
   data,
@@ -62,7 +63,7 @@ export default function Home({
 
   if (session) {
     return (
-      <div className="">
+      <div className=" w-full flex flex-col">
         <Header
           fetchDataAndUpdate={fetchDataAndUpdate}
           searchById={searchById}
@@ -73,14 +74,13 @@ export default function Home({
           clientsOfflineCount={clientsOfflineCount}
         />
         {loading && (
-          <div className="mt-64 gap-2 flex flex-col items-center justify-center">
-            {' '}
-            <LoadingSpinner className={'h-32 w-32'} />
+          <div className=" h-screen mt-64 gap-2 flex flex-col items-center justify-center">
+            <div className="h-5/6 w-full"></div> <LoadingSpinner className={'h-32 w-32'} />
             <h1>Loading the data for you.</h1>
           </div>
         )}
-        {/* provide a default value for data when it's undefined */}
         {!loading && <DataTable columns={columns} data={filteredData || []} />}
+        {/* provide a default value for data when it's undefined */}
         <Footer />
       </div>
     )

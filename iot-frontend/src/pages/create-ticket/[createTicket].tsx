@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
+import { showToast } from '@/components/Toast'
 import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import LoginScreen from '../login'
+import { useSession } from 'next-auth/react'
+import Breadcrumb from '@/components/Breadcrumb'
 
 function fetchDeviceId() {
-  //Fetches deviceId from Url
+  // Fetches deviceId from URL
   const pathname = usePathname()
   const parts = pathname ? pathname.split('/') : []
   const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
@@ -15,13 +19,25 @@ function fetchDeviceId() {
 const isEmail = (email: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)
 
 const CreateTicket = (data: any) => {
+  const { data: session } = useSession()
   const [to, setTo] = useState('')
   const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState(`Hi team, There is something wrong with...`)
+  const [message, setMessage] = useState('Hi team, There is something wrong with...')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [ticketCreated] = useState(false) // State to track if ticket is successfully created
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
+
+  // Breadcrumb items
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` },
+    {
+      name: `Create Ticket ${deviceData?.device_id}`,
+      path: `/create-ticket/${deviceData?.device_id}`,
+    },
+  ]
 
   const handleCreateTicket = async () => {
     // Reset errors
@@ -49,125 +65,136 @@ const CreateTicket = (data: any) => {
       })
 
       if (response.ok) {
-        console.log('Ticket created successfully')
+        showToast({ message: 'Ticket created successfully!', type: 'success' })
       } else {
-        console.error('Error creating ticket')
+        const data = await response.json()
+        if (data.message === 'Invalid API key') {
+          showToast({ message: 'Invalid API key', type: 'error' })
+        } else {
+          showToast({ message: `Error creating ticket: ${data.message}`, type: 'error' })
+        }
       }
     } catch (error) {
-      console.error('Error creating ticket:', error)
+      if (error instanceof Error) {
+        showToast({ message: `Error creating ticket: ${error.message}`, type: 'error' })
+      } else {
+        showToast({ message: 'Unknown error occurred while creating ticket', type: 'error' })
+      }
     }
   }
 
-  return (
-    <>
-      <Header />
-      <div className="min-h-screen bg-gray-100">
-        <div className="container mx-auto">
-          <p className="text-black-600 text-center mt-2 flex justify-center">
-            Ticket will be sent to support@adroit.co.nz
-          </p>
+  if (session) {
+    return (
+      <>
+        <Header />
+        <Breadcrumb breadcrumbs={breadcrumbs} />
+        <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
+          <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden border-2 border-blue-500">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-800">Create Ticket</h2>
+              </div>
 
-          <div className="mx-auto py-8">
-            <div className="flex justify-center mb-4 bg-white text-black px-3 py-1 rounded-lg items-center">
-              <span className="text-4xl font-semibold mr-2">Create Ticket</span>
-            </div>
+              <div className="mb-8">
+                <p className="text-black-600 text-center mb-4">
+                  Ticket will be sent to support@adroit.co.nz
+                </p>
 
-            <p className="mt-2 font-semibold">Device Information:</p>
-            <div className="mx-auto">
-              <div className="mb-2">
-                <span className="font-semibold">Device ID:</span> {deviceData?.device_id}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">Device Key:</span> {deviceData?.device_key}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">Client Name:</span> {deviceData?.client_name}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">Last Online: </span>
-                {typeof deviceData?.last_online === 'string'
-                  ? deviceData.last_online
-                  : deviceData?.last_online?.value || 'N/A'}
-              </div>
-              <div className="mb-2">
-                <span className="font-semibold">Last ticket created:</span>{' '}
-                {/* {deviceData?.last_ticket_created} */}
-              </div>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 className="text-xl font-bold mb-4 text-gray-800">Device Information</h3>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-600">Device ID:</span>{' '}
+                      {deviceData?.device_id}
+                    </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-600">Device Key:</span>{' '}
+                      {deviceData?.device_key}
+                    </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-600">Client Name:</span>{' '}
+                      {deviceData?.client_name}
+                    </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-600">Last Online:</span>{' '}
+                      {typeof deviceData?.last_online === 'string'
+                        ? deviceData.last_online
+                        : deviceData?.last_online?.value || 'N/A'}
+                    </div>
+                    <div className="mb-2">
+                      <span className="font-semibold text-gray-600">Last ticket created:</span>{' '}
+                      Never
+                    </div>
+                  </div>
 
-            {/* Email Start */}
-            <div className="mx-auto py-8">
-              <div className="flex justify-center mb-4 bg-white text-black px-3 py-1 rounded-lg items-center">
-                <span className="text-4xl font-semibold mr-2">Ticket</span>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="from" className="font-semibold">
-                  From:
-                </label>
-                <input
-                  id="from"
-                  type="text"
-                  value="support@adroit.co.nz"
-                  readOnly
-                  disabled
-                  className="mt-1 block w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-sm shadow-sm placeholder-slate-400
-                  focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500
-                  disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none
-                  invalid:border-pink-500 invalid:text-pink-600
-                  focus:invalid:border-pink-500 focus:invalid:ring-pink-500"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="to" className="font-semibold">
-                  To:
-                </label>
-                <input
-                  id="to"
-                  type="text"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  required
-                  className="border border-gray-300 p-2 rounded-md bg-white w-full"
-                />
-                {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="subject" className="font-semibold">
-                  Subject:
-                </label>
-                <input
-                  id="subject"
-                  type="text"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  required
-                  className="border border-gray-300 p-2 rounded-md bg-white w-full"
-                />
-                {errors.subject && <p className="text-red-500 mt-1">{errors.subject}</p>}
-              </div>
-              <p className="mt-4 font-semibold">Message:</p>
-              <textarea
-                className="border border-gray-300 p-2 rounded-md bg-white w-full h-40"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                required
-              ></textarea>
-              {errors.message && <p className="text-red-500 mt-1">{errors.message}</p>}
-              <div className="mt-6 flex justify-center">
-                <button
-                  className="bg-green-500 text-white font-bold py-2 px-4 rounded"
-                  onClick={handleCreateTicket}
-                >
-                  Create Ticket
-                </button>
+                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 className="text-xl font-bold mb-4 text-gray-800">Ticket Details</h3>
+                    {ticketCreated && (
+                      <p className="text-green-600 mb-4">
+                        Thank You, the Ticket has been successfully submitted!
+                      </p>
+                    )}
+                    <div className="mb-4">
+                      <label htmlFor="to" className="font-semibold text-gray-600">
+                        To:
+                      </label>
+                      <input
+                        id="to"
+                        type="text"
+                        value={to}
+                        onChange={(e) => setTo(e.target.value)}
+                        required
+                        className="border border-gray-300 p-2 rounded-md bg-white w-full"
+                      />
+                      {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
+                    </div>
+                    <div className="mb-4">
+                      <label htmlFor="subject" className="font-semibold text-gray-600">
+                        Subject:
+                      </label>
+                      <input
+                        id="subject"
+                        type="text"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        required
+                        className="border border-gray-300 p-2 rounded-md bg-white w-full"
+                      />
+                      {errors.subject && <p className="text-red-500 mt-1">{errors.subject}</p>}
+                    </div>
+                    <div className="mb-4">
+                      <label htmlFor="message" className="font-semibold text-gray-600">
+                        Message:
+                      </label>
+                      <textarea
+                        id="message"
+                        className="border border-gray-300 p-2 rounded-md bg-white w-full h-40"
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        required
+                      ></textarea>
+                      {errors.message && <p className="text-red-500 mt-1">{errors.message}</p>}
+                    </div>
+                    <div className="mt-6 flex justify-center">
+                      <button
+                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300 shadow-md"
+                        onClick={handleCreateTicket}
+                      >
+                        Submit Ticket
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <Footer />
-    </>
-  )
+        <Footer />
+      </>
+    )
+  } else {
+    return <LoginScreen />
+  }
 }
 
 export default CreateTicket
