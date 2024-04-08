@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { flattenNestedData } from '@/utils'
 import Header from '@/components/Header'
@@ -8,6 +8,7 @@ import Link from 'next/link'
 import LoginScreen from '../login'
 import { useSession } from 'next-auth/react'
 import { DynamicMetricData } from '@/types'
+import Joyride from 'react-joyride'
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -30,11 +31,55 @@ function DeviceID(data: any) {
     { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
   ]
 
+  const [runTour, setRunTour] = useState(false)
+
+  const tourSteps = [
+    {
+      target: '.quick-device-summary',
+      content: 'A Quick Device Summary From The Metrics.',
+      disableScrolling: true,
+      disableBeacon: true,
+    },
+    {
+      target: '.device-status-metrics',
+      content: 'Full Device Info Listed Here.',
+      disableScrolling: true,
+      disableBeacon: true,
+    },
+    {
+      target: '.bg-blue-500',
+      content: 'You Can Create A Ticket For This Device Here.',
+      disableScrolling: true,
+      disableBeacon: true,
+    },
+  ]
+
   if (session) {
     return (
       <>
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
+
+        <Joyride
+          steps={tourSteps}
+          run={runTour}
+          continuous={true}
+          scrollToFirstStep={true}
+          showProgress={true}
+          showSkipButton={true}
+          callback={(data) => {
+            if (data.status === 'finished' || data.status === 'skipped') {
+              setRunTour(false) // Stop the tour when finished or skipped
+            }
+          }}
+        />
+
+        <button
+          onClick={() => setRunTour(true)}
+          className="bg-yellow-500 hover:border-b-2 text-blue-950 rounded-xl shadow-lg border-2 border-b-4 border-blue-950 cursor-pointer active:bg-yellow-400 py-2 px-3 mx-2 my-3"
+        >
+          Start Tour
+        </button>
 
         <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
           <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden animate-slide-in border-2 border-blue-500">
@@ -49,33 +94,36 @@ function DeviceID(data: any) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Device ID:</span>{' '}
-                    {deviceData?.device_id}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Device Key:</span>{' '}
-                    {deviceData?.device_key}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Client Name:</span>{' '}
-                    {deviceData?.client_name}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Last Online:</span>{' '}
-                    {typeof deviceData?.last_online === 'string'
-                      ? deviceData.last_online
-                      : deviceData?.last_online?.value || 'N/A'}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Last ticket created:</span> Never
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">
-                      {' '}
-                      {deviceData && debugMetrics(deviceData)}{' '}
-                    </span>
+                <div className="quick-device-summary bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
+                  <div className="">
+                    <div className="mb-4">
+                      <span className=" font-semibold text-gray-600">Device ID:</span>{' '}
+                      {deviceData?.device_id}
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-semibold text-gray-600">Device Key:</span>{' '}
+                      {deviceData?.device_key}
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-semibold text-gray-600">Client Name:</span>{' '}
+                      {deviceData?.client_name}
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-semibold text-gray-600">Last Online:</span>{' '}
+                      {typeof deviceData?.last_online === 'string'
+                        ? deviceData.last_online
+                        : deviceData?.last_online?.value || 'N/A'}
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-semibold text-gray-600">Last ticket created:</span>{' '}
+                      Never
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-semibold text-gray-600">
+                        {' '}
+                        {deviceData && debugMetrics(deviceData)}{' '}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -101,7 +149,7 @@ function DeviceID(data: any) {
                       </span>
                     </div>
                   </div>
-                  <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+                  <div className="device-status-metrics max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
                     <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
                     {deviceData && renderMetrics(deviceData)}
                   </div>
