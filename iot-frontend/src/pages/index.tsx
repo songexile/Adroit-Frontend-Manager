@@ -1,33 +1,39 @@
-import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
+import { initializeColumns, columns } from '@/components/iotTable/columns'
+import { DynamicMetricData } from '@/types'
 import Header from '@/components/Header'
 import { DataTable } from '@/components/iotTable/data-table'
-import { initializeColumns, columns } from '@/components/iotTable/columns'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Footer from '@/components/Footer'
 import LoginScreen from './login'
+import { useAuthenticatedData } from '@/hooks/useAuthenticatedData'
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils'
-import { DynamicMetricData } from '@/types'
 
-export default function Home({
-  data,
-  fetchDataAndUpdate,
-}: {
-  data?: DynamicMetricData[]
-  fetchDataAndUpdate: () => Promise<void>
-}) {
+export default function Home() {
   const { data: session } = useSession()
-  const [loading, setLoading] = useState(true)
+  const { data, loading, fetchDataAndUpdate } = useAuthenticatedData()
   const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([])
   const [searchById, setSearchById] = useState('')
   const [searchByClientName, setSearchByClientName] = useState('')
+  const [totalDevicesOfflineCount, setTotalDevicesOfflineCount] = useState(0)
+  const [clientsOfflineCount, setClientsOfflineCount] = useState(0)
 
-  const [totalDevicesOfflineCount, setTotalDevicesOfflineCount] = useState(
-    data ? getTotalDevicesOfflineCount(data) : 0
-  )
-  const [clientsOfflineCount, setClientsOfflineCount] = useState(
-    data ? getClientsOfflineCount(data) : 0
-  )
+  useEffect(() => {
+    if (data != null) {
+      setFilteredData(data)
+      setTotalDevicesOfflineCount(getTotalDevicesOfflineCount(data))
+      setClientsOfflineCount(getClientsOfflineCount(data))
+      initializeColumns()
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (data) {
+      const filtered = filterData(data, searchById, searchByClientName)
+      setFilteredData(filtered)
+    }
+  }, [searchById, searchByClientName, data])
 
   const filterData = (
     data: DynamicMetricData[],
@@ -42,24 +48,6 @@ export default function Home({
       return deviceIdMatch && clientNameMatch
     })
   }
-
-  useEffect(() => {
-    if (data != null) {
-      initializeColumns()
-      setFilteredData(data)
-      setLoading(false)
-      console.log(data)
-      setTotalDevicesOfflineCount(getTotalDevicesOfflineCount(data))
-      setClientsOfflineCount(getClientsOfflineCount(data))
-    }
-  }, [data])
-
-  useEffect(() => {
-    if (data) {
-      const filtered = filterData(data, searchById, searchByClientName)
-      setFilteredData(filtered)
-    }
-  }, [searchById, searchByClientName, data])
 
   if (session) {
     return (
@@ -80,7 +68,6 @@ export default function Home({
           </div>
         )}
         {!loading && <DataTable columns={columns} data={filteredData || []} />}
-        {/* provide a default value for data when it's undefined */}
         <Footer />
       </div>
     )
