@@ -9,8 +9,8 @@ interface DataItem {
 
 const GaugeChartPage = () => {
   const jsonData: DataItem[] = [
-    { name: 'Water Soil', value: 0.0 },
-    { name: 'Temperature Internal', value: 0.0 },
+    { name: 'Water Soil', value: 50 },
+    { name: 'Temperature Internal', value: 7 },
     { name: 'Battery Value', value: 3310 },
     { name: 'Conduct Soil', value: 0.0 },
     { name: 'Temperature Soil', value: 21.28 },
