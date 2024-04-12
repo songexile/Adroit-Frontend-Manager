@@ -8,6 +8,11 @@ import Link from 'next/link'
 import LoginScreen from '../login'
 import { useSession } from 'next-auth/react'
 import { DynamicMetricData } from '@/types'
+import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart';
+import { Heading1 } from 'lucide-react'
+
+//import SpeedometerChart from '../components/speedometerChart/SpeedometerChart';
+
 
 function fetchDeviceId() {
     // Fetches deviceId from Url
@@ -102,46 +107,54 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     const fullMetricName = filterMetric.map((key) => prefix + key)
 
     return (
-        <div className='grid grid-cols-3  gap-4'>
-            {Object.entries(deviceData).map(([key, value]) => {
-                const index = fullMetricName.indexOf(key)
-                if (index !== -1) {
-                    const formalName = formalMetricName[index]
-                    if (typeof value === 'string') {
-                        return (
-                            <div className="flex bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500" key={key}>
-                                <p>
-                                    {formalName}: {value}
-                                </p>
-                            </div>
-                        )
-                    } else if (value && typeof value === 'object' && 'value' in value) {
-                        return (
-                            <div className="flex items-start    border-blue-500 border-b-2 hover:bg-gray-300  transition   bg-blue-200 bg- rounded-md flex-col gap-4 text-black h-16  justify-center" key={key}>
-                                <div className='mx-4 flex flex-col  gap-4'>
-                                    <p className='font-bold text-xl'>
-                                        {formalName}
-                                    </p>
+        <div>Hello world
+
+            <div className='grid grid-cols-3  gap-4'>
+                {Object.entries(deviceData).map(([key, value]) => {
+                    const index = fullMetricName.indexOf(key)
+                    if (index !== -1) {
+                        const formalName = formalMetricName[index]
+                        if (typeof value === 'string') {
+                            return (
+                                <div className="flex bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500" key={key}>
                                     <p>
-                                        {value.value}
+                                        {formalName}: {value}
+
                                     </p>
                                 </div>
+                            )
+                        } else if (value && typeof value === 'object' && 'value' in value) {
+                            return (
+                                <div className="flex items-start    border-blue-500 border-b-2 hover:bg-gray-300  transition   bg-blue-200 bg- rounded-md flex-col gap-4 text-black h-16  justify-center" key={key}>
+                                    <div className='mx-4 flex flex-col  gap-4'>
+                                        <p className='font-bold text-xl'>
+                                            {formalName}
+                                            <div>
+                                                <SpeedometerChart value={parseFloat(value.value)} colors={['#00ff00', '#ff0000']} />
+                                            </div>
+                                        </p>
+                                        <p>
+                                            {value.value}
 
-                            </div>
+                                        </p>
+                                    </div>
 
-                        )
+                                </div>
+
+                            )
+                        } else {
+                            return (
+                                <div className="" key={key}>
+                                    <p>{formalName}: N/A</p>
+                                </div>
+                            )
+                        }
                     } else {
-                        return (
-                            <div className="" key={key}>
-                                <p>{formalName}: N/A</p>
-                            </div>
-                        )
+                        return <></>
                     }
-                } else {
-                    return <></>
-                }
 
-            })}
+                })}
+            </div>
         </div>
     )
 }

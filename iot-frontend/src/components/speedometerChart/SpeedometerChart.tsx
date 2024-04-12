@@ -17,21 +17,22 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
       const config: ChartConfiguration = {
         type: 'doughnut',
         data: {
-          labels: ['Value', 'Remaining'],
+          //     labels: ['Value', 'Remaining'],
           datasets: [
             {
-              data: [value, 100 - value],
+              data: [value, 10 - value],
               backgroundColor: colors,
               hoverBackgroundColor: colors
             }
           ]
         },
+
         options: {
-          circumference: Math.PI,
-          rotation: Math.PI,
+          circumference: 180,
+          rotation: 270,
           cutoutPercentage: 80, // This is for the thickness of the gauge
           tooltips: { enabled: false },
-          //         hover: { mode: null },
+          hover: { mode: null },
           responsive: false,
         }
       };
@@ -47,7 +48,7 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
     };
   }, [value, colors]);
 
-  return <canvas ref={chartContainer} />;
+  return <canvas className="bg-gray-500" ref={chartContainer} />;
 };
 
 export default SpeedometerChart;
