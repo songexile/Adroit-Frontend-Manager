@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useDataFetch } from '@/hooks/useDataFetch'
 import { AuthCheckAndAction } from '@/components/AuthCheckAndAction'
+import NextTopLoader from 'nextjs-toploader'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { data, loading, hasFetchedData, fetchDataAndUpdate } = useDataFetch()
@@ -30,6 +31,21 @@ function MyApp({ Component, pageProps }: AppProps) {
           hasFetchedData={hasFetchedData}
           fetchDataAndUpdate={fetchDataAndUpdate}
         >
+          <NextTopLoader
+            color="#8A6616"
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={true}
+            easing="ease"
+            speed={200}
+            shadow="0 0 10px #8A6616,0 0 5px #8A6616"
+            template='<div class="bar" role="bar"><div class="peg"></div></div>
+  <div class="spinner" role="spinner"><div class="spinner-icon"></div></div>'
+            zIndex={1600}
+            showAtBottom={false}
+          />
           <Component data={data} {...pageProps} fetchDataAndUpdate={fetchDataAndUpdate} />
         </AuthCheckAndAction>
       </SessionProvider>
