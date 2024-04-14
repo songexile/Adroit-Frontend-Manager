@@ -1,5 +1,0 @@
-# Build
-ASD
-
-# Deploy
-ASD
