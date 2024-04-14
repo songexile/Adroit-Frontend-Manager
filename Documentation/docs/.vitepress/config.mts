@@ -30,6 +30,7 @@ export default defineConfig({
           { text: 'Routes', link: '/configurations/routes' },
           { text: 'Site Config', link: '/configurations/site-config' },
           { text: 'Environment', link: '/configurations/environment' },
+          { text: 'Scripts', link: '/configurations/scripts' },
 
         ],
       },
@@ -51,7 +52,7 @@ export default defineConfig({
         items: [
           { text: 'Next Auth', link: '/integrations/next-auth' },
           { text: 'React Email (Resend)', link: '/integrations/resend' },
-
+          { text: 'Toastify', link: '/integrations/toastify' },
         ],
       },
       {
