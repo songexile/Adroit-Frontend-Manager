@@ -8,7 +8,9 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: 'Getting Started', link: '/getting-started/introduction' },
+      { text: 'Installation', link: '/getting-started/installation' },
+      { text: 'Create New Page', link: '/development/create-new-page' },
     ],
 
     sidebar: [
@@ -17,6 +19,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Introduction', link: '/getting-started/introduction' },
+          { text: 'Installation', link: '/getting-started/installation' },
 
         ],
       },
@@ -25,6 +28,39 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Routes', link: '/configurations/routes' },
+          { text: 'Site Config', link: '/configurations/site-config' },
+          { text: 'Environment', link: '/configurations/environment' },
+
+        ],
+      },
+      {
+        text: 'Development',
+        collapsed: false,
+        items: [
+          { text: 'Project Structure', link: '/development/project-structure' },
+          { text: 'Create New Page', link: '/development/create-new-page' },
+          { text: 'Environment', link: '/development/environment' },
+          { text: 'Build And Deploy', link: '/development/build-deploy' },
+          { text: 'Resource Credits', link: '/development/resource-credits' },
+
+        ],
+      },
+      {
+        text: 'Integrations',
+        collapsed: false,
+        items: [
+          { text: 'Next Auth', link: '/integrations/next-auth' },
+          { text: 'React Email (Resend)', link: '/integrations/resend' },
+
+        ],
+      },
+      {
+        text: 'Components',
+        collapsed: false,
+        items: [
+          { text: 'Navbar', link: '/components/navbar' },
+          { text: 'Tables', link: '/components/tables' },
+          { text: 'Gauge Chart', link: '/components/gauge-chart' },
 
         ],
       },
