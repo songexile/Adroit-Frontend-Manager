@@ -133,10 +133,13 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
       If the value is a string, it displays the string value directly.
       If the value is an object and has a 'value' property, it accesses and displays the 'value' property.
       Otherwise, it returns null to handle undefined or unexpected values. */}
-      {Object.entries(deviceData).map(([key, value]) => {
+      {Object.entries(deviceData).map(([key, value], index) => {
+        // Use index and key together to ensure unique key for each entry
+        const uniqueKey = `${key}_${index}`
+
         if (typeof value === 'string') {
           return (
-            <div key={key}>
+            <div key={uniqueKey}>
               <p>
                 {key}: {value}
               </p>
@@ -144,14 +147,14 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
           )
         } else if (value && typeof value === 'object' && 'value' in value) {
           return (
-            <div key={key}>
+            <div key={uniqueKey}>
               <p>
                 {key}: {value.value}
               </p>
             </div>
           )
         } else {
-          return null // handle undefined or unexpected value
+          return null // Handle undefined or unexpected value
         }
       })}
     </div>
@@ -178,11 +181,14 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
 
   return (
     <div className="flex flex-col gap-4 text-red-500">
-      {Object.entries(deviceData).map(([key, value]) => {
+      {Object.entries(deviceData).map(([key, value], index) => {
+        // Use index and key together to ensure unique key for each entry
+        const uniqueKey = `${key}_${index}`
+
         if (errorKeys.includes(key)) {
           if (typeof value === 'string') {
             return (
-              <div className="" key={key}>
+              <div key={uniqueKey}>
                 <p>
                   {key}: {value}
                 </p>
@@ -190,23 +196,21 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             )
           } else if (value && typeof value === 'object' && 'value' in value) {
             return (
-              <div className="" key={key}>
+              <div key={uniqueKey}>
                 <p>
                   {key}: {value.value}
                 </p>
               </div>
             )
           } else {
-            // Handle undefined or unexpected value
             return (
-              <div className="" key={key}>
+              <div key={uniqueKey}>
                 <p>{key}: N/A</p>
               </div>
             )
           }
         } else {
-          // Key is not in errorKeys, return an empty fragment
-          return <></>
+          return null // Key is not in errorKeys, return null
         }
       })}
     </div>
