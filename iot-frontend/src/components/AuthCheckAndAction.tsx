@@ -20,8 +20,6 @@ export function AuthCheckAndAction({
 }: AuthCheckAndActionProps) {
   const { status } = useSession()
 
-  console.log(status)
-
   useEffect(() => {
     // Only proceed if the user is authenticated
     if (status === 'authenticated' && !hasFetchedData) {

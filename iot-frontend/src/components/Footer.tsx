@@ -12,7 +12,7 @@ const Footer = () => {
       </div>
 
       <div className="container mx-auto flex items-center justify-center">
-        <p className="text-sm text-center">v0.0.10</p>
+        <p className="text-sm text-center">v0.0.11</p>
       </div>
     </footer>
   )
