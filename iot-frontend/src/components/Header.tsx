@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import sparkAdroit from '@/public/assets/img/Adroit-environmental-monitoring2.png'
 import { CustomUser, HeaderProps } from '@/types'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
@@ -62,7 +61,7 @@ HeaderProps) => {
           <Link href={'/'} className="font-bold">
             <Image
               alt="Logo of Spark x Adroit"
-              src={sparkAdroit}
+              src="/assets/img/Adroit-environmental-monitoring2.png"
               width={0}
               height={0}
               style={{ width: '120px', height: 'auto' }}
