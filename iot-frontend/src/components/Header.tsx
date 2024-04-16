@@ -58,12 +58,12 @@ HeaderProps) => {
       {/* Top Blue Header */}
       <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white py-2 px-4">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href={'/'} className="font-bold">
+          <Link href={'/'} className="font-bold flex items-center justify-center gap-x-4">
             <Image
               alt="Logo of Spark x Adroit"
               src="/assets/img/Adroit-environmental-monitoring2.png"
-              width={0}
-              height={0}
+              width={200}
+              height={200}
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />

@@ -27,6 +27,9 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([{ id: 'Timestamp', desc: false }])
 
+  const defaultPaginationSize = 25
+  
+
   const table = useReactTable({
     data,
     columns,
@@ -42,8 +45,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       size: 5, //starting column size
       minSize: 80, //enforced during column resizing
       maxSize: 100, //enforced during column resizing
+   
     },
+   
   })
+
+  //Set default pagination of pagesize.
+  table.getState().pagination.pageSize = defaultPaginationSize
 
   return (
     <div className="w-full">
@@ -134,7 +142,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 table.setPageSize(Number(e.target.value))
               }}
             >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {[25, 50, 75, 100].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </option>
