@@ -68,9 +68,7 @@ export const initializeColumns = () => {
                 <Link href={`/device-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
-                Hide client from Dashboard
-              </DropdownMenuItem>
+             
 
               <DropdownMenuItem>
                 <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
