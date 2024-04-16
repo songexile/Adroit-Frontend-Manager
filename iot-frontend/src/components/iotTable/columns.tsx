@@ -112,7 +112,7 @@ export const initializeColumns = () => {
 
     
         // Render the number of days ago
-        return <span className={`${bgColor} px-2 py-1 rounded-md text-white font-medium`}>{timestamp ? `${daysAgo} days ago` : 'N/A'}</span>;
+        return <span className={`${bgColor} p-4 rounded-md text-white font-medium`}>{timestamp ? `${daysAgo} days ago` : 'N/A'}</span>;
       },
       /**
        * Sorts rows based on the timestamp data of their original data.
@@ -181,14 +181,14 @@ export const initializeColumns = () => {
       },
     },
     {
-      accessorKey: 'device_id',
+      accessorKey: 'device_key',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Device ID
+            Device Key
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
@@ -232,7 +232,7 @@ export const initializeColumns = () => {
         return (
           <div className="flex justify-center">
             <span
-              className={`px-2 py-1 rounded-md text-white font-medium ${
+              className={`p-4 rounded-md text-white font-medium ${
                 battery !== null ? 'inline-block ' + color : 'hidden'
               }`}
             >
@@ -281,7 +281,7 @@ export const initializeColumns = () => {
           return (
             <div className="flex justify-center">
               <span
-                className={`px-2 py-1 rounded-md text-white font-medium ${
+                className={`p-4 rounded-md text-white font-medium ${
                   voltage !== null ? 'inline-block ' + color : 'hidden'
                 }`}
               >
