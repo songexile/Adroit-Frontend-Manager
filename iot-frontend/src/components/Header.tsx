@@ -56,8 +56,8 @@ HeaderProps) => {
   return (
     <>
       {/* Top Blue Header */}
-      <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white py-2 px-4">
-        <div className="container mx-auto flex justify-between items-center">
+      <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white ">
+        <div className="container mx-auto flex p-6 justify-between items-center">
           <Link href={'/'} className="font-bold flex items-center justify-center gap-x-4">
             <Image
               alt="Logo of Spark x Adroit"
@@ -67,7 +67,12 @@ HeaderProps) => {
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />
-            <h1 className="font-thin text-sm">Frontend Manager</h1>
+           
+            <div className='font-thin text-sm mt-[1.3rem]'>
+            <h1 className="">Frontend </h1>
+            <h1>Manager</h1>
+
+            </div>
           </Link>
           <div className="relative" ref={dropdownRef}>
             <button className="flex items-center space-x-2" onClick={toggleDropdown}>
@@ -107,40 +112,42 @@ HeaderProps) => {
         </div>
 
         {(setSearchById || setSearchByClientName || fetchDataAndUpdate) && (
-          <div className={`${setSearchById && setSearchByClientName ? '   py-2 px-4' : ''}`}>
-            <div className="container mx-auto md:flex items-center justify-between">
-              {(setSearchById || setSearchByClientName) && (
-                <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
-                  {setSearchById && (
-                    <input
-                      className="border-b-4 border-gray-100  text-black font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
-                      type="text"
-                      placeholder="Search by Device ID"
-                      value={searchById}
-                      onChange={(e) => setSearchById(e.target.value)}
-                    />
-                  )}
-                  {setSearchByClientName && (
-                    <input
-                      className="    border-b-4 border-gray-100  text-black font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
-                      type="text"
-                      placeholder="Search by Client Name"
-                      value={searchByClientName}
-                      onChange={(e) => setSearchByClientName(e.target.value)}
-                    />
-                  )}
-                </div>
-              )}
-              {fetchDataAndUpdate && (
-                <div className="flex items-center space-x-2 mt-3 md:mt-0">
-                  <button
-                    onClick={handleFetchAndUpdate}
-                    className=" bg-white border-b-4 border-gray-100 text-gray-400   font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
-                  >
-                    Fetch New Data
-                  </button>
-                </div>
-              )}
+          <div className='h-full bg-cyan-900 p-6'>
+            <div className={`${setSearchById && setSearchByClientName ? '   py-2 px-4' : ''}`}>
+              <div className="container mx-auto md:flex items-center justify-between">
+                {(setSearchById || setSearchByClientName) && (
+                  <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
+                    {setSearchById && (
+                      <input
+                        className="border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition "
+                        type="text"
+                        placeholder="Search by Device ID"
+                        value={searchById}
+                        onChange={(e) => setSearchById(e.target.value)}
+                      />
+                    )}
+                    {setSearchByClientName && (
+                      <input
+                        className="    border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition"
+                        type="text"
+                        placeholder="Search by Client Name"
+                        value={searchByClientName}
+                        onChange={(e) => setSearchByClientName(e.target.value)}
+                      />
+                    )}
+                  </div>
+                )}
+                {fetchDataAndUpdate && (
+                  <div className="flex items-center space-x-2 mt-3 md:mt-0">
+                    <button
+                      onClick={handleFetchAndUpdate}
+                      className=" hover:shadow-md bg-white border-b-4 rounded-2xl border-gray-100 text-gray-400   font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
+                    >
+                      Fetch New Data
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
