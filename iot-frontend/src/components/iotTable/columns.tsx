@@ -97,7 +97,22 @@ export const initializeColumns = () => {
         const timestamp = timestampData ? timestampData.timestamp : undefined
 
         // Render the timestamp
-        return <span>{timestamp ? new Date(timestamp).toLocaleString() : 'N/A'}</span>
+        const now = new Date();
+        const daysAgo = timestamp ? Math.floor((now.getTime() - new Date(timestamp).getTime()) / (1000 * 60 * 60 * 24)) : undefined;
+
+        var bgColor = 'inherit'
+
+        if (daysAgo !== undefined) {
+          if (daysAgo > 7) {
+            bgColor = 'bg-red-500'; // Red for over 7 days
+          } else if (daysAgo > 3) {
+            bgColor = 'bg-orange-500'; // Orange for 3-7 days
+          }
+        }
+
+    
+        // Render the number of days ago
+        return <span className={`${bgColor} px-2 py-1 rounded-md text-white font-medium`}>{timestamp ? `${daysAgo} days ago` : 'N/A'}</span>;
       },
       /**
        * Sorts rows based on the timestamp data of their original data.
@@ -255,7 +270,7 @@ export const initializeColumns = () => {
         if (typeof batteryVoltage === 'object' && typeof batteryVoltage.value === 'string') {
           const voltage = parseFloat(batteryVoltage.value)
 
-          if (voltage >= 3.6 && voltage <= 3.7) {
+          if (voltage >= 3.6) {
             color = 'bg-green-500'
           } else if (voltage >= 3.5 && voltage <= 3.8) {
             color = 'bg-orange-500'
