@@ -4,6 +4,7 @@ import { CustomUser, HeaderProps } from '@/types'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
 import LoginScreen from '@/pages/login'
+import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png'
 
 const Header = ({
   fetchDataAndUpdate,
@@ -61,7 +62,7 @@ HeaderProps) => {
           <Link href={'/'} className="font-bold">
             <Image
               alt="Logo of Spark x Adroit"
-              src="/assets/img/Adroit-environmental-monitoring2.png"
+              src={AdroitLogo}
               width={0}
               height={0}
               style={{ width: '120px', height: 'auto' }}
