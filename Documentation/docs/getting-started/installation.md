@@ -75,9 +75,9 @@ For More Info
 
 Once you've completed the aforementioned steps, you can execute the following commands in the terminal/command prompt from the project's root directory.
 
-| Command        |                                                                               Description                                                                                |
-| -------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| `pnpm install` |                                          This process will install all the necessary dependencies into the node_modules folder.                                          |
+| Command        | Description                                                                                                                                                              |
+| -------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm install` | This process will install all the necessary dependencies into the node_modules folder.                                                                                   |
 | `pnpm dev`     | It launches the project locally, initiates the development server, and monitors any changes in your code. You can access the development server at http://localhost:3000 |
 
 Congratulations!! You have successfully run the project. Visit http://localhost:3000/ (opens new window)to check it in your browser.
