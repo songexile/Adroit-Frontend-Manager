@@ -97,7 +97,7 @@ const CreateTicket = (data: any) => {
 
               <div className="mb-8">
                 <p className="text-black-600 text-center mb-4">
-                  Ticket will be sent to support@adroit.co.nz
+                  Tickets will be sent to support@adroit.co.nz
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
