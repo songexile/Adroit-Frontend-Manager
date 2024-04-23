@@ -16,15 +16,21 @@ function fetchDeviceId() {
   return deviceId
 }
 
-const isEmail = (email: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)
+const isEmailValid = (email: string) =>
+  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email.trim())
+
+const validateEmails = (emails: string) => {
+  return emails.split(',').every(isEmailValid)
+}
 
 const CreateTicket = (data: any) => {
   const { data: session } = useSession()
   const [to, setTo] = useState('')
+  const [cc, setCC] = useState('')
   const [subject, setSubject] = useState('')
   const [message, setMessage] = useState('Hi team, There is something wrong with...')
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [ticketCreated, setTicketCreated] = useState(false) // State to track if ticket is successfully created
+  const [ticketCreated] = useState(false) // State to track if ticket is successfully created
   const deviceId = fetchDeviceId()
   const filteredData = flattenNestedData(data, deviceId)
   const deviceData = filteredData[0]
@@ -46,9 +52,12 @@ const CreateTicket = (data: any) => {
     // Validate fields
     const validationErrors: { [key: string]: string } = {}
     if (!to) validationErrors.to = 'To field is required'
+    if (!cc) validationErrors.cc = 'CC field is required'
     if (!subject.trim()) validationErrors.subject = 'Subject field is required'
     if (!message.trim()) validationErrors.message = 'Message field is required'
-    if (!isEmail(to)) validationErrors.to = 'Invalid email format'
+    if (!isEmailValid(to)) validationErrors.to = 'Invalid email format'
+    if (!validateEmails(cc) && !validateEmails(cc))
+      validationErrors.cc = 'One or more CC email formats are invalid'
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
@@ -61,18 +70,14 @@ const CreateTicket = (data: any) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ to, subject, message, deviceData }),
+        body: JSON.stringify({ to, cc, subject, message, deviceData }),
       })
 
       if (response.ok) {
         showToast({ message: 'Ticket created successfully!', type: 'success' })
       } else {
         const data = await response.json()
-        if (data.message === 'Invalid API key') {
-          showToast({ message: 'Invalid API key', type: 'error' })
-        } else {
-          showToast({ message: `Error creating ticket: ${data.message}`, type: 'error' })
-        }
+        showToast({ message: `Error creating ticket: ${data.message}`, type: 'error' })
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -147,6 +152,20 @@ const CreateTicket = (data: any) => {
                         className="border border-gray-300 p-2 rounded-md bg-white w-full"
                       />
                       {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
+                    </div>
+                    <div className="mb-4">
+                      <label htmlFor="cc" className="font-semibold text-gray-600">
+                        CC (separate multiple emails with commas):
+                      </label>
+                      <input
+                        id="cc"
+                        type="text"
+                        value={cc}
+                        onChange={(e) => setCC(e.target.value)}
+                        className="border border-gray-300 p-2 rounded-md bg-white w-full"
+                        placeholder="example1@mail.com, example2@mail.com"
+                      />
+                      {errors.cc && <p className="text-red-500 mt-1">{errors.cc}</p>}
                     </div>
                     <div className="mb-4">
                       <label htmlFor="subject" className="font-semibold text-gray-600">
