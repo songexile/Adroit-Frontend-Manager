@@ -190,6 +190,88 @@ const CreateTicket = (data: any) => {
           </div>
         </div>
         <Footer />
+
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+          <div className="border text-card-foreground w-full max-w-4xl p-8 bg-white shadow-xl rounded-lg divide-y divide-gray-200">
+            <div className="pb-8">
+              <h1 className="text-2xl font-bold text-gray-800">Create Ticket</h1>
+              <p className="text-sm text-gray-500">
+                Ticket will be sent to{' '}
+                <a href="#" className="text-blue-500 hover:text-blue-600">
+                  support@adroit.co.nz
+                </a>
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-8 pt-8">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Device Information</h2>
+                <p className="text-sm text-gray-600">
+                  <strong>Device ID:</strong> 880
+                  <br />
+                  <strong>Device Key:</strong>
+                  vibration-node-1-st11262
+                  <br />
+                  <strong>Client Name:</strong> Isaac Construction
+                  <br />
+                  <strong>Last Online:</strong> 07/10/2100, 09:20:05
+                  <br />
+                  <strong>Last ticket created:</strong> Never
+                </p>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Ticket Details</h2>
+                <form>
+                  <div className="space-y-4 mb-4">
+                    <div>
+                      <label
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        htmlFor="to"
+                      >
+                        To:
+                      </label>
+                      <input
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                        id="to"
+                        placeholder="Recipient email"
+                        type="email"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        htmlFor="subject"
+                      >
+                        Subject:
+                      </label>
+                      <input
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                        id="subject"
+                        placeholder="Ticket Subject"
+                        type="text"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        htmlFor="message"
+                      >
+                        Message:
+                      </label>
+                      <textarea
+                        className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1 min-h-[100px]"
+                        id="message"
+                        placeholder="Describe your issue"
+                      ></textarea>
+                    </div>
+                  </div>
+                  <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full">
+                    Submit Ticket
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     )
   } else {
@@ -198,3 +280,99 @@ const CreateTicket = (data: any) => {
 }
 
 export default CreateTicket
+
+// /**
+//  * v0 by Vercel.
+//  * @see https://v0.dev/t/dtD9QKoyQGJ
+//  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
+//  */
+// import Link from 'next/link';
+// import { Label } from '@/components/ui/label';
+// import { Input } from '@/components/ui/input';
+// import { Textarea } from '@/components/ui/textarea';
+// import { Button } from '@/components/ui/button';
+// import { Card } from '@/components/ui/card';
+
+// export default function Component() {
+//   return (
+//     <div className='min-h-screen bg-gray-100 flex items-center justify-center'>
+//       <Card className='w-full max-w-4xl p-8 bg-white shadow-xl rounded-lg divide-y divide-gray-200'>
+//         <div className='pb-8'>
+//           <nav className='text-sm mb-4'>
+//             <Link className='text-blue-500 hover:text-blue-600' href='#'>
+//               Home
+//             </Link>
+//             <span className='text-gray-500 mx-2'>{`>`}</span>
+//             <Link className='text-blue-500 hover:text-blue-600' href='#'>
+//               Device 880
+//             </Link>
+//             <span className='text-gray-500 mx-2'>{`>`}</span>
+//             <span className='text-gray-500'>Create Ticket 880</span>
+//           </nav>
+//           <h1 className='text-2xl font-bold text-gray-800'>Create Ticket</h1>
+//           <p className='text-sm text-gray-500'>
+//             Ticket will be sent to{' '}
+//             <a className='text-blue-500 hover:text-blue-600' href='#'>
+//               support@adroit.co.nz
+//             </a>
+//           </p>
+//         </div>
+//         <div className='grid grid-cols-2 gap-8 pt-8'>
+//           <div>
+//             <h2 className='text-lg font-semibold text-gray-800 mb-4'>
+//               Device Information
+//             </h2>
+//             <p className='text-sm text-gray-600'>
+//               <strong>Device ID:</strong> 880
+//               <br />
+//               <strong>Device Key:</strong> vibration-node-1-st11262
+//               <br />
+//               <strong>Client Name:</strong> Isaac Construction
+//               <br />
+//               <strong>Last Online:</strong> 07/10/2100, 09:20:05
+//               <br />
+//               <strong>Last ticket created:</strong>
+//               Never{'\n                  '}
+//             </p>
+//           </div>
+//           <div>
+//             <h2 className='text-lg font-semibold text-gray-800 mb-4'>
+//               Ticket Details
+//             </h2>
+//             <form>
+//               <div className='space-y-4 mb-4'>
+//                 <div>
+//                   <Label htmlFor='to'>To:</Label>
+//                   <Input
+//                     className='mt-1'
+//                     id='to'
+//                     placeholder='Recipient email'
+//                     type='email'
+//                   />
+//                 </div>
+//                 <div>
+//                   <Label htmlFor='subject'>Subject:</Label>
+//                   <Input
+//                     className='mt-1'
+//                     id='subject'
+//                     placeholder='Ticket Subject'
+//                     type='text'
+//                   />
+//                 </div>
+//                 <div>
+//                   <Label htmlFor='message'>Message:</Label>
+//                   <Textarea
+//                     className='mt-1 min-h-[100px]'
+//                     id='message'
+//                     placeholder='Describe your issue'
+//                   />
+//                 </div>
+//               </div>
+//               <Button className='w-full'>Submit Ticket</Button>
+//             </form>
+//           </div>
+//         </div>
+//       </Card>
+//     </div>
+//   );
+// }
