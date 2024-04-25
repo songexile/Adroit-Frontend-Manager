@@ -113,16 +113,21 @@ export const initializeColumns = () => {
         const timestampDataB = getTimestampData(rowB.original)
 
         // Extract timestamps if available
-        const timestampA = timestampDataA ? new Date(timestampDataA.timestamp) : null
-        const timestampB = timestampDataB ? new Date(timestampDataB.timestamp) : null
+        const timestampA =
+          timestampDataA && typeof timestampDataA.timestamp === 'number'
+            ? new Date(timestampDataA.timestamp)
+            : null
+        const timestampB =
+          timestampDataB && typeof timestampDataB.timestamp === 'number'
+            ? new Date(timestampDataB.timestamp)
+            : null
 
         // Sort by actual timestamps if available (newest to oldest)
         if (timestampA && timestampB) {
           return timestampB.getTime() - timestampA.getTime() // Reverse order for newest first
         } else if (!timestampA && !timestampB) {
           return 0 // Both are missing or N/A, so equal
-        } else if (!timestampA || (timestampDataA && timestampDataA.text === 'N/A')) {
-          // Check for N/A explicitly
+        } else if (!timestampA || (timestampDataA && timestampDataA.value === 'N/A')) {
           return 1 // rowA missing/N/A, so put it after rowB
         } else {
           return -1 // rowB missing/N/A, so put it after rowA
