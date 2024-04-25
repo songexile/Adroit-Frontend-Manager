@@ -40,8 +40,10 @@ export interface HeaderProps {
   clientsOfflineCount?: number;
 }
 
-export interface RequestBody {
+export interface EmailRequestBody {
   to: string
+  cc?: string | string[]
+  bcc?: string | string[]
   subject: string
   message: string
   deviceData: DynamicMetricData
