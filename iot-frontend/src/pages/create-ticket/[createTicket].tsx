@@ -1,39 +1,38 @@
-import React, { useState } from 'react'
-import { showToast } from '@/components/Toast'
-import { usePathname } from 'next/navigation'
-import { flattenNestedData } from '@/utils'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import LoginScreen from '../login'
-import { useSession } from 'next-auth/react'
-import Breadcrumb from '@/components/Breadcrumb'
+import React, { useState } from 'react';
+import { showToast } from '@/components/Toast';
+import { usePathname } from 'next/navigation';
+import { flattenNestedData } from '@/utils';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import LoginScreen from '../login';
+import { useSession } from 'next-auth/react';
+import Breadcrumb from '@/components/Breadcrumb';
 
 function fetchDeviceId() {
   // Fetches deviceId from URL
-  const pathname = usePathname()
-  const parts = pathname ? pathname.split('/') : []
-  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
-  return deviceId
+  const pathname = usePathname();
+  const parts = pathname ? pathname.split('/') : [];
+  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0; // Parse the deviceId as an integer, defaulting to 0 if it is undefined
+  return deviceId;
 }
 
-const isEmailValid = (email: string) =>
-  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email.trim())
-
-const validateEmails = (emails: string) => {
-  return emails.split(',').every(isEmailValid)
-}
+const isEmail = (email: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+const isValidEmails = (emails: string) => {
+  const emailArray = emails.split(',').map((email) => email.trim());
+  return emailArray.every(isEmail);
+};
 
 const CreateTicket = (data: any) => {
-  const { data: session } = useSession()
-  const [to, setTo] = useState('')
-  const [cc, setCC] = useState('')
-  const [subject, setSubject] = useState('')
-  const [message, setMessage] = useState('Hi team, There is something wrong with...')
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [ticketCreated] = useState(false) // State to track if ticket is successfully created
-  const deviceId = fetchDeviceId()
-  const filteredData = flattenNestedData(data, deviceId)
-  const deviceData = filteredData[0]
+  const { data: session } = useSession();
+  const [to, setTo] = useState('');
+  const [cc, setCc] = useState('');
+  const [bcc, setBcc] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('Hi team, There is something wrong with...');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const deviceId = fetchDeviceId();
+  const filteredData = flattenNestedData(data, deviceId);
+  const deviceData = filteredData[0];
 
   // Breadcrumb items
   const breadcrumbs = [
@@ -43,25 +42,24 @@ const CreateTicket = (data: any) => {
       name: `Create Ticket ${deviceData?.device_id}`,
       path: `/create-ticket/${deviceData?.device_id}`,
     },
-  ]
+  ];
 
   const handleCreateTicket = async () => {
     // Reset errors
-    setErrors({})
+    setErrors({});
 
     // Validate fields
-    const validationErrors: { [key: string]: string } = {}
-    if (!to) validationErrors.to = 'To field is required'
-    if (!cc) validationErrors.cc = 'CC field is required'
-    if (!subject.trim()) validationErrors.subject = 'Subject field is required'
-    if (!message.trim()) validationErrors.message = 'Message field is required'
-    if (!isEmailValid(to)) validationErrors.to = 'Invalid email format'
-    if (!validateEmails(cc) && !validateEmails(cc))
-      validationErrors.cc = 'One or more CC email formats are invalid'
+    const validationErrors: { [key: string]: string } = {};
+    if (!to) validationErrors.to = 'To field is required';
+    if (!subject.trim()) validationErrors.subject = 'Subject field is required';
+    if (!message.trim()) validationErrors.message = 'Message field is required';
+    if (!isEmail(to)) validationErrors.to = 'Invalid email format';
+    if (cc && !isValidEmails(cc)) validationErrors.cc = 'Invalid email format for CC field';
+    if (bcc && !isValidEmails(bcc)) validationErrors.bcc = 'Invalid email format for BCC field';
 
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
-      return
+      setErrors(validationErrors);
+      return;
     }
 
     try {
@@ -70,150 +68,170 @@ const CreateTicket = (data: any) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ to, cc, subject, message, deviceData }),
-      })
+        body: JSON.stringify({ to, cc, bcc, subject, message, deviceData }),
+      });
 
       if (response.ok) {
-        showToast({ message: 'Ticket created successfully!', type: 'success' })
+        showToast({ message: 'Ticket created successfully!', type: 'success' });
       } else {
-        const data = await response.json()
-        showToast({ message: `Error creating ticket: ${data.message}`, type: 'error' })
+        const data = await response.json();
+        if (data.message === 'Invalid API key') {
+          showToast({ message: 'Invalid API key', type: 'error' });
+        } else {
+          showToast({ message: `Error creating ticket: ${data.message}`, type: 'error' });
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
-        showToast({ message: `Error creating ticket: ${error.message}`, type: 'error' })
+        showToast({ message: `Error creating ticket: ${error.message}`, type: 'error' });
       } else {
-        showToast({ message: 'Unknown error occurred while creating ticket', type: 'error' })
+        showToast({ message: 'Unknown error occurred while creating ticket', type: 'error' });
       }
     }
-  }
+  };
 
   if (session) {
     return (
       <>
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
-          <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden border-2 border-blue-500">
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800">Create Ticket</h2>
-              </div>
-
-              <div className="mb-8">
-                <p className="text-black-600 text-center mb-4">
-                  Tickets will be sent to support@adroit.co.nz
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+          <div className="border text-card-foreground w-full max-w-6xl p-8 bg-white shadow-xl rounded-lg divide-y divide-gray-200">
+            <div className="pb-8">
+              <h1 className="text-2xl font-bold text-gray-800">Create Ticket</h1>
+              <p className="text-sm text-gray-500">
+                Ticket will be sent to{' '}
+                <a
+                  href="#"
+                  className="text-blue-500 hover:text-blue-600"
+                >
+                  support@adroit.co.nz
+                </a>
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Device Information</h2>
+                <p className="text-sm text-gray-600">
+                  <strong>Device ID:</strong> {deviceData?.device_id}
+                  <br />
+                  <strong>Device Key:</strong> {deviceData?.device_key}
+                  <br />
+                  <strong>Client Name:</strong> {deviceData?.client_name}
+                  <br />
+                  <strong>Last Online:</strong>{' '}
+                  {typeof deviceData?.last_online === 'string'
+                    ? deviceData.last_online
+                    : deviceData?.last_online?.value || 'N/A'}
+                  <br />
+                  <strong>Last ticket created:</strong> Never
                 </p>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Ticket Details</h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="bg-gray-50 p-6 rounded-lg shadow-md border border-gray-200">
-                    <h3 className="text-xl font-bold mb-4 text-gray-800">Device Information</h3>
-                    <div className="mb-2">
-                      <span className="font-semibold text-gray-600">Device ID:</span>{' '}
-                      {deviceData?.device_id}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold text-gray-600">Device Key:</span>{' '}
-                      {deviceData?.device_key}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold text-gray-600">Client Name:</span>{' '}
-                      {deviceData?.client_name}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold text-gray-600">Last Online:</span>{' '}
-                      {typeof deviceData?.last_online === 'string'
-                        ? deviceData.last_online
-                        : deviceData?.last_online?.value || 'N/A'}
-                    </div>
-                    <div className="mb-2">
-                      <span className="font-semibold text-gray-600">Last ticket created:</span>{' '}
-                      Never
-                    </div>
+                <div className="space-y-4 mb-4">
+                  <div>
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="to"
+                    >
+                      To:
+                    </label>
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                      id="to"
+                      placeholder="support@adroit.co.nz"
+                      type="email"
+                      value={to}
+                      onChange={(e) => setTo(e.target.value)}
+                    />
+                    {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
                   </div>
-
-                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-                    <h3 className="text-xl font-bold mb-4 text-gray-800">Ticket Details</h3>
-                    {ticketCreated && (
-                      <p className="text-green-600 mb-4">
-                        Thank You, the Ticket has been successfully submitted!
-                      </p>
-                    )}
-                    <div className="mb-4">
-                      <label htmlFor="to" className="font-semibold text-gray-600">
-                        To:
-                      </label>
-                      <input
-                        id="to"
-                        type="text"
-                        value={to}
-                        onChange={(e) => setTo(e.target.value)}
-                        required
-                        className="border border-gray-300 p-2 rounded-md bg-white w-full"
-                      />
-                      {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
-                    </div>
-                    <div className="mb-4">
-                      <label htmlFor="cc" className="font-semibold text-gray-600">
-                        CC (separate multiple emails with commas):
-                      </label>
-                      <input
-                        id="cc"
-                        type="text"
-                        value={cc}
-                        onChange={(e) => setCC(e.target.value)}
-                        className="border border-gray-300 p-2 rounded-md bg-white w-full"
-                        placeholder="example1@mail.com, example2@mail.com"
-                      />
-                      {errors.cc && <p className="text-red-500 mt-1">{errors.cc}</p>}
-                    </div>
-                    <div className="mb-4">
-                      <label htmlFor="subject" className="font-semibold text-gray-600">
-                        Subject:
-                      </label>
-                      <input
-                        id="subject"
-                        type="text"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        required
-                        className="border border-gray-300 p-2 rounded-md bg-white w-full"
-                      />
-                      {errors.subject && <p className="text-red-500 mt-1">{errors.subject}</p>}
-                    </div>
-                    <div className="mb-4">
-                      <label htmlFor="message" className="font-semibold text-gray-600">
-                        Message:
-                      </label>
-                      <textarea
-                        id="message"
-                        className="border border-gray-300 p-2 rounded-md bg-white w-full h-40"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        required
-                      ></textarea>
-                      {errors.message && <p className="text-red-500 mt-1">{errors.message}</p>}
-                    </div>
-                    <div className="mt-6 flex justify-center">
-                      <button
-                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition duration-300 shadow-md"
-                        onClick={handleCreateTicket}
-                      >
-                        Submit Ticket
-                      </button>
-                    </div>
+                  <div>
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="cc"
+                    >
+                      CC (optional / separate multiple emails with commas):
+                    </label>
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                      id="cc"
+                      placeholder="example1@mail.com, example2@mail.com"
+                      type="text"
+                      value={cc}
+                      onChange={(e) => setCc(e.target.value)}
+                    />
+                    {errors.cc && <p className="text-red-500 mt-1">{errors.cc}</p>}
+                  </div>
+                  <div>
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="bcc"
+                    >
+                      BCC (optional / separate multiple emails with commas):
+                    </label>
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                      id="bcc"
+                      placeholder="example1@mail.com, example2@mail.com"
+                      type="text"
+                      value={bcc}
+                      onChange={(e) => setBcc(e.target.value)}
+                    />
+                    {errors.bcc && <p className="text-red-500 mt-1">{errors.bcc}</p>}
+                  </div>
+                  <div>
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="subject"
+                    >
+                      Subject:
+                    </label>
+                    <input
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1"
+                      id="subject"
+                      placeholder="Ticket Subject"
+                      type="text"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                    />
+                    {errors.subject && <p className="text-red-500 mt-1">{errors.subject}</p>}
+                  </div>
+                  <div>
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="message"
+                    >
+                      Message:
+                    </label>
+                    <textarea
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1 min-h-[100px]"
+                      id="message"
+                      placeholder="Describe your issue"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    ></textarea>
+                    {errors.message && <p className="text-red-500 mt-1">{errors.message}</p>}
                   </div>
                 </div>
+                <button
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-500 text-primary-foreground hover:bg-blue-600 h-10 px-4 py-2 w-full"
+                  onClick={handleCreateTicket}
+                >
+                  Submit Ticket
+                </button>
               </div>
             </div>
           </div>
         </div>
         <Footer />
       </>
-    )
+    );
   } else {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
-}
+};
 
-export default CreateTicket
+export default CreateTicket;
