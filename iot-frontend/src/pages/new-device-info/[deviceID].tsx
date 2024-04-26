@@ -9,7 +9,7 @@ import LoginScreen from '../login'
 import { useSession } from 'next-auth/react'
 import { DynamicMetricData } from '@/types'
 import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart';
-import { Heading1 } from 'lucide-react'
+import { Heading1, Ticket } from 'lucide-react'
 
 //import SpeedometerChart from '../components/speedometerChart/SpeedometerChart';
 
@@ -107,7 +107,73 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     const fullMetricName = filterMetric.map((key) => prefix + key)
 
     return (
-        <div>Hello world
+        // Device Info and create Ticket button.
+        <div>
+            <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
+                <Link href={`/create-ticket/${deviceData?.device_id}`}>
+                    <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
+                        Create Ticket
+                    </button>
+                </Link>
+            </div>
+
+            {/* Device Info Card */}
+            <div className="bg-gray-200 p-4 rounded-lg">
+                <div className="flex flex-wrap">
+                    <div className="w-full md:w-1/5 mb-4">
+                        <span className="font-bold text-gray-600">Device ID:</span>
+                        <div className="text-right md:text-left md:pl-1">{deviceData?.device_id}</div>
+                    </div>
+                    <div className="w-full md:w-1/5 mb-4">
+                        <span className="font-bold text-gray-600">Device Key:</span>
+                        <div className="text-right md:text-left md:pl-1">{deviceData?.device_key}</div>
+                    </div>
+                    <div className="w-full md:w-1/5 mb-4">
+                        <span className="font-bold text-gray-600">Client Name:</span>
+                        <div className="text-right md:text-left md:pl-1">{deviceData?.client_name}</div>
+                    </div>
+                    <div className="w-full md:w-1/5 mb-4">
+                        <span className="font-bold text-gray-600">Last Online:</span>
+                        <div className="text-right md:text-left md:pl-1">
+                            {typeof deviceData?.last_online === 'string'
+                                ? deviceData.last_online
+                                : deviceData?.last_online?.value || 'N/A'}
+                        </div>
+                    </div>
+                    <div className="w-full md:w-1/5 mb-4">
+                        <span className="font-bold text-gray-600">Last Ticket Created:</span>
+                        <div className="text-right md:text-left md:pl-1">Never</div>
+                    </div>
+                </div>
+            </div>
+
+            {/*  Status Card */}
+            <div className="bg-gray-200 p-4 rounded-lg flex items-center mt-4 mb-4">
+                <h3 className="text-xl font-bold mr-4 text-gray-800">Status</h3>
+                <div className="flex space-x-4">
+                    <div className="flex items-center">
+                        <span className="font-bold text-gray-600 mr-2">Scan:</span>
+                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
+                            ONLINE
+                        </span>
+                    </div>
+                    <div className="flex items-center">
+                        <span className="font-bold text-gray-600 mr-2">Battery:</span>
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
+                            OFFLINE
+                        </span>
+                    </div>
+                    <div className="flex items-center">
+                        <span className="font-bold text-gray-600 mr-2">Insitu:</span>
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
+                            ERROR
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
 
             <div className='grid grid-cols-3  gap-4'>
                 {Object.entries(deviceData).map(([key, value]) => {
@@ -119,26 +185,23 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                                 <div className="flex bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500" key={key}>
                                     <p>
                                         {formalName}: {value}
-
                                     </p>
                                 </div>
                             )
                         } else if (value && typeof value === 'object' && 'value' in value) {
                             return (
-                                <div className="flex items-start    border-blue-500 border-b-2 hover:bg-gray-300  transition   bg-blue-200 bg- rounded-md flex-col gap-4 text-black h-16  justify-center" key={key}>
-                                    <div className='mx-4 flex flex-col  gap-4'>
+                                <div className="flex items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black h-16 justify-center" key={key}>
+                                    <div className='mx-4 flex flex-col gap-4'>
                                         <p className='font-bold text-xl'>
                                             {formalName}
-                                            <div>
-                                                <SpeedometerChart value={parseFloat(value.value)} colors={['#00ff00', '#ff0000']} />
-                                            </div>
                                         </p>
                                         <p>
                                             {value.value}
-
                                         </p>
                                     </div>
-
+                                    {/* <div className='mx-4 col-span-1'>
+                                        <SpeedometerChart value={parseFloat(value.value)} colors={['#00ff00', '#ff0000']} />
+                                    </div> */}
                                 </div>
 
                             )
@@ -146,6 +209,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                             return (
                                 <div className="" key={key}>
                                     <p>{formalName}: N/A</p>
+
                                 </div>
                             )
                         }
@@ -154,6 +218,11 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                     }
 
                 })}
+            </div>
+
+            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+                <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
+                {deviceData && renderMetrics(deviceData)}
             </div>
         </div>
     )

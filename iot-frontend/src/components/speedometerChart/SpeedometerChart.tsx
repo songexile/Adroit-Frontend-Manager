@@ -17,12 +17,12 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
       const config: ChartConfiguration = {
         type: 'doughnut',
         data: {
-          //     labels: ['Value', 'Remaining'],
           datasets: [
             {
               data: [value, 10 - value],
               backgroundColor: colors,
-              hoverBackgroundColor: colors
+              hoverBackgroundColor: colors,
+              borderWidth: 0
             }
           ]
         },
@@ -48,7 +48,7 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
     };
   }, [value, colors]);
 
-  return <canvas className="bg-gray-500" ref={chartContainer} />;
+  return <canvas className="bg-gray-500" style={{ height: '150px', width: '340px' }} ref={chartContainer} />;
 };
 
 export default SpeedometerChart;
