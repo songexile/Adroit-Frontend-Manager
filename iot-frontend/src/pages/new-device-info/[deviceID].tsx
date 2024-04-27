@@ -150,23 +150,23 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
 
             {/*  Status Card */}
             <div className="bg-gray-200 p-4 rounded-lg flex items-center mt-4 mb-4">
-                <h3 className="text-xl font-bold mr-4 text-gray-800">Status</h3>
+                <h3 className="text-xl font-bold mr-8 text-gray-800">Status</h3>
                 <div className="flex space-x-4">
                     <div className="flex items-center">
                         <span className="font-bold text-gray-600 mr-2">Scan:</span>
-                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
+                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold mr-12">
                             ONLINE
                         </span>
                     </div>
                     <div className="flex items-center">
                         <span className="font-bold text-gray-600 mr-2">Battery:</span>
-                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold mr-12">
                             OFFLINE
                         </span>
                     </div>
                     <div className="flex items-center">
                         <span className="font-bold text-gray-600 mr-2">Insitu:</span>
-                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold mr-12">
                             ERROR
                         </span>
                     </div>
@@ -190,18 +190,19 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                             )
                         } else if (value && typeof value === 'object' && 'value' in value) {
                             return (
-                                <div className="flex items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black h-16 justify-center" key={key}>
-                                    <div className='mx-4 flex flex-col gap-4'>
-                                        <p className='font-bold text-xl'>
+                                <div className=" md-16 flex items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black h-16 justify-center" key={key}>
+                                    <div className='mx-4 flex flex-col gap-4 md-16'>
+                                        <p className='font-bold text-xl md-16'>
                                             {formalName}
                                         </p>
                                         <p>
                                             {value.value}
                                         </p>
+                                        <p>
+                                            <SpeedometerChart value={parseFloat(value.value)} colors={['#00ff00', '#ff0000']} />
+                                        </p>
+
                                     </div>
-                                    {/* <div className='mx-4 col-span-1'>
-                                        <SpeedometerChart value={parseFloat(value.value)} colors={['#00ff00', '#ff0000']} />
-                                    </div> */}
                                 </div>
 
                             )
