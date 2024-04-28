@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from 'react';
-import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import React, { useEffect, useRef } from 'react'
+import { Chart, ChartConfiguration, registerables } from 'chart.js'
 
-Chart.register(...registerables);
+Chart.register(...registerables)
 
 interface GaugeProps {
-  value: number;
-  colors: string[];
+  value: number
+  colors: string[]
 }
 
 const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
-  const chartContainer = useRef<HTMLCanvasElement | null>(null);
-  const chartInstance = useRef<Chart | null>(null);
+  const chartContainer = useRef<HTMLCanvasElement | null>(null)
+  const chartInstance = useRef<Chart | null>(null)
 
   useEffect(() => {
     if (chartContainer.current) {
@@ -19,12 +19,12 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
         data: {
           datasets: [
             {
-              data: [value, 10 - value],
+              data: [value, 20 - value],
               backgroundColor: colors,
               hoverBackgroundColor: colors,
-              borderWidth: 0
-            }
-          ]
+              borderWidth: 0,
+            },
+          ],
         },
 
         options: {
@@ -34,21 +34,25 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
           tooltips: { enabled: false },
           hover: { mode: null },
           responsive: false,
-        }
-      };
+        },
+      }
 
-      chartInstance.current = new Chart(chartContainer.current, config);
+      chartInstance.current = new Chart(chartContainer.current, config)
     }
 
     return () => {
       if (chartInstance.current) {
-        chartInstance.current.destroy();
-        chartInstance.current = null;
+        chartInstance.current.destroy()
+        chartInstance.current = null
       }
-    };
-  }, [value, colors]);
+    }
+  }, [value, colors])
 
-  return <canvas className="bg-gray-500" style={{ height: '150px', width: '340px' }} ref={chartContainer} />;
-};
+  return (
+    <div className="mx-8">
+      <canvas className="w-full h-32 " ref={chartContainer} />
+    </div>
+  )
+}
 
-export default SpeedometerChart;
+export default SpeedometerChart

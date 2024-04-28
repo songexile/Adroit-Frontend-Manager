@@ -8,11 +8,10 @@ import Link from 'next/link'
 import LoginScreen from '../login'
 import { useSession } from 'next-auth/react'
 import { DynamicMetricData } from '@/types'
-import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart';
+import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart'
 import { Heading1, Ticket } from 'lucide-react'
 
 //import SpeedometerChart from '../components/speedometerChart/SpeedometerChart';
-
 
 function fetchDeviceId() {
     // Fetches deviceId from Url
@@ -40,11 +39,8 @@ function DeviceID(data: any) {
             <>
                 <Header />
                 <Breadcrumb breadcrumbs={breadcrumbs} />
-                <div className='flex  mx-32  min-h-screen py-6 flex-col '>
-
+                <div className="flex  mx-32  min-h-screen py-6 flex-col ">
                     {deviceData && debugMetrics(deviceData)}
-
-
                 </div>
                 <Footer />
             </>
@@ -102,9 +98,26 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS']
     const prefix = 'metric_'
 
-    const formalMetricName = ['pH Level', 'Temperature', 'Battery Percentage %', 'Solar Voltage', 'Press']
+    const formalMetricName = [
+        'pH Level',
+        'Temperature',
+        'Battery Percentage %',
+        'Solar Voltage',
+        'Press',
+    ]
 
     const fullMetricName = filterMetric.map((key) => prefix + key)
+
+    const relevantKeys = [
+        'signal quality',
+        'MESSAGE',
+        'scanStatus',
+        'insituStatus',
+        'solar volt',
+        'batt status',
+        'DIAGNOSTICS',
+    ]
+    const errorKeys = relevantKeys.map((key) => prefix + key) // Concatenate prefix to each key
 
     return (
         // Device Info and create Ticket button.
@@ -150,39 +163,40 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
 
             {/*  Status Card */}
             <div className="bg-gray-200 p-4 rounded-lg flex items-center mt-4 mb-4">
-                <h3 className="text-xl font-bold mr-8 text-gray-800">Status</h3>
+                <h3 className="text-xl font-bold mr-16 text-gray-800">Status</h3>
                 <div className="flex space-x-4">
                     <div className="flex items-center">
                         <span className="font-bold text-gray-600 mr-2">Scan:</span>
-                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold mr-12">
+                        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
                             ONLINE
                         </span>
                     </div>
                     <div className="flex items-center">
-                        <span className="font-bold text-gray-600 mr-2">Battery:</span>
-                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold mr-12">
+                        <span className="font-bold text-gray-600 ml-16 mr-2">Battery:</span>
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
                             OFFLINE
                         </span>
                     </div>
                     <div className="flex items-center">
-                        <span className="font-bold text-gray-600 mr-2">Insitu:</span>
-                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold mr-12">
+                        <span className="font-bold text-gray-600 ml-16 mr-2">Insitu:</span>
+                        <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
                             ERROR
                         </span>
                     </div>
                 </div>
             </div>
 
-
-
-            <div className='grid grid-cols-3  gap-4'>
+            <div className="grid grid-cols-3  gap-4">
                 {Object.entries(deviceData).map(([key, value]) => {
                     const index = fullMetricName.indexOf(key)
                     if (index !== -1) {
                         const formalName = formalMetricName[index]
                         if (typeof value === 'string') {
                             return (
-                                <div className="flex bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500" key={key}>
+                                <div
+                                    className="flex bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500"
+                                    key={key}
+                                >
                                     <p>
                                         {formalName}: {value}
                                     </p>
@@ -190,60 +204,82 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                             )
                         } else if (value && typeof value === 'object' && 'value' in value) {
                             return (
-                                <div className=" md-16 flex items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black h-16 justify-center" key={key}>
-                                    <div className='mx-4 flex flex-col gap-4 md-16'>
-                                        <p className='font-bold text-xl md-16'>
-                                            {formalName}
-                                        </p>
-                                        <p>
-                                            {value.value}
-                                        </p>
-                                        <p>
-                                            <SpeedometerChart value={parseFloat(value.value)} colors={['#00ff00', '#ff0000']} />
-                                        </p>
-
+                                <div
+                                    className="flex items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black min-h-[16rem] justify-center"
+                                    key={key}
+                                >
+                                    <div className="mx-4 flex flex-col gap-4">
+                                        <p className="font-bold text-xl">{formalName}</p>
+                                        <p>{value.value}</p>
                                     </div>
-                                </div>
 
+                                    <SpeedometerChart
+                                        value={parseFloat(value.value)}
+                                        colors={['#00ff00', '#ff0000']}
+                                    />
+                                </div>
                             )
                         } else {
                             return (
                                 <div className="" key={key}>
                                     <p>{formalName}: N/A</p>
-
                                 </div>
                             )
                         }
                     } else {
                         return <></>
                     }
-
                 })}
             </div>
 
-            <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
-                {deviceData && renderMetrics(deviceData)}
+            <div className="flex flex-wrap max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+                <div>
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
+                    {deviceData && renderMetrics(deviceData)}
+                </div>
+
+                <div className="flex flex-col gap-4 text-red-500">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Attentus:</h2>
+
+                    {Object.entries(deviceData).map(([key, value]) => {
+                        if (errorKeys.includes(key)) {
+                            if (typeof value === 'string') {
+                                return (
+                                    <div className="" key={key}>
+                                        <p>
+                                            {key}: {value}
+                                        </p>
+                                    </div>
+                                )
+                            } else if (value && typeof value === 'object' && 'value' in value) {
+                                return (
+                                    <div className="" key={key}>
+                                        <p>
+                                            {key}: {value.value}
+                                        </p>
+                                    </div>
+                                )
+                            } else {
+                                // Handle undefined or unexpected value
+                                return (
+                                    <div className="" key={key}>
+                                        <p>{key}: N/A</p>
+                                    </div>
+                                )
+                            }
+                        } else {
+                            // Key is not in errorKeys, return an empty fragment
+                            return <></>
+                        }
+                    })}
+
+                </div>
             </div>
+
         </div>
     )
 }
-
-
-
 
 export default DeviceID
 
 
-
-const MetricsCard = ({ deviceData }: { deviceData: DynamicMetricData }): JSX.Element => {
-
-
-    return (
-        <div>
-            {deviceData.client_name}
-            {deviceData.device_id}
-
-        </div>
-    )
-}
