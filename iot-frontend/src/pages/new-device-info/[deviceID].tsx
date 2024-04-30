@@ -10,6 +10,7 @@ import { useSession } from 'next-auth/react'
 import { DynamicMetricData } from '@/types'
 import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart'
 import { Heading1, Ticket } from 'lucide-react'
+const scan = "OFFLINE";
 
 //import SpeedometerChart from '../components/speedometerChart/SpeedometerChart';
 
@@ -130,7 +131,6 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                     </button>
                 </Link>
             </div>
-
             {/* Device Info Card */}
             <div className="bg-gray-200 p-4 rounded-lg">
                 <div className="flex flex-wrap">
@@ -162,13 +162,13 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             </div>
 
             {/*  Status Card */}
-            <div className="bg-gray-200 p-4 rounded-lg flex items-center mt-4 mb-4">
-                <h3 className="text-xl font-bold mr-16 text-gray-800">Status</h3>
-                <div className="flex space-x-4">
+            <h3 className="text-xl font-bold mr-16 text-gray-800">Status</h3>
+            <div className="bg-gray-200 p-4 rounded-lg flex flex-col items-center justify-center mt-4 mb-4">
+                <div className="flex flex-col md:flex-row items-center justify-center">
                     <div className="flex items-center">
                         <span className="font-bold text-gray-600 mr-2">Scan:</span>
                         <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
-                            ONLINE
+                            {scan}
                         </span>
                     </div>
                     <div className="flex items-center">
@@ -186,7 +186,8 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                 </div>
             </div>
 
-            <div className="grid grid-cols-3  gap-4">
+            {/* Chart components */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
                 {Object.entries(deviceData).map(([key, value]) => {
                     const index = fullMetricName.indexOf(key)
                     if (index !== -1) {
@@ -194,7 +195,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                         if (typeof value === 'string') {
                             return (
                                 <div
-                                    className="flex bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500"
+                                    className="flex flex-wrap bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500"
                                     key={key}
                                 >
                                     <p>
@@ -205,7 +206,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                         } else if (value && typeof value === 'object' && 'value' in value) {
                             return (
                                 <div
-                                    className="flex items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black min-h-[16rem] justify-center"
+                                    className="flex flex-wrap items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black min-h-[16rem] justify-center"
                                     key={key}
                                 >
                                     <div className="mx-4 flex flex-col gap-4">
@@ -213,10 +214,15 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                                         <p>{value.value}</p>
                                     </div>
 
-                                    <SpeedometerChart
-                                        value={parseFloat(value.value)}
-                                        colors={['#00ff00', '#ff0000']}
-                                    />
+                                    {/* SpeedoMeeter Chart */}
+                                    <div>
+
+                                        <SpeedometerChart
+                                            value={parseFloat(value.value)}
+                                            colors={['#00ff00', '#ff0000']}
+                                        />
+                                    </div>
+
                                 </div>
                             )
                         } else {
@@ -247,6 +253,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                                 return (
                                     <div className="" key={key}>
                                         <p>
+
                                             {key}: {value}
                                         </p>
                                     </div>
