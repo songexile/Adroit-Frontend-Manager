@@ -4,6 +4,7 @@ import { CustomUser, HeaderProps } from '@/types'
 import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
 import LoginScreen from '@/pages/login'
+import { Switch } from '@/components/ui/switch'
 
 const Header = ({
   fetchDataAndUpdate,
@@ -22,6 +23,11 @@ HeaderProps) => {
   }
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [hideSelected, setHideSelected] = useState(false)
+
+  if (hideSelected) {
+    console.log('hideSelected')
+  }
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const { data: session } = useSession()
@@ -67,11 +73,10 @@ HeaderProps) => {
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />
-           
-            <div className='font-thin text-sm mt-[1.3rem]'>
-            <h1 className="">Frontend </h1>
-            <h1>Manager</h1>
 
+            <div className="font-thin text-sm mt-[1.3rem]">
+              <h1 className="">Frontend </h1>
+              <h1>Manager</h1>
             </div>
           </Link>
           <div className="relative" ref={dropdownRef}>
@@ -112,7 +117,7 @@ HeaderProps) => {
         </div>
 
         {(setSearchById || setSearchByClientName || fetchDataAndUpdate) && (
-          <div className='h-full bg-cyan-900 p-6'>
+          <div className="h-full bg-cyan-900 p-6">
             <div className={`${setSearchById && setSearchByClientName ? '   py-2 px-4' : ''}`}>
               <div className="container mx-auto md:flex items-center justify-between">
                 {(setSearchById || setSearchByClientName) && (
@@ -147,6 +152,15 @@ HeaderProps) => {
                     </button>
                   </div>
                 )}
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    checked={hideSelected}
+                    onCheckedChange={setHideSelected}
+                    id="airplane-mode"
+                  />
+                  <label htmlFor="airplane-mode">Hide Devices with null values</label>
+                </div>
               </div>
             </div>
           </div>
