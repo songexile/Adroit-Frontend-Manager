@@ -191,6 +191,17 @@ export const initializeColumns = () => {
           </Button>
         )
       },
+      cell: ({ row }) => {
+        const deviceKey = row.original.device_key;
+      
+      
+        return (
+          <div className='w-8'>
+         
+            {deviceKey}
+          </div>
+        );
+      }
     },
     {
       accessorKey: 'metric_battery_percentage',
