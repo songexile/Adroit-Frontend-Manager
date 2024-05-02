@@ -153,14 +153,15 @@ HeaderProps) => {
                   </div>
                 )}
 
-                <div className="flex items-center space-x-2">
+{/* Would like to implement in future */}
+                {/* <div className="flex items-center space-x-2">
                   <Switch
                     checked={hideSelected}
                     onCheckedChange={setHideSelected}
                     id="airplane-mode"
                   />
                   <label htmlFor="airplane-mode">Hide Devices with null values</label>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
