@@ -8,10 +8,10 @@ import { Switch } from '@/components/ui/switch'
 
 const Header = ({
   fetchDataAndUpdate,
-  searchById,
-  setSearchById,
   searchByClientName,
   setSearchByClientName,
+  searchByDeviceKey,
+  setSearchByDeviceKey,
   totalDevicesOfflineCount,
   clientsOfflineCount,
 }: // recentlyOfflineCount,
@@ -28,6 +28,7 @@ HeaderProps) => {
   if (hideSelected) {
     console.log('hideSelected')
   }
+
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const { data: session } = useSession()
@@ -62,7 +63,7 @@ HeaderProps) => {
   return (
     <>
       {/* Top Blue Header */}
-      <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white ">
+      <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white">
         <div className="container mx-auto flex p-6 justify-between items-center">
           <Link href={'/'} className="font-bold flex items-center justify-center gap-x-4">
             <Image
@@ -116,28 +117,30 @@ HeaderProps) => {
           </div>
         </div>
 
-        {(setSearchById || setSearchByClientName || fetchDataAndUpdate) && (
+        {(setSearchByClientName || setSearchByDeviceKey || fetchDataAndUpdate) && (
           <div className="h-full bg-cyan-900 p-6">
-            <div className={`${setSearchById && setSearchByClientName ? '   py-2 px-4' : ''}`}>
+            <div
+              className={`${setSearchByClientName && setSearchByDeviceKey ? '   py-2 px-4' : ''}`}
+            >
               <div className="container mx-auto md:flex items-center justify-between">
-                {(setSearchById || setSearchByClientName) && (
+                {(setSearchByClientName || setSearchByDeviceKey) && (
                   <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
-                    {setSearchById && (
-                      <input
-                        className="border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition "
-                        type="text"
-                        placeholder="Search by Device ID"
-                        value={searchById}
-                        onChange={(e) => setSearchById(e.target.value)}
-                      />
-                    )}
                     {setSearchByClientName && (
                       <input
-                        className="    border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition"
+                        className="border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition "
                         type="text"
                         placeholder="Search by Client Name"
                         value={searchByClientName}
                         onChange={(e) => setSearchByClientName(e.target.value)}
+                      />
+                    )}
+                    {setSearchByDeviceKey && (
+                      <input
+                        className="    border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition"
+                        type="text"
+                        placeholder="Search by Device Key"
+                        value={searchByDeviceKey}
+                        onChange={(e) => setSearchByDeviceKey(e.target.value)}
                       />
                     )}
                   </div>
@@ -153,15 +156,15 @@ HeaderProps) => {
                   </div>
                 )}
 
-{/* Would like to implement in future */}
-                {/* <div className="flex items-center space-x-2">
+                {/* Would like to implement in future */}
+                <div className="flex items-center space-x-2">
                   <Switch
                     checked={hideSelected}
                     onCheckedChange={setHideSelected}
                     id="airplane-mode"
                   />
                   <label htmlFor="airplane-mode">Hide Devices with null values</label>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
