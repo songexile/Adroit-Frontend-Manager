@@ -46,3 +46,8 @@ export interface RequestBody {
   message: string
   deviceData: DynamicMetricData
 }
+
+export interface ToggleSwitchProps {
+  text: string
+  initialValue?: boolean
+}

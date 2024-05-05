@@ -1,9 +1,5 @@
+import { ToggleSwitchProps } from '@/types'
 import React, { useState } from 'react'
-
-interface ToggleSwitchProps {
-  text: string
-  initialValue?: boolean
-}
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ text, initialValue = false }) => {
   const [isChecked, setIsChecked] = useState(initialValue)
