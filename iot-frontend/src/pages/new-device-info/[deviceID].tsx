@@ -6,9 +6,10 @@ import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
 import Link from 'next/link';
 import LoginScreen from '../login';
-import { useSession } from 'next-auth/react';
 import { DynamicMetricData } from '@/types';
 import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
+import { useAuth } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -19,7 +20,7 @@ function fetchDeviceId() {
 }
 
 function DeviceID(data: any) {
-  const { data: session } = useSession();
+  const { isAuthenticated, isLoading } = useAuth();
   const deviceId = fetchDeviceId();
 
   const filteredData = useMemo(() => flattenNestedData(data, deviceId), [data, deviceId]);
@@ -33,7 +34,17 @@ function DeviceID(data: any) {
     { name: `Device ${deviceData?.device_id}`, path: `/new-device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
   ];
 
-  if (session) {
+  if (isLoading) {
+    return (
+      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
+        <div className="h-5/6 w-full"></div>
+        <LoadingSpinner className={'h-32 w-32'} />
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
     return (
       <>
         <Header />
@@ -89,8 +100,11 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
   );
 };
 
-//**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
-
+/**
+ * Renders metric data from the provided deviceData object, highlighting specific keys in red for important debugging metrics.
+ * @param {DynamicMetricData | null} deviceData - The object containing metric data or null if no data is available.
+ * @returns {JSX.Element | null} JSX representing the rendered metric data with highlighted debugging metrics, or null if deviceData is null.
+ */
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
   if (!deviceData) return null;
 

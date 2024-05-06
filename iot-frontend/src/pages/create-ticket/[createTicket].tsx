@@ -5,8 +5,9 @@ import { flattenNestedData } from '@/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import LoginScreen from '../login';
-import { useSession } from 'next-auth/react';
 import Breadcrumb from '@/components/Breadcrumb';
+import { useAuth } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 function fetchDeviceId() {
   // Fetches deviceId from URL
@@ -23,12 +24,14 @@ const isValidEmails = (emails: string) => {
 };
 
 const CreateTicket = (data: any) => {
-  const { data: session } = useSession();
+  const { isAuthenticated, isLoading } = useAuth();
+
   const [to, setTo] = useState('');
   const [cc, setCc] = useState('');
   const [bcc, setBcc] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('Hi team, There is something wrong with...');
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const deviceId = fetchDeviceId();
   const filteredData = flattenNestedData(data, deviceId);
@@ -90,7 +93,17 @@ const CreateTicket = (data: any) => {
     }
   };
 
-  if (session) {
+  if (isLoading) {
+    return (
+      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
+        <div className="h-5/6 w-full"></div>
+        <LoadingSpinner className={'h-32 w-32'} />
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
     return (
       <>
         <Header />

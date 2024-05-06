@@ -1,13 +1,14 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import LoginScreen from '../login'
-import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { CustomUser } from '@/types'
-import { showToast } from '@/components/Toast'
-import { updateUserAttribute } from 'aws-amplify/auth'
-import { Amplify } from "aws-amplify";
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import LoginScreen from '../login';
+import { useEffect, useState } from 'react';
+import { CustomUser } from '@/types';
+import { showToast } from '@/components/Toast';
+import { updateUserAttribute } from 'aws-amplify/auth';
+import { Amplify } from 'aws-amplify';
 import awsConfig from '@/utils/AWS-config';
+import { useAuth } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 Amplify.configure({
   Auth: {
@@ -16,20 +17,21 @@ Amplify.configure({
 });
 
 const Profile = () => {
-  const { data: session } = useSession()
-  const [givenName, setGivenName] = useState<string>('')
-  const [familyName, setFamilyName] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
+  const { isAuthenticated, session, isLoading } = useAuth();
+
+  const [givenName, setGivenName] = useState<string>('');
+  const [familyName, setFamilyName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
 
   // Extract user data if session exists
   useEffect(() => {
     if (session) {
-      const { given_name, family_name, email } = session.user as CustomUser
-      setGivenName(given_name || '')
-      setFamilyName(family_name || '')
-      setEmail(email || '')
+      const { given_name, family_name, email } = session.user as CustomUser;
+      setGivenName(given_name || '');
+      setFamilyName(family_name || '');
+      setEmail(email || '');
     }
-  }, [session])
+  }, [session]);
 
   const handleUpdateAttribute = async (attributeKey: string, value: string) => {
     try {
@@ -38,46 +40,57 @@ const Profile = () => {
           attributeKey,
           value,
         },
-      })
-      handleUpdateAttributeNextSteps(output)
+      });
+      handleUpdateAttributeNextSteps(output);
     } catch (error: any) {
-      showToast({ message: 'Error updating user attribute: ' + error.message, type: 'error' })
+      showToast({ message: 'Error updating user attribute: ' + error.message, type: 'error' });
     }
-  }
+  };
 
   const handleUpdateAttributeNextSteps = (output: any) => {
-    const { nextStep } = output
+    const { nextStep } = output;
 
     switch (nextStep.updateAttributeStep) {
       case 'CONFIRM_ATTRIBUTE_WITH_CODE':
-        const codeDeliveryDetails = nextStep.codeDeliveryDetails
+        const codeDeliveryDetails = nextStep.codeDeliveryDetails;
         showToast({
           message: `Confirmation code was sent to ${codeDeliveryDetails?.deliveryMedium}.`,
           type: 'info',
-        })
+        });
         // Collect the confirmation code from the user and pass to confirmUserAttribute.
-        break
+        break;
       case 'DONE':
-        showToast({ message: 'Attribute was successfully updated.', type: 'success' })
-        break
+        showToast({ message: 'Attribute was successfully updated.', type: 'success' });
+        break;
       default:
-        showToast({ message: 'Unknown next step.', type: 'error' })
-        break
+        showToast({ message: 'Unknown next step.', type: 'error' });
+        break;
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      await handleUpdateAttribute('given_name', givenName)
-      await handleUpdateAttribute('family_name', familyName)
-      await handleUpdateAttribute('email', email)
+      await handleUpdateAttribute('given_name', givenName);
+      await handleUpdateAttribute('family_name', familyName);
+      await handleUpdateAttribute('email', email);
     } catch (error: any) {
-      showToast({ message: 'Error updating user attributes: ' + error.message, type: 'error' })
+      showToast({ message: 'Error updating user attributes: ' + error.message, type: 'error' });
     }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
+        <div className="h-5/6 w-full"></div>
+        <LoadingSpinner className={'h-32 w-32'} />
+        <h1>Loading...</h1>
+      </div>
+    );
   }
-  if (session) {
+
+  if (isAuthenticated) {
     return (
       <>
         <Header />
@@ -117,7 +130,10 @@ const Profile = () => {
                 />
               </div>
               <div className="mb-5">
-                <label htmlFor="email" className="mb-3 block text-base font-medium text-[#07074D]">
+                <label
+                  htmlFor="email"
+                  className="mb-3 block text-base font-medium text-[#07074D]"
+                >
                   Email
                 </label>
                 <input
@@ -142,10 +158,10 @@ const Profile = () => {
         </div>
         <Footer />
       </>
-    )
+    );
   } else {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
-}
+};
 
-export default Profile
+export default Profile;
