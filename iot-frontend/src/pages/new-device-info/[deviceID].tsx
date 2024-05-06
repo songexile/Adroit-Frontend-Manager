@@ -8,7 +8,7 @@ import Link from 'next/link';
 import LoginScreen from '../login';
 import { useSession } from 'next-auth/react';
 import { DynamicMetricData } from '@/types';
-import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart';
+import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url

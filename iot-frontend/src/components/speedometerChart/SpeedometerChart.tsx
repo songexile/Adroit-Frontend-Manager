@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from 'react'
-import { Chart, ChartConfiguration, registerables } from 'chart.js'
+import React, { useEffect, useRef } from 'react';
+import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
-Chart.register(...registerables)
+Chart.register(...registerables);
 
 interface GaugeProps {
-  value: number
-  colors: string[]
+  value: number;
+  colors: string[];
 }
 
 const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
-  const chartContainer = useRef<HTMLCanvasElement | null>(null)
-  const chartInstance = useRef<Chart | null>(null)
+  const chartContainer = useRef<HTMLCanvasElement | null>(null);
+  const chartInstance = useRef<Chart | null>(null);
 
   useEffect(() => {
     if (chartContainer.current) {
@@ -28,31 +28,35 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
         },
 
         options: {
+          //@ts-ignore
           circumference: 180,
           rotation: 270,
           cutoutPercentage: 80, // This is for the thickness of the gauge
           tooltips: { enabled: false },
-          hover: { mode: null },
+          hover: { mode: 'nearest' },
           responsive: true,
         },
-      }
+      };
 
-      chartInstance.current = new Chart(chartContainer.current, config)
+      chartInstance.current = new Chart(chartContainer.current, config);
     }
 
     return () => {
       if (chartInstance.current) {
-        chartInstance.current.destroy()
-        chartInstance.current = null
+        chartInstance.current.destroy();
+        chartInstance.current = null;
       }
-    }
-  }, [value, colors])
+    };
+  }, [value, colors]);
 
   return (
     <div className="mx-8">
-      <canvas className="w-full h-32 " ref={chartContainer} />
+      <canvas
+        className="w-full h-32 "
+        ref={chartContainer}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default SpeedometerChart
+export default SpeedometerChart;
