@@ -363,7 +363,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                   <div>
                     <SpeedometerChart
                       value={parseFloat(value.value)}
-                      colors={['#00ff00', '#ff0000']}
+                      colors={['#38bdf8', '#EF4444']}
                     />
                   </div>
                 </div>
