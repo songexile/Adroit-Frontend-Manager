@@ -1,6 +1,6 @@
-import React from 'react'
-const currentYear = new Date().getFullYear()
-const establishedYear = 2015
+import React from 'react';
+const currentYear = new Date().getFullYear();
+const establishedYear = 2015;
 
 const Footer = () => {
   return (
@@ -15,7 +15,7 @@ const Footer = () => {
         <p className="text-sm text-center">v0.0.13</p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -5,6 +5,8 @@ import { useSession, signOut } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
 import LoginScreen from '@/pages/login'
 import { Switch } from '@/components/ui/switch'
+import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png'
+
 
 const Header = ({
   fetchDataAndUpdate,
@@ -68,9 +70,12 @@ HeaderProps) => {
           <Link href={'/'} className="font-bold flex items-center justify-center gap-x-4">
             <Image
               alt="Logo of Spark x Adroit"
-              src="/assets/img/Adroit-environmental-monitoring2.png"
+
               width={200}
               height={200}
+
+              src={AdroitLogo}
+
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />
