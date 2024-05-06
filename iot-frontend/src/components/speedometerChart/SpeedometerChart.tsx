@@ -31,7 +31,7 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
           //@ts-ignore
           circumference: 180,
           rotation: 270,
-          cutout: '80%',
+          //cutout: '80%',
           //cutoutPercentage: 80, // This is for the thickness of the gauge
           tooltips: { enabled: false },
           hover: { mode: 'nearest' },
