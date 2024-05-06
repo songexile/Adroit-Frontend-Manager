@@ -178,9 +178,16 @@ HeaderProps) => {
 
       {/* Quick Info */}
       {totalDevicesOfflineCount && (
-        <span className="text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
-          Total Devices Offline: {totalDevicesOfflineCount} | Clients Offline: {clientsOfflineCount}
-        </span>
+        <div className=" gap-x-4 text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
+           Devices Offline
+           <span className='font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900  hover:text-black transition '>
+           {totalDevicesOfflineCount}
+            </span>
+            Clients Offline
+            <span className='font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900 hover:text-black transition'>
+          {clientsOfflineCount}
+              </span>
+        </div>
       )}
     </>
   )
