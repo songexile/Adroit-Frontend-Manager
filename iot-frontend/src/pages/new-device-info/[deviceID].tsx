@@ -1,37 +1,35 @@
-import React from 'react'
-import { usePathname } from 'next/navigation'
-import { flattenNestedData } from '@/utils'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Breadcrumb from '@/components/Breadcrumb'
-import Link from 'next/link'
-import LoginScreen from '../login'
-import { useSession } from 'next-auth/react'
-import { DynamicMetricData } from '@/types'
-import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart'
-
-//import SpeedometerChart from '../components/speedometerChart/SpeedometerChart';
+import React from 'react';
+import { usePathname } from 'next/navigation';
+import { flattenNestedData } from '@/utils';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Breadcrumb from '@/components/Breadcrumb';
+import Link from 'next/link';
+import LoginScreen from '../login';
+import { useSession } from 'next-auth/react';
+import { DynamicMetricData } from '@/types';
+import SpeedometerChart from '@/components/speedometerChart/SpeedometerChart';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
-  const pathname = usePathname()
-  const parts = pathname ? pathname.split('/') : []
-  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
-  return deviceId
+  const pathname = usePathname();
+  const parts = pathname ? pathname.split('/') : [];
+  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0; // Parse the deviceId as an integer, defaulting to 0 if it is undefined
+  return deviceId;
 }
 
 function DeviceID(data: any) {
-  const { data: session } = useSession()
-  const deviceId = fetchDeviceId()
-  const filteredData = flattenNestedData(data, deviceId)
-  const deviceData = filteredData[0]
-  console.log(deviceData) // Returns the array of the device.
+  const { data: session } = useSession();
+  const deviceId = fetchDeviceId();
+  const filteredData = flattenNestedData(data, deviceId);
+  const deviceData = filteredData[0];
+  console.log(deviceData); // Returns the array of the device.
 
   // Breadcrumb items
   const breadcrumbs = [
     { name: 'Home', path: '/' },
     { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
-  ]
+  ];
 
   if (session) {
     return (
@@ -43,9 +41,9 @@ function DeviceID(data: any) {
         </div>
         <Footer />
       </>
-    )
+    );
   } else {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
 }
 
@@ -55,7 +53,7 @@ function DeviceID(data: any) {
  * @returns {JSX.Element | null} JSX representing the rendered metric data, or null if deviceData is null.
  */
 const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
-  if (!deviceData) return null
+  if (!deviceData) return null;
 
   return (
     <div>
@@ -72,7 +70,7 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
                 {key}: {value}
               </p>
             </div>
-          )
+          );
         } else if (value && typeof value === 'object' && 'value' in value) {
           return (
             <div key={key}>
@@ -80,22 +78,22 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
                 {key}: {value.value}
               </p>
             </div>
-          )
+          );
         } else {
-          return null // handle undefined or unexpected value
+          return null; // handle undefined or unexpected value
         }
       })}
     </div>
-  )
-}
+  );
+};
 
 //**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
 
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
-  if (!deviceData) return null
+  if (!deviceData) return null;
 
-  const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS']
-  const prefix = 'metric_'
+  const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS'];
+  const prefix = 'metric_';
 
   const formalMetricName = [
     'pH Level',
@@ -103,9 +101,9 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'Battery Percentage %',
     'Solar Voltage',
     'Press',
-  ]
+  ];
 
-  const fullMetricName = filterMetric.map((key) => prefix + key)
+  const fullMetricName = filterMetric.map((key) => prefix + key);
 
   const relevantKeys = [
     'signal quality',
@@ -115,8 +113,8 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'solar volt',
     'batt status',
     'DIAGNOSTICS',
-  ]
-  const errorKeys = relevantKeys.map((key) => prefix + key) // Concatenate prefix to each key
+  ];
+  const errorKeys = relevantKeys.map((key) => prefix + key); // Concatenate prefix to each key
 
   return (
     // Device Info and create Ticket button.
@@ -171,21 +169,21 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                   .filter(([key]) => key === 'metric_scanStatus')
                   .some(([, value]) => {
                     if (typeof value === 'object' && 'value' in value) {
-                      return value.value === 'OK' || value.value === 'Modbus error'
+                      return value.value === 'OK' || value.value === 'Modbus error';
                     }
-                    return false
+                    return false;
                   })
                   ? Object.entries(deviceData)
                       .filter(([key]) => key === 'metric_scanStatus')
                       .map(([, value]) => {
                         if (typeof value === 'object' && 'value' in value) {
                           if (value.value === 'OK') {
-                            return 'bg-green-100 text-green-800'
+                            return 'bg-green-100 text-green-800';
                           } else if (value.value === 'Modbus error') {
-                            return 'bg-red-100 text-red-800'
+                            return 'bg-red-100 text-red-800';
                           }
                         }
-                        return 'bg-gray-300 text-gray-800'
+                        return 'bg-gray-300 text-gray-800';
                       })
                       .join(' ')
                   : 'bg-gray-300 text-gray-800'
@@ -197,11 +195,11 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               undefined
                 ? (({ value }) => {
                     if (value === 'OK') {
-                      return 'ONLINE'
+                      return 'ONLINE';
                     } else if (value === 'Modbus error') {
-                      return 'ERROR'
+                      return 'ERROR';
                     } else {
-                      return 'N/A'
+                      return 'N/A';
                     }
                   })(
                     Object.entries(deviceData)
@@ -220,21 +218,21 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                   .filter(([key]) => key === 'metric_batt status')
                   .some(([, value]) => {
                     if (typeof value === 'object' && 'value' in value) {
-                      return value.value === 'On' || value.value === 'Off'
+                      return value.value === 'On' || value.value === 'Off';
                     }
-                    return false
+                    return false;
                   })
                   ? Object.entries(deviceData)
                       .filter(([key]) => key === 'metric_batt status')
                       .map(([, value]) => {
                         if (typeof value === 'object' && 'value' in value) {
                           if (value.value === 'On') {
-                            return 'bg-green-100 text-green-800'
+                            return 'bg-green-100 text-green-800';
                           } else if (value.value === 'Off') {
-                            return 'bg-red-100 text-red-800'
+                            return 'bg-red-100 text-red-800';
                           }
                         }
-                        return 'bg-gray-300 text-gray-800'
+                        return 'bg-gray-300 text-gray-800';
                       })
                       .join(' ')
                   : 'bg-gray-300 text-gray-800'
@@ -246,11 +244,11 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               undefined
                 ? (({ value }) => {
                     if (value === 'On') {
-                      return 'ONLINE'
+                      return 'ONLINE';
                     } else if (value === 'Off') {
-                      return 'OFFLINE'
+                      return 'OFFLINE';
                     } else {
-                      return 'N/A'
+                      return 'N/A';
                     }
                   })(
                     Object.entries(deviceData)
@@ -276,27 +274,27 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                         value.value === 'POWER_CYCLED' ||
                         value.value === 'STARTUP' ||
                         value.value === 'AQUATROLL 500'
-                      )
+                      );
                     }
-                    return false
+                    return false;
                   })
                   ? Object.entries(deviceData)
                       .filter(([key]) => key === 'metric_insituStatus')
                       .map(([, value]) => {
                         if (typeof value === 'object' && 'value' in value) {
                           if (value.value === 'Normal' || value.value === 'OK') {
-                            return 'bg-green-100 text-green-800'
+                            return 'bg-green-100 text-green-800';
                           } else if (value.value === 'COMS_ERROR') {
-                            return 'bg-red-100 text-red-800'
+                            return 'bg-red-100 text-red-800';
                           } else if (
                             value.value === 'POWER_CYCLED' ||
                             value.value === 'STARTUP' ||
                             value.value === 'AQUATROLL 500'
                           ) {
-                            return 'bg-yellow-100 text-yellow-800'
+                            return 'bg-yellow-100 text-yellow-800';
                           }
                         }
-                        return 'bg-gray-300 text-gray-800'
+                        return 'bg-gray-300 text-gray-800';
                       })
                       .join(' ')
                   : 'bg-gray-300 text-gray-800'
@@ -308,17 +306,17 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               undefined
                 ? (({ value }) => {
                     if (value === 'Normal' || value === 'OK') {
-                      return 'NORMAL'
+                      return 'NORMAL';
                     } else if (value === 'COMS_ERROR') {
-                      return 'ERROR'
+                      return 'ERROR';
                     } else if (
                       value === 'POWER_CYCLED' ||
                       value === 'STARTUP' ||
                       value === 'AQUATROLL 500'
                     ) {
-                      return value
+                      return value;
                     } else {
-                      return 'N/A'
+                      return 'N/A';
                     }
                   })(
                     Object.entries(deviceData)
@@ -334,9 +332,9 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
       {/* Chart components */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
         {Object.entries(deviceData).map(([key, value]) => {
-          const index = fullMetricName.indexOf(key)
+          const index = fullMetricName.indexOf(key);
           if (index !== -1) {
-            const formalName = formalMetricName[index]
+            const formalName = formalMetricName[index];
             if (typeof value === 'string') {
               return (
                 <div
@@ -347,7 +345,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                     {formalName}: {value}
                   </p>
                 </div>
-              )
+              );
             } else if (value && typeof value === 'object' && 'value' in value) {
               return (
                 <div
@@ -367,16 +365,19 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                     />
                   </div>
                 </div>
-              )
+              );
             } else {
               return (
-                <div className="" key={key}>
+                <div
+                  className=""
+                  key={key}
+                >
                   <p>{formalName}: N/A</p>
                 </div>
-              )
+              );
             }
           } else {
-            return <></>
+            return <></>;
           }
         })}
       </div>
@@ -388,43 +389,52 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
         </div>
 
         <div className="flex flex-col gap-4 text-red-500">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Attentus:</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Fault Identification:</h2>
 
           {Object.entries(deviceData).map(([key, value]) => {
             if (errorKeys.includes(key)) {
               if (typeof value === 'string') {
                 return (
-                  <div className="" key={key}>
+                  <div
+                    className=""
+                    key={key}
+                  >
                     <p>
                       {key}: {value}
                     </p>
                   </div>
-                )
+                );
               } else if (value && typeof value === 'object' && 'value' in value) {
                 return (
-                  <div className="" key={key}>
+                  <div
+                    className=""
+                    key={key}
+                  >
                     <p>
                       {key}: {value.value}
                     </p>
                   </div>
-                )
+                );
               } else {
                 // Handle undefined or unexpected value
                 return (
-                  <div className="" key={key}>
+                  <div
+                    className=""
+                    key={key}
+                  >
                     <p>{key}: N/A</p>
                   </div>
-                )
+                );
               }
             } else {
               // Key is not in errorKeys, return an empty fragment
-              return <></>
+              return <></>;
             }
           })}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DeviceID
+export default DeviceID;
