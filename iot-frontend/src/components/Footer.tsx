@@ -4,7 +4,7 @@ const establishedYear = 2015;
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-800 text-white py-2 px-4">
+    <footer className="bg-gradient-to-b  from-cyan-600 to-blue-500 text-white py-2 px-4">
       <div className="container mx-auto flex items-center justify-center">
         <p className="text-sm text-center">
           Copyright © Adroit {establishedYear} - {currentYear}. All rights reserved.

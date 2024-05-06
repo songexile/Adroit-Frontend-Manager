@@ -1,5 +1,5 @@
-import { showToast } from "@/components/Toast"
-import { DynamicMetricData } from "@/types"
+import { showToast } from '@/components/Toast'
+import { DynamicMetricData } from '@/types'
 
 /**
  * Flattens nested data into an array of DynamicMetricData objects.
@@ -7,7 +7,11 @@ import { DynamicMetricData } from "@/types"
  * @param {number | undefined} targetDeviceId - (Optional) The ID of the target device to retrieve.
  * @returns {DynamicMetricData[]} An array of flattened DynamicMetricData objects.
  */
-export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMetricData[] {
+export function flattenNestedData(
+  data: any,
+  targetDeviceId?: number,
+  hideDeviceWithoutData?: boolean
+): DynamicMetricData[] {
   const flattenedData: DynamicMetricData[] = []
 
   // Check if targetDeviceId is provided (e.g. device stat page)
@@ -40,7 +44,6 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
         const firstMetric = firstMetricKey ? device[firstMetricKey] : undefined
 
         let extractedTimestamp: number | undefined
-
         if (firstMetric && 'timestamp' in firstMetric) {
           extractedTimestamp = firstMetric.timestamp
           flattenedDevice.last_online = extractedTimestamp
@@ -48,11 +51,7 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
             : ''
         }
 
-        // TEST - Log extracted timestamp and flattened device
-        // console.log("Extracted Timestamp:", extractedTimestamp);
-        // console.log("Flattened Device:", flattenedDevice);
-
-        // Push the flattened device to the array
+        // Add the flattened device to the array
         flattenedData.push(flattenedDevice)
 
         // Exit loop after finding the first matching device
@@ -92,8 +91,17 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           }
         }
 
-        // Push the flattened device to the array
-        flattenedData.push(flattenedDevice)
+        // Check if the device has the required data or if hideDeviceWithoutData is false
+        const hasTimestamp = flattenedDevice.last_online !== ''
+        const hasBatteryPercentage = !!flattenedDevice['metric_battery_percentage']
+        const hasBatteryVoltage = !!flattenedDevice['metric_battery_voltage']
+
+        if (
+          !hideDeviceWithoutData ||
+          (hasTimestamp && (hasBatteryPercentage || hasBatteryVoltage))
+        ) {
+          flattenedData.push(flattenedDevice)
+        }
       }
     }
   }
