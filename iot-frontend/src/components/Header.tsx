@@ -38,7 +38,7 @@ HeaderProps) => {
   if (!session || !session.user) {
     return <LoginScreen />;
   }
-  const { given_name } = session.user as CustomUser;
+  const { username } = session.user as CustomUser;
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -105,7 +105,7 @@ HeaderProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="font-medium">{capitalizeWords(given_name)}</span>
+              <span className="font-medium">{capitalizeWords(username)}</span>
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">

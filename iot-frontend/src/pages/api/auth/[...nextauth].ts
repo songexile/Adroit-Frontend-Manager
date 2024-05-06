@@ -12,7 +12,7 @@ const authOptions: NextAuthOptions = {
       idToken: true,
       authorization: {
         params: {
-          scope: "openid",
+          scope: "phone openid profile email aws.cognito.signin.user.admin",
         },
       },
     }),
@@ -20,22 +20,31 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, profile }) {
       if (profile && typeof profile === 'object') {
+        (user as CustomUser).username = (profile as any)['cognito:username'];
         (user as CustomUser).given_name = (profile as any).given_name;
         (user as CustomUser).family_name = (profile as any).family_name;
+        (user as CustomUser).email = (profile as any).email;
       }
       return true;
     },
     async session({ session, token }): Promise<CustomSession> {
       if (token) {
+        (session.user as CustomUser).username = (token as CustomToken).username;
         (session.user as CustomUser).given_name = (token as CustomToken).given_name;
         (session.user as CustomUser).family_name = (token as CustomToken).family_name;
+        (session.user as CustomUser).email = token.email as string;
+        (session as CustomSession).accessToken = token.accessToken as string;
       }
       return session as CustomSession;
     },
-    async jwt({ token, user }): Promise<CustomToken> {
+    async jwt({ token, user, account }) {
       if (user) {
+        (token as CustomToken).username = (user as CustomUser).username;
         (token as CustomToken).given_name = (user as CustomUser).given_name;
         (token as CustomToken).family_name = (user as CustomUser).family_name;
+      }
+      if (account) {
+        (token as CustomToken).accessToken = account.access_token;
       }
       return token as CustomToken;
     },
@@ -60,4 +69,3 @@ export default async function auth(req: NextApiRequest, res: NextApiResponse) {
     throw error;
   }
 }
-

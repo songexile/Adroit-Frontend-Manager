@@ -2,19 +2,14 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import LoginScreen from '../login';
 import { useEffect, useState } from 'react';
-import { CustomUser } from '@/types';
+import { CustomSession, CustomUser } from '@/types';
 import { showToast } from '@/components/Toast';
-import { updateUserAttribute } from 'aws-amplify/auth';
-import { Amplify } from 'aws-amplify';
-import awsConfig from '@/utils/AWS-config';
+import {
+  CognitoIdentityProviderClient,
+  UpdateUserAttributesCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 import { useAuth } from '@/hooks/useAuth';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-
-Amplify.configure({
-  Auth: {
-    ...awsConfig.Auth,
-  },
-});
 
 const Profile = () => {
   const { isAuthenticated, session, isLoading } = useAuth();
@@ -33,38 +28,51 @@ const Profile = () => {
     }
   }, [session]);
 
-  const handleUpdateAttribute = async (attributeKey: string, value: string) => {
-    try {
-      const output = await updateUserAttribute({
-        userAttribute: {
-          attributeKey,
-          value,
-        },
-      });
-      handleUpdateAttributeNextSteps(output);
-    } catch (error: any) {
-      showToast({ message: 'Error updating user attribute: ' + error.message, type: 'error' });
-    }
-  };
+  const handleUpdateAttribute = async (attributeName: string, attributeValue: string) => {
+    if (isAuthenticated && session) {
+      try {
+        console.log('handleUpdateAttribute - session:', session);
 
-  const handleUpdateAttributeNextSteps = (output: any) => {
-    const { nextStep } = output;
-
-    switch (nextStep.updateAttributeStep) {
-      case 'CONFIRM_ATTRIBUTE_WITH_CODE':
-        const codeDeliveryDetails = nextStep.codeDeliveryDetails;
-        showToast({
-          message: `Confirmation code was sent to ${codeDeliveryDetails?.deliveryMedium}.`,
-          type: 'info',
+        const client = new CognitoIdentityProviderClient({
+          region: process.env.NEXT_PUBLIC_AWS_REGION,
+          credentials: {
+            accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+            secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
+          },
         });
-        // Collect the confirmation code from the user and pass to confirmUserAttribute.
-        break;
-      case 'DONE':
-        showToast({ message: 'Attribute was successfully updated.', type: 'success' });
-        break;
-      default:
-        showToast({ message: 'Unknown next step.', type: 'error' });
-        break;
+
+        const accessToken = (session as CustomSession).accessToken;
+
+        const command = new UpdateUserAttributesCommand({
+          UserAttributes: [
+            {
+              Name: attributeName,
+              Value: attributeValue,
+            },
+          ],
+          AccessToken: accessToken,
+        });
+
+        await client.send(command);
+
+        // Update existing value on frontend
+        switch (attributeName) {
+          case 'given_name':
+            setGivenName(attributeValue);
+            break;
+          case 'family_name':
+            setFamilyName(attributeValue);
+            break;
+          case 'email':
+            setEmail(attributeValue);
+            break;
+          default:
+            break;
+        }
+      } catch (error: any) {
+        console.log('handleUpdateAttribute - error:', error);
+        showToast({ message: 'Error updating user attribute: ' + error.message, type: 'error' });
+      }
     }
   };
 
@@ -75,6 +83,7 @@ const Profile = () => {
       await handleUpdateAttribute('given_name', givenName);
       await handleUpdateAttribute('family_name', familyName);
       await handleUpdateAttribute('email', email);
+      showToast({ message: 'Attributes were successfully updated.', type: 'success' });
     } catch (error: any) {
       showToast({ message: 'Error updating user attributes: ' + error.message, type: 'error' });
     }
