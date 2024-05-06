@@ -81,7 +81,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
-                    className="table-row" // Add CSS class for row height
+                    className="table-row " 
+                    style={{
+                      height: '150px',
+                    }} //Sizes the table row, 150px so that each row is same height
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
