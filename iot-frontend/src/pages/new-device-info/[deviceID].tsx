@@ -94,7 +94,7 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
   if (!deviceData) return null;
 
-  const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS'];
+  const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS', 'battery_voltage'];
   const prefix = 'metric_';
 
   const formalMetricName = [
@@ -103,6 +103,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'Battery Percentage %',
     'Solar Voltage',
     'Press',
+    'Battery Voltage'
   ];
 
   const fullMetricName = filterMetric.map((key) => prefix + key);
@@ -117,6 +118,16 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'DIAGNOSTICS',
   ];
   const errorKeys = relevantKeys.map((key) => prefix + key); // Concatenate prefix to each key
+  const siteEntry = Object.entries(deviceData).find(([key]) => key === 'metric_site');
+  let siteValue;
+  if (siteEntry) {
+    const [, siteData] = siteEntry;
+    if (typeof siteData === 'string') {
+      siteValue = siteData;
+    } else if (typeof siteData === 'object' && 'value' in siteData) {
+      siteValue = siteData.value;
+    }
+  }
 
   return (
     // Device Info and create Ticket button.
@@ -156,6 +167,10 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             <span className="font-bold text-gray-600">Last Ticket Created:</span>
             <div className="text-right md:text-left md:pl-1">Never</div>
           </div>
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Location:</span>
+            <div className="text-right md:text-left md:pl-1">{siteValue}</div>
+          </div>
         </div>
       </div>
 
@@ -166,13 +181,12 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           <div className="flex items-center">
             <span className="font-bold text-gray-600 mr-2">Scan:</span>
             <span
-              className={`px-3 py-1 rounded-full font-semibold ${
-                getScanStatus(deviceData) === 'ONLINE'
+              className={`px-3 py-1 rounded-full font-semibold ${getScanStatus(deviceData) === 'ONLINE'
                   ? 'bg-green-100 text-green-800'
                   : getScanStatus(deviceData) === 'ERROR'
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-gray-300 text-gray-800'
-              }`}
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-gray-300 text-gray-800'
+                }`}
             >
               {getScanStatus(deviceData)}
             </span>
@@ -181,13 +195,12 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           <div className="flex items-center">
             <span className="font-bold text-gray-600 ml-16 mr-2">Battery:</span>
             <span
-              className={`px-3 py-1 rounded-full font-semibold ${
-                getBatteryStatus(deviceData) === 'ONLINE'
-                  ? 'bg-green-100 text-green-800'
-                  : getBatteryStatus(deviceData) === 'OFFLINE'
+              className={`px-3 py-1 rounded-full font-semibold ${getBatteryStatus(deviceData) === 'ONLINE'
+                ? 'bg-green-100 text-green-800'
+                : getBatteryStatus(deviceData) === 'OFFLINE'
                   ? 'bg-red-100 text-red-800'
                   : 'bg-gray-300 text-gray-800'
-              }`}
+                }`}
             >
               {getBatteryStatus(deviceData)}
             </span>
@@ -196,17 +209,16 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           <div className="flex items-center">
             <span className="font-bold text-gray-600 ml-16 mr-2">Insitu:</span>
             <span
-              className={`px-3 py-1 rounded-full font-semibold ${
-                getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
-                  ? 'bg-green-100 text-green-800'
-                  : getInsituStatus(deviceData) === 'ERROR'
+              className={`px-3 py-1 rounded-full font-semibold ${getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
+                ? 'bg-green-100 text-green-800'
+                : getInsituStatus(deviceData) === 'ERROR'
                   ? 'bg-red-100 text-red-800'
                   : getInsituStatus(deviceData) === 'POWER_CYCLED' ||
                     getInsituStatus(deviceData) === 'STARTUP' ||
                     getInsituStatus(deviceData) === 'AQUATROLL 500'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-gray-300 text-gray-800'
-              }`}
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-300 text-gray-800'
+                }`}
             >
               {getInsituStatus(deviceData)}
             </span>
