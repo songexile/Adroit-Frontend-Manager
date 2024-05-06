@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { flattenNestedData } from '@/utils';
+import { flattenNestedData, getBatteryStatus, getInsituStatus, getScanStatus } from '@/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -21,14 +21,16 @@ function fetchDeviceId() {
 function DeviceID(data: any) {
   const { data: session } = useSession();
   const deviceId = fetchDeviceId();
-  const filteredData = flattenNestedData(data, deviceId);
+
+  const filteredData = useMemo(() => flattenNestedData(data, deviceId), [data, deviceId]);
   const deviceData = filteredData[0];
+
   console.log(deviceData); // Returns the array of the device.
 
   // Breadcrumb items
   const breadcrumbs = [
     { name: 'Home', path: '/' },
-    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
+    { name: `Device ${deviceData?.device_id}`, path: `/new-device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
   ];
 
   if (session) {
@@ -36,7 +38,7 @@ function DeviceID(data: any) {
       <>
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <div className="flex  mx-32  min-h-screen py-6 flex-col ">
+        <div className="flex mx-32 min-h-screen py-6 flex-col ">
           {deviceData && debugMetrics(deviceData)}
         </div>
         <Footer />
@@ -165,48 +167,14 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             <span className="font-bold text-gray-600 mr-2">Scan:</span>
             <span
               className={`px-3 py-1 rounded-full font-semibold ${
-                Object.entries(deviceData)
-                  .filter(([key]) => key === 'metric_scanStatus')
-                  .some(([, value]) => {
-                    if (typeof value === 'object' && 'value' in value) {
-                      return value.value === 'OK' || value.value === 'Modbus error';
-                    }
-                    return false;
-                  })
-                  ? Object.entries(deviceData)
-                      .filter(([key]) => key === 'metric_scanStatus')
-                      .map(([, value]) => {
-                        if (typeof value === 'object' && 'value' in value) {
-                          if (value.value === 'OK') {
-                            return 'bg-green-100 text-green-800';
-                          } else if (value.value === 'Modbus error') {
-                            return 'bg-red-100 text-red-800';
-                          }
-                        }
-                        return 'bg-gray-300 text-gray-800';
-                      })
-                      .join(' ')
+                getScanStatus(deviceData) === 'ONLINE'
+                  ? 'bg-green-100 text-green-800'
+                  : getScanStatus(deviceData) === 'ERROR'
+                  ? 'bg-red-100 text-red-800'
                   : 'bg-gray-300 text-gray-800'
               }`}
             >
-              {Object.entries(deviceData)
-                .filter(([key]) => key === 'metric_scanStatus')
-                .find(([, value]) => typeof value === 'object' && 'value' in value)?.[1]?.value !==
-              undefined
-                ? (({ value }) => {
-                    if (value === 'OK') {
-                      return 'ONLINE';
-                    } else if (value === 'Modbus error') {
-                      return 'ERROR';
-                    } else {
-                      return 'N/A';
-                    }
-                  })(
-                    Object.entries(deviceData)
-                      .filter(([key]) => key === 'metric_scanStatus')
-                      .find(([, value]) => typeof value === 'object' && 'value' in value)?.[1] || {}
-                  )
-                : 'N/A'}
+              {getScanStatus(deviceData)}
             </span>
           </div>
 
@@ -214,48 +182,14 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             <span className="font-bold text-gray-600 ml-16 mr-2">Battery:</span>
             <span
               className={`px-3 py-1 rounded-full font-semibold ${
-                Object.entries(deviceData)
-                  .filter(([key]) => key === 'metric_batt status')
-                  .some(([, value]) => {
-                    if (typeof value === 'object' && 'value' in value) {
-                      return value.value === 'On' || value.value === 'Off';
-                    }
-                    return false;
-                  })
-                  ? Object.entries(deviceData)
-                      .filter(([key]) => key === 'metric_batt status')
-                      .map(([, value]) => {
-                        if (typeof value === 'object' && 'value' in value) {
-                          if (value.value === 'On') {
-                            return 'bg-green-100 text-green-800';
-                          } else if (value.value === 'Off') {
-                            return 'bg-red-100 text-red-800';
-                          }
-                        }
-                        return 'bg-gray-300 text-gray-800';
-                      })
-                      .join(' ')
+                getBatteryStatus(deviceData) === 'ONLINE'
+                  ? 'bg-green-100 text-green-800'
+                  : getBatteryStatus(deviceData) === 'OFFLINE'
+                  ? 'bg-red-100 text-red-800'
                   : 'bg-gray-300 text-gray-800'
               }`}
             >
-              {Object.entries(deviceData)
-                .filter(([key]) => key === 'metric_batt status')
-                .find(([, value]) => typeof value === 'object' && 'value' in value)?.[1]?.value !==
-              undefined
-                ? (({ value }) => {
-                    if (value === 'On') {
-                      return 'ONLINE';
-                    } else if (value === 'Off') {
-                      return 'OFFLINE';
-                    } else {
-                      return 'N/A';
-                    }
-                  })(
-                    Object.entries(deviceData)
-                      .filter(([key]) => key === 'metric_batt status')
-                      .find(([, value]) => typeof value === 'object' && 'value' in value)?.[1] || {}
-                  )
-                : 'N/A'}
+              {getBatteryStatus(deviceData)}
             </span>
           </div>
 
@@ -263,83 +197,34 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             <span className="font-bold text-gray-600 ml-16 mr-2">Insitu:</span>
             <span
               className={`px-3 py-1 rounded-full font-semibold ${
-                Object.entries(deviceData)
-                  .filter(([key]) => key === 'metric_insituStatus')
-                  .some(([, value]) => {
-                    if (typeof value === 'object' && 'value' in value) {
-                      return (
-                        value.value === 'Normal' ||
-                        value.value === 'OK' ||
-                        value.value === 'COMS_ERROR' ||
-                        value.value === 'POWER_CYCLED' ||
-                        value.value === 'STARTUP' ||
-                        value.value === 'AQUATROLL 500'
-                      );
-                    }
-                    return false;
-                  })
-                  ? Object.entries(deviceData)
-                      .filter(([key]) => key === 'metric_insituStatus')
-                      .map(([, value]) => {
-                        if (typeof value === 'object' && 'value' in value) {
-                          if (value.value === 'Normal' || value.value === 'OK') {
-                            return 'bg-green-100 text-green-800';
-                          } else if (value.value === 'COMS_ERROR') {
-                            return 'bg-red-100 text-red-800';
-                          } else if (
-                            value.value === 'POWER_CYCLED' ||
-                            value.value === 'STARTUP' ||
-                            value.value === 'AQUATROLL 500'
-                          ) {
-                            return 'bg-yellow-100 text-yellow-800';
-                          }
-                        }
-                        return 'bg-gray-300 text-gray-800';
-                      })
-                      .join(' ')
+                getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
+                  ? 'bg-green-100 text-green-800'
+                  : getInsituStatus(deviceData) === 'ERROR'
+                  ? 'bg-red-100 text-red-800'
+                  : getInsituStatus(deviceData) === 'POWER_CYCLED' ||
+                    getInsituStatus(deviceData) === 'STARTUP' ||
+                    getInsituStatus(deviceData) === 'AQUATROLL 500'
+                  ? 'bg-yellow-100 text-yellow-800'
                   : 'bg-gray-300 text-gray-800'
               }`}
             >
-              {Object.entries(deviceData)
-                .filter(([key]) => key === 'metric_insituStatus')
-                .find(([, value]) => typeof value === 'object' && 'value' in value)?.[1]?.value !==
-              undefined
-                ? (({ value }) => {
-                    if (value === 'Normal' || value === 'OK') {
-                      return 'NORMAL';
-                    } else if (value === 'COMS_ERROR') {
-                      return 'ERROR';
-                    } else if (
-                      value === 'POWER_CYCLED' ||
-                      value === 'STARTUP' ||
-                      value === 'AQUATROLL 500'
-                    ) {
-                      return value;
-                    } else {
-                      return 'N/A';
-                    }
-                  })(
-                    Object.entries(deviceData)
-                      .filter(([key]) => key === 'metric_insituStatus')
-                      .find(([, value]) => typeof value === 'object' && 'value' in value)?.[1] || {}
-                  )
-                : 'N/A'}
+              {getInsituStatus(deviceData)}
             </span>
           </div>
         </div>
       </div>
 
       {/* Chart components */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
-        {Object.entries(deviceData).map(([key, value]) => {
-          const index = fullMetricName.indexOf(key);
-          if (index !== -1) {
-            const formalName = formalMetricName[index];
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Object.entries(deviceData).map(([key, value], index) => {
+          const metricIndex = fullMetricName.indexOf(key);
+          if (metricIndex !== -1) {
+            const formalName = formalMetricName[metricIndex];
             if (typeof value === 'string') {
               return (
                 <div
                   className="flex flex-wrap bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500"
-                  key={key}
+                  key={`${key}-${index}`}
                 >
                   <p>
                     {formalName}: {value}
@@ -350,13 +235,12 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               return (
                 <div
                   className="flex flex-wrap items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black min-h-[16rem] justify-center"
-                  key={key}
+                  key={`${key}-${index}`}
                 >
                   <div className="mx-4 flex flex-col gap-4">
                     <p className="font-bold text-xl">{formalName}</p>
                     <p>{value.value}</p>
                   </div>
-
                   {/* SpeedoMeeter Chart */}
                   <div>
                     <SpeedometerChart
@@ -368,16 +252,13 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               );
             } else {
               return (
-                <div
-                  className=""
-                  key={key}
-                >
+                <div key={`${key}-${index}`}>
                   <p>{formalName}: N/A</p>
                 </div>
               );
             }
           } else {
-            return <></>;
+            return null;
           }
         })}
       </div>
@@ -390,15 +271,11 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
 
         <div className="flex flex-col gap-4 text-red-500">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">Fault Identification:</h2>
-
-          {Object.entries(deviceData).map(([key, value]) => {
+          {Object.entries(deviceData).map(([key, value], index) => {
             if (errorKeys.includes(key)) {
               if (typeof value === 'string') {
                 return (
-                  <div
-                    className=""
-                    key={key}
-                  >
+                  <div key={`${key}-${index}`}>
                     <p>
                       {key}: {value}
                     </p>
@@ -406,10 +283,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                 );
               } else if (value && typeof value === 'object' && 'value' in value) {
                 return (
-                  <div
-                    className=""
-                    key={key}
-                  >
+                  <div key={`${key}-${index}`}>
                     <p>
                       {key}: {value.value}
                     </p>
@@ -418,17 +292,14 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               } else {
                 // Handle undefined or unexpected value
                 return (
-                  <div
-                    className=""
-                    key={key}
-                  >
+                  <div key={`${key}-${index}`}>
                     <p>{key}: N/A</p>
                   </div>
                 );
               }
             } else {
-              // Key is not in errorKeys, return an empty fragment
-              return <></>;
+              // Key is not in errorKeys, return null
+              return null;
             }
           })}
         </div>

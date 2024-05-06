@@ -1,34 +1,34 @@
-import React from 'react'
-import { usePathname } from 'next/navigation'
-import { flattenNestedData } from '@/utils'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import Breadcrumb from '@/components/Breadcrumb'
-import Link from 'next/link'
-import LoginScreen from '../login'
-import { useSession } from 'next-auth/react'
-import { DynamicMetricData } from '@/types'
+import React from 'react';
+import { usePathname } from 'next/navigation';
+import { flattenNestedData } from '@/utils';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Breadcrumb from '@/components/Breadcrumb';
+import Link from 'next/link';
+import LoginScreen from '../login';
+import { useSession } from 'next-auth/react';
+import { DynamicMetricData } from '@/types';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
-  const pathname = usePathname()
-  const parts = pathname ? pathname.split('/') : []
-  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0 // Parse the deviceId as an integer, defaulting to 0 if it is undefined
-  return deviceId
+  const pathname = usePathname();
+  const parts = pathname ? pathname.split('/') : [];
+  const deviceId = parts[parts.length - 1] ? parseInt(parts[parts.length - 1] as string) : 0; // Parse the deviceId as an integer, defaulting to 0 if it is undefined
+  return deviceId;
 }
 
 function DeviceID(data: any) {
-  const { data: session } = useSession()
-  const deviceId = fetchDeviceId()
-  const filteredData = flattenNestedData(data, deviceId)
-  const deviceData = filteredData[0]
-  console.log(deviceData) // Returns the array of the device.
+  const { data: session } = useSession();
+  const deviceId = fetchDeviceId();
+  const filteredData = flattenNestedData(data, deviceId);
+  const deviceData = filteredData[0];
+  console.log(deviceData); // Returns the array of the device.
 
   // Breadcrumb items
   const breadcrumbs = [
     { name: 'Home', path: '/' },
-    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
-  ]
+    { name: `Device ${deviceData?.device_id}`, path: `/new-device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
+  ];
 
   if (session) {
     return (
@@ -112,9 +112,9 @@ function DeviceID(data: any) {
         </div>
         <Footer />
       </>
-    )
+    );
   } else {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
 }
 
@@ -124,7 +124,7 @@ function DeviceID(data: any) {
  * @returns {JSX.Element | null} JSX representing the rendered metric data, or null if deviceData is null.
  */
 const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
-  if (!deviceData) return null
+  if (!deviceData) return null;
 
   return (
     <div>
@@ -135,7 +135,7 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
       Otherwise, it returns null to handle undefined or unexpected values. */}
       {Object.entries(deviceData).map(([key, value], index) => {
         // Use index and key together to ensure unique key for each entry
-        const uniqueKey = `${key}_${index}`
+        const uniqueKey = `${key}_${index}`;
 
         if (typeof value === 'string') {
           return (
@@ -144,7 +144,7 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
                 {key}: {value}
               </p>
             </div>
-          )
+          );
         } else if (value && typeof value === 'object' && 'value' in value) {
           return (
             <div key={uniqueKey}>
@@ -152,19 +152,19 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
                 {key}: {value.value}
               </p>
             </div>
-          )
+          );
         } else {
-          return null // Handle undefined or unexpected value
+          return null; // Handle undefined or unexpected value
         }
       })}
     </div>
-  )
-}
+  );
+};
 
 //**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
 
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
-  if (!deviceData) return null
+  if (!deviceData) return null;
 
   const relevantKeys = [
     'signal quality',
@@ -174,16 +174,16 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'solar volt',
     'batt status',
     'DIAGNOSTICS',
-  ]
-  const prefix = 'metric_'
+  ];
+  const prefix = 'metric_';
 
-  const errorKeys = relevantKeys.map((key) => prefix + key) // Concatenate prefix to each key
+  const errorKeys = relevantKeys.map((key) => prefix + key); // Concatenate prefix to each key
 
   return (
     <div className="flex flex-col gap-4 text-red-500">
       {Object.entries(deviceData).map(([key, value], index) => {
         // Use index and key together to ensure unique key for each entry
-        const uniqueKey = `${key}_${index}`
+        const uniqueKey = `${key}_${index}`;
 
         if (errorKeys.includes(key)) {
           if (typeof value === 'string') {
@@ -193,7 +193,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                   {key}: {value}
                 </p>
               </div>
-            )
+            );
           } else if (value && typeof value === 'object' && 'value' in value) {
             return (
               <div key={uniqueKey}>
@@ -201,20 +201,20 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
                   {key}: {value.value}
                 </p>
               </div>
-            )
+            );
           } else {
             return (
               <div key={uniqueKey}>
                 <p>{key}: N/A</p>
               </div>
-            )
+            );
           }
         } else {
-          return null // Key is not in errorKeys, return null
+          return null; // Key is not in errorKeys, return null
         }
       })}
     </div>
-  )
-}
+  );
+};
 
-export default DeviceID
+export default DeviceID;
