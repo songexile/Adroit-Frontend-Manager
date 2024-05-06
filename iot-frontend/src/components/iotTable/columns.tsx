@@ -68,7 +68,7 @@ export const initializeColumns = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
-                <Link href={`/new-device-info/${deviceID}`}>View device stats</Link>
+                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
 
@@ -242,9 +242,8 @@ export const initializeColumns = () => {
         return (
           <div className="flex justify-center">
             <span
-              className={`p-4 rounded-md text-white font-medium ${
-                battery !== null ? 'inline-block ' + color : 'hidden'
-              }`}
+              className={`p-4 rounded-md text-white font-medium ${battery !== null ? 'inline-block ' + color : 'hidden'
+                }`}
             >
               {battery !== null ? battery.toFixed(2) : 'N/A'}
             </span>
@@ -291,9 +290,8 @@ export const initializeColumns = () => {
           return (
             <div className="flex justify-center">
               <span
-                className={`p-4 rounded-md text-white font-medium ${
-                  voltage !== null ? 'inline-block ' + color : 'hidden'
-                }`}
+                className={`p-4 rounded-md text-white font-medium ${voltage !== null ? 'inline-block ' + color : 'hidden'
+                  }`}
               >
                 {voltage.toFixed(2)}
               </span>
