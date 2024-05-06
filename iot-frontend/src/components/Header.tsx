@@ -1,12 +1,12 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { CustomUser, HeaderProps } from '@/types'
-import { useSession, signOut } from 'next-auth/react'
-import { useEffect, useRef, useState } from 'react'
-import LoginScreen from '@/pages/login'
-import { Switch } from '@/components/ui/switch'
-import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png'
-
+import Image from 'next/image';
+import Link from 'next/link';
+import { CustomUser, HeaderProps } from '@/types';
+import { useSession, signOut } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
+import LoginScreen from '@/pages/login';
+import { Switch } from '@/components/ui/switch';
+import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png';
+import { capitalizeWords } from '@/utils';
 
 const Header = ({
   fetchDataAndUpdate,
@@ -20,62 +20,62 @@ const Header = ({
 HeaderProps) => {
   const handleFetchAndUpdate = async () => {
     if (fetchDataAndUpdate) {
-      await fetchDataAndUpdate()
+      await fetchDataAndUpdate();
     }
-  }
+  };
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [hideSelected, setHideSelected] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hideSelected, setHideSelected] = useState(false);
 
   if (hideSelected) {
-    console.log('hideSelected')
+    console.log('hideSelected');
   }
 
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   if (!session || !session.user) {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
-  const { given_name } = session.user as CustomUser
+  const { given_name } = session.user as CustomUser;
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleLogout = async () => {
-    await signOut()
-  }
+    await signOut();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false)
+        setIsDropdownOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('click', handleClickOutside, true)
+    document.addEventListener('click', handleClickOutside, true);
 
     return () => {
-      document.removeEventListener('click', handleClickOutside, true)
-    }
-  }, [])
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
 
   return (
     <>
       {/* Top Blue Header */}
       <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white">
         <div className="container mx-auto flex p-6 justify-between items-center">
-          <Link href={'/'} className="font-bold flex items-center justify-center gap-x-4">
+          <Link
+            href={'/'}
+            className="font-bold flex items-center justify-center gap-x-4"
+          >
             <Image
               alt="Logo of Spark x Adroit"
-
               width={200}
               height={200}
-
               src={AdroitLogo}
-
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />
@@ -85,8 +85,14 @@ HeaderProps) => {
               <h1>Manager</h1>
             </div>
           </Link>
-          <div className="relative" ref={dropdownRef}>
-            <button className="flex items-center space-x-2" onClick={toggleDropdown}>
+          <div
+            className="relative"
+            ref={dropdownRef}
+          >
+            <button
+              className="flex items-center space-x-2"
+              onClick={toggleDropdown}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -99,7 +105,7 @@ HeaderProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="font-medium">{given_name}</span>
+              <span className="font-medium">{capitalizeWords(given_name)}</span>
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
@@ -179,18 +185,18 @@ HeaderProps) => {
       {/* Quick Info */}
       {totalDevicesOfflineCount && (
         <div className=" gap-x-4 text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
-           Devices Offline
-           <span className='font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900  hover:text-black transition '>
-           {totalDevicesOfflineCount}
-            </span>
-            Clients Offline
-            <span className='font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900 hover:text-black transition'>
-          {clientsOfflineCount}
-              </span>
+          Devices Offline
+          <span className="font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900  hover:text-black transition ">
+            {totalDevicesOfflineCount}
+          </span>
+          Clients Offline
+          <span className="font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900 hover:text-black transition">
+            {clientsOfflineCount}
+          </span>
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
