@@ -1,7 +1,5 @@
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Button } from '@/components/ui/button';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,42 +8,45 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import { getTimestampData } from '@/utils';
+import Link from 'next/link';
+import tagsData from './tagsdata.json'; // Importing the JSON file
 import { DynamicMetricData } from '@/types';
+import { Button } from '../ui/button';
 
-// Declare an empty array initially
+interface TagsData {
+  tags: string[];
+}
+
+const typedTagsData: TagsData = tagsData;
+
 let columns: ColumnDef<DynamicMetricData>[] = [];
 
-//Modifed Sorting function to handle undefined values
 function createSortingFn<T>(getValueFromRow: (row: T) => number | null | undefined) {
   return (rowA: { original: T }, rowB: { original: T }) => {
     const valueA = getValueFromRow(rowA.original);
     const valueB = getValueFromRow(rowB.original);
 
-    // Handle undefined values
     if (valueA === undefined && valueB === undefined) {
-      return 0; // Both are undefined, so they are equal
+      return 0;
     } else if (valueA === undefined) {
-      return 1; // rowA is undefined, so put it after rowB
+      return 1;
     } else if (valueB === undefined) {
-      return -1; // rowB is undefined, so put it after rowA
+      return -1;
     }
 
-    // Compare the values
     if (valueA !== null && valueB !== null) {
       if (valueA < valueB) return -1;
       if (valueA > valueB) return 1;
       return 0;
     }
 
-    // If we reach this point, it means one or both values are not valid numbers
-    return 0; // Consider them equal if we can't compare the values
+    return 0;
   };
 }
 
 export const initializeColumns = () => {
-  // Initialize columns with the static columns
   columns = [
     {
       id: 'actions',
@@ -74,7 +75,6 @@ export const initializeColumns = () => {
               <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
                 Hide client from Dashboard
               </DropdownMenuItem>
-
               <DropdownMenuItem>
                 <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
               </DropdownMenuItem>
@@ -83,7 +83,6 @@ export const initializeColumns = () => {
         );
       },
     },
-    // Timestamp column with sorting function
     {
       accessorKey: 'Timestamp',
       header: ({ column }) => (
@@ -102,15 +101,6 @@ export const initializeColumns = () => {
         // Render the timestamp
         return <span>{timestamp ? new Date(timestamp).toLocaleString() : 'N/A'}</span>;
       },
-      /**
-       * Sorts rows based on the timestamp data of their original data.
-       * Accessing the timestamp value using the same logic as in the cell renderer.
-       * We're finding the first key that starts with metric_ and retrieving the timestamp value from the corresponding object.
-       * @param {Row} rowA - The first row to compare.
-       * @param {Row} rowB - The second row to compare.
-       * @returns {number} A negative number if rowA's timestamp is earlier than rowB's, 0 if they are equal,
-       * or a positive number if rowA's timestamp is later than rowB's.
-       */
       sortingFn: (rowA, rowB) => {
         const timestampDataA = getTimestampData(rowA.original);
         const timestampDataB = getTimestampData(rowB.original);
@@ -139,7 +129,7 @@ export const initializeColumns = () => {
     },
     {
       accessorKey: 'client_name',
-
+      size: 150, // Adjusting the width
       header: ({ column }) => {
         return (
           <Button
@@ -155,7 +145,7 @@ export const initializeColumns = () => {
 
     {
       accessorKey: 'client_id',
-
+      size: 100, // Adjusting the width
       header: ({ column }) => {
         return (
           <Button
@@ -170,6 +160,7 @@ export const initializeColumns = () => {
     },
     {
       accessorKey: 'device_id',
+      size: 100, // Adjusting the width
       header: ({ column }) => {
         return (
           <Button
@@ -184,6 +175,7 @@ export const initializeColumns = () => {
     },
     {
       accessorKey: 'metric_battery_percentage',
+      size: 150, // Adjusting the width
       header: ({ column }) => {
         return (
           <Button
@@ -238,27 +230,46 @@ export const initializeColumns = () => {
         return null;
       }),
     },
-
     {
       accessorKey: 'tags',
+      size: 200, // Adjusting the width
       header: 'Tags',
       cell: ({ row }) => {
-        const tags = row.original.tags || '';
+        const [selectedTag, setSelectedTag] = React.useState(row.original.tags || '');
+
+        const handleTagChange = (e: any) => {
+          const newTag = e.target.value;
+          setSelectedTag(newTag);
+          row.original.tags = newTag;
+        };
 
         return (
-          <input
-            type="text"
-            onChange={(e) => {
-              row.original.tags = e.target.value;
-            }}
-            className="w-full px-2 py-1 border border-gray-300 rounded-md"
-          />
+          <div className="relative">
+            <select
+              value={selectedTag}
+              onChange={(e) => {
+                handleTagChange(e);
+              }}
+              className="w-full px-2 py-1 border border-gray-300 rounded-md pr-8"
+            >
+              <option value="">Select Tag</option>
+              {tagsData.tags.map((tag, index) => (
+                <option
+                  key={index}
+                  value={tag}
+                >
+                  {tag}
+                </option>
+              ))}
+            </select>
+          </div>
         );
       },
     },
+
     {
       accessorKey: 'metric_battery_voltage',
-      size: 10,
+      size: 150, // Adjusting the width
       header: ({ column }) => {
         return (
           <Button
@@ -312,7 +323,6 @@ export const initializeColumns = () => {
   ];
 };
 
-// Initialize columns (pass an empty array initially, it will be populated later)
 initializeColumns();
 
 export { columns };
