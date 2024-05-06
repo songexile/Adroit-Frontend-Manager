@@ -1,10 +1,12 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { CustomUser, HeaderProps } from '@/types'
-import { useSession, signOut } from 'next-auth/react'
-import { useEffect, useRef, useState } from 'react'
-import LoginScreen from '@/pages/login'
-import { Switch } from '@/components/ui/switch'
+import Image from 'next/image';
+import Link from 'next/link';
+import { CustomUser, HeaderProps } from '@/types';
+import { useSession, signOut } from 'next-auth/react';
+import { useEffect, useRef, useState } from 'react';
+import LoginScreen from '@/pages/login';
+import { Switch } from '@/components/ui/switch';
+import { useAtom } from 'jotai';
+import { hideSelectedAtom } from './context/toggleAtom';
 
 const Header = ({
   fetchDataAndUpdate,
@@ -18,54 +20,57 @@ const Header = ({
 HeaderProps) => {
   const handleFetchAndUpdate = async () => {
     if (fetchDataAndUpdate) {
-      await fetchDataAndUpdate()
+      await fetchDataAndUpdate();
     }
-  }
+  };
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  const [hideSelected, setHideSelected] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hideSelected, setHideSelected] = useAtom(hideSelectedAtom);
 
   if (hideSelected) {
-    console.log('hideSelected')
+    console.log('hideSelected');
   }
 
-  const dropdownRef = useRef<HTMLDivElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   if (!session || !session.user) {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
-  const { given_name } = session.user as CustomUser
+  const { given_name } = session.user as CustomUser;
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleLogout = async () => {
-    await signOut()
-  }
+    await signOut();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false)
+        setIsDropdownOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('click', handleClickOutside, true)
+    document.addEventListener('click', handleClickOutside, true);
 
     return () => {
-      document.removeEventListener('click', handleClickOutside, true)
-    }
-  }, [])
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, []);
 
   return (
     <>
       {/* Top Blue Header */}
       <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white">
         <div className="container mx-auto flex p-6 justify-between items-center">
-          <Link href={'/'} className="font-bold flex items-center justify-center gap-x-4">
+          <Link
+            href={'/'}
+            className="font-bold flex items-center justify-center gap-x-4"
+          >
             <Image
               alt="Logo of Spark x Adroit"
               src="/assets/img/Adroit-environmental-monitoring2.png"
@@ -80,8 +85,14 @@ HeaderProps) => {
               <h1>Manager</h1>
             </div>
           </Link>
-          <div className="relative" ref={dropdownRef}>
-            <button className="flex items-center space-x-2" onClick={toggleDropdown}>
+          <div
+            className="relative"
+            ref={dropdownRef}
+          >
+            <button
+              className="flex items-center space-x-2"
+              onClick={toggleDropdown}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -127,7 +138,7 @@ HeaderProps) => {
                   <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
                     {setSearchByClientName && (
                       <input
-                        className="border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition "
+                        className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition "
                         type="text"
                         placeholder="Search by Client Name"
                         value={searchByClientName}
@@ -136,7 +147,7 @@ HeaderProps) => {
                     )}
                     {setSearchByDeviceKey && (
                       <input
-                        className="    border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition"
+                        className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition"
                         type="text"
                         placeholder="Search by Device Key"
                         value={searchByDeviceKey}
@@ -149,14 +160,13 @@ HeaderProps) => {
                   <div className="flex items-center space-x-2 mt-3 md:mt-0">
                     <button
                       onClick={handleFetchAndUpdate}
-                      className=" hover:shadow-md bg-white border-b-4 rounded-2xl border-gray-100 text-gray-400   font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
+                      className="hover:shadow-md bg-white border-b-4 rounded-2xl border-gray-100 text-gray-400 font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
                     >
                       Fetch New Data
                     </button>
                   </div>
                 )}
 
-                {/* Would like to implement in future */}
                 <div className="flex items-center space-x-2">
                   <Switch
                     checked={hideSelected}
@@ -178,7 +188,7 @@ HeaderProps) => {
         </span>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
