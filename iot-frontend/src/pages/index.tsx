@@ -19,8 +19,8 @@ export default function Home({
   const { data: session } = useSession()
   const [loading, setLoading] = useState(true)
   const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([])
-  const [searchById, setSearchById] = useState('')
   const [searchByClientName, setSearchByClientName] = useState('')
+  const [searchByDeviceKey, setSearchByDeviceKey] = useState('')
 
   const [totalDevicesOfflineCount, setTotalDevicesOfflineCount] = useState(
     data ? getTotalDevicesOfflineCount(data) : 0
@@ -31,15 +31,17 @@ export default function Home({
 
   const filterData = (
     data: DynamicMetricData[],
-    searchById: string,
-    searchByClientName: string
+    searchByClientName: string,
+    searchByDeviceKey: string
   ) => {
     return data.filter((item) => {
-      const deviceIdMatch = (item.device_id + '').toLowerCase().includes(searchById.toLowerCase())
       const clientNameMatch = (item.client_name + '')
         .toLowerCase()
         .includes(searchByClientName.toLowerCase())
-      return deviceIdMatch && clientNameMatch
+      const deviceKeyMatch = (item.device_key + '')
+        .toLowerCase()
+        .includes(searchByDeviceKey.toLowerCase())
+      return clientNameMatch && deviceKeyMatch
     })
   }
 
@@ -56,20 +58,20 @@ export default function Home({
 
   useEffect(() => {
     if (data) {
-      const filtered = filterData(data, searchById, searchByClientName)
+      const filtered = filterData(data, searchByClientName, searchByDeviceKey)
       setFilteredData(filtered)
     }
-  }, [searchById, searchByClientName, data])
+  }, [searchByClientName, searchByDeviceKey, data])
 
   if (session) {
     return (
       <div className=" w-full flex flex-col">
         <Header
           fetchDataAndUpdate={fetchDataAndUpdate}
-          searchById={searchById}
-          setSearchById={setSearchById}
           searchByClientName={searchByClientName}
           setSearchByClientName={setSearchByClientName}
+          searchByDeviceKey={searchByDeviceKey}
+          setSearchByDeviceKey={setSearchByDeviceKey}
           totalDevicesOfflineCount={totalDevicesOfflineCount}
           clientsOfflineCount={clientsOfflineCount}
         />

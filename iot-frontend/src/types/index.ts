@@ -32,17 +32,24 @@ export interface SpinnerProps {
 
 export interface HeaderProps {
   fetchDataAndUpdate?: () => Promise<void>;
-  searchById?: string;
-  setSearchById?: (value: string) => void;
   searchByClientName?: string;
   setSearchByClientName?: (value: string) => void;
+  searchByDeviceKey?: string;
+  setSearchByDeviceKey?: (value: string) => void;
   totalDevicesOfflineCount?: number;
   clientsOfflineCount?: number;
 }
 
-export interface RequestBody {
+export interface EmailRequestBody {
   to: string
+  cc?: string | string[]
+  bcc?: string | string[]
   subject: string
   message: string
   deviceData: DynamicMetricData
+}
+
+export interface ToggleSwitchProps {
+  text: string
+  initialValue?: boolean
 }

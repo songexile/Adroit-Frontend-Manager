@@ -10,8 +10,9 @@ const LoginScreen = () => {
           <Image
             src="/assets/img/Adroit-logo.png"
             alt="Adroit Company Logo"
-            width={80}
-            height={80}
+            width="0"
+            height="0"
+            style={{ width: '80', height: '80' }}
           />
         </div>
         <h1 className="text-3xl font-bold text-center mb-6 text-white">

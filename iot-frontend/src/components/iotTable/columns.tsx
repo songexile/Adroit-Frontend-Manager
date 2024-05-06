@@ -68,9 +68,7 @@ export const initializeColumns = () => {
                 <Link href={`/device-info/${deviceID}`}>View device stats</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => console.log('Hide client from Dashboard')}>
-                Hide client from Dashboard
-              </DropdownMenuItem>
+             
 
               <DropdownMenuItem>
                 <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
@@ -97,7 +95,22 @@ export const initializeColumns = () => {
         const timestamp = timestampData ? timestampData.timestamp : undefined
 
         // Render the timestamp
-        return <span>{timestamp ? new Date(timestamp).toLocaleString() : 'N/A'}</span>
+        const now = new Date();
+        const daysAgo = timestamp ? Math.floor((now.getTime() - new Date(timestamp).getTime()) / (1000 * 60 * 60 * 24)) : undefined;
+
+        var bgColor = 'inherit'
+
+        if (daysAgo !== undefined) {
+          if (daysAgo > 7) {
+            bgColor = 'bg-red-500'; // Red for over 7 days
+          } else if (daysAgo > 3) {
+            bgColor = 'bg-orange-500'; // Orange for 3-7 days
+          }
+        }
+
+    
+        // Render the number of days ago
+        return <span className={`${bgColor} p-4 rounded-md text-white font-medium`}>{timestamp ? `${daysAgo} days ago` : 'N/A'}</span>;
       },
       /**
        * Sorts rows based on the timestamp data of their original data.
@@ -166,18 +179,29 @@ export const initializeColumns = () => {
       },
     },
     {
-      accessorKey: 'device_id',
+      accessorKey: 'device_key',
       header: ({ column }) => {
         return (
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
           >
-            Device ID
+            Device Key
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
       },
+      cell: ({ row }) => {
+        const deviceKey = row.original.device_key;
+      
+      
+        return (
+          <div className='w-8'>
+         
+            {deviceKey}
+          </div>
+        );
+      }
     },
     {
       accessorKey: 'metric_battery_percentage',
@@ -217,7 +241,7 @@ export const initializeColumns = () => {
         return (
           <div className="flex justify-center">
             <span
-              className={`px-2 py-1 rounded-md text-white font-medium ${
+              className={`p-4 rounded-md text-white font-medium ${
                 battery !== null ? 'inline-block ' + color : 'hidden'
               }`}
             >
@@ -255,7 +279,7 @@ export const initializeColumns = () => {
         if (typeof batteryVoltage === 'object' && typeof batteryVoltage.value === 'string') {
           const voltage = parseFloat(batteryVoltage.value)
 
-          if (voltage >= 3.6 && voltage <= 3.7) {
+          if (voltage >= 3.6) {
             color = 'bg-green-500'
           } else if (voltage >= 3.5 && voltage <= 3.8) {
             color = 'bg-orange-500'
@@ -266,7 +290,7 @@ export const initializeColumns = () => {
           return (
             <div className="flex justify-center">
               <span
-                className={`px-2 py-1 rounded-md text-white font-medium ${
+                className={`p-4 rounded-md text-white font-medium ${
                   voltage !== null ? 'inline-block ' + color : 'hidden'
                 }`}
               >
