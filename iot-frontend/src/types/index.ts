@@ -4,6 +4,7 @@ import { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
 export interface CustomUser extends User {
+  username: string;
   given_name: string;
   family_name: string;
   email: string;
@@ -11,11 +12,14 @@ export interface CustomUser extends User {
 
 export interface CustomSession extends Session {
   user: CustomUser;
+  accessToken?: string;
 }
 
 export interface CustomToken extends JWT {
+  username: string;
   given_name: string;
   family_name: string;
+  accessToken?: string;
 }
 
 export interface DynamicMetricData {
@@ -40,8 +44,10 @@ export interface HeaderProps {
   clientsOfflineCount?: number;
 }
 
-export interface RequestBody {
+export interface EmailRequestBody {
   to: string
+  cc?: string | string[]
+  bcc?: string | string[]
   subject: string
   message: string
   deviceData: DynamicMetricData

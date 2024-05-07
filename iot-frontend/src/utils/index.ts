@@ -196,3 +196,100 @@ export const getClientsOfflineCount = (flattenedData: DynamicMetricData[]): numb
   }
   return uniqueClients.size
 }
+
+export function capitalizeWords(str: string): string {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+/**
+ * Retrieves the scan status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The scan status string.
+ */
+export const getScanStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const scanStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_scanStatus'
+  );
+
+  if (!scanStatusEntry) return 'N/A';
+
+  const [, value] = scanStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: scanStatus } = value;
+
+    if (scanStatus === 'OK') {
+      return 'ONLINE';
+    } else if (scanStatus === 'Modbus error') {
+      return 'ERROR';
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Retrieves the battery status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The battery status string.
+ */
+export const getBatteryStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const batteryStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_batt status'
+  );
+
+  if (!batteryStatusEntry) return 'N/A';
+
+  const [, value] = batteryStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: batteryStatus } = value;
+
+    if (batteryStatus === 'On') {
+      return 'ONLINE';
+    } else if (batteryStatus === 'Off') {
+      return 'OFFLINE';
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Retrieves the Insitu status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The Insitu status string.
+ */
+export const getInsituStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const insituStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_insituStatus'
+  );
+
+  if (!insituStatusEntry) return 'N/A';
+
+  const [, value] = insituStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: insituStatus } = value;
+
+    if (insituStatus === 'Normal' || insituStatus === 'OK') {
+      return 'NORMAL';
+    } else if (insituStatus === 'COMS_ERROR') {
+      return 'ERROR';
+    } else if (
+      insituStatus === 'POWER_CYCLED' ||
+      insituStatus === 'STARTUP' ||
+      insituStatus === 'AQUATROLL 500'
+    ) {
+      return insituStatus;
+    }
+  }
+
+  return 'N/A';
+};
