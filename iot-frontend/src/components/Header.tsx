@@ -7,6 +7,8 @@ import LoginScreen from '@/pages/login';
 import { Switch } from '@/components/ui/switch';
 import { useAtom } from 'jotai';
 import { hideSelectedAtom } from './context/toggleAtom';
+import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png';
+import { capitalizeWords } from '@/utils';
 
 const Header = ({
   fetchDataAndUpdate,
@@ -38,7 +40,8 @@ HeaderProps) => {
   if (!session || !session.user) {
     return <LoginScreen />;
   }
-  const { given_name } = session.user as CustomUser;
+
+  const { username } = session.user as CustomUser;
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -73,7 +76,7 @@ HeaderProps) => {
           >
             <Image
               alt="Logo of Spark x Adroit"
-              src="/assets/img/Adroit-environmental-monitoring2.png"
+              src={AdroitLogo}
               width={200}
               height={200}
               style={{ width: '120px', height: 'auto' }}
@@ -105,7 +108,7 @@ HeaderProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="font-medium">{given_name}</span>
+              <span className="font-medium">{capitalizeWords(username)}</span>
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
@@ -183,9 +186,16 @@ HeaderProps) => {
 
       {/* Quick Info */}
       {totalDevicesOfflineCount && (
-        <span className="text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
-          Total Devices Offline: {totalDevicesOfflineCount} | Clients Offline: {clientsOfflineCount}
-        </span>
+        <div className=" gap-x-4 text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
+          Devices Offline
+          <span className="font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900  hover:text-black transition ">
+            {totalDevicesOfflineCount}
+          </span>
+          Clients Offline
+          <span className="font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900 hover:text-black transition">
+            {clientsOfflineCount}
+          </span>
+        </div>
       )}
     </>
   );
