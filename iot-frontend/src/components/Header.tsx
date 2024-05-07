@@ -29,10 +29,6 @@ HeaderProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hideSelected, setHideSelected] = useAtom(hideSelectedAtom);
 
-  if (hideSelected) {
-    console.log('hideSelected');
-  }
-
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const { data: session } = useSession();
@@ -68,7 +64,7 @@ HeaderProps) => {
   return (
     <>
       {/* Top Blue Header */}
-      <div className="bg-gradient-to-b  from-cyan-500 to-blue-500 text-white">
+      <div className="bg-gradient-to-b from-cyan-500 to-blue-500 text-white">
         <div className="container mx-auto flex p-6 justify-between items-center">
           <Link
             href={'/'}
@@ -136,47 +132,48 @@ HeaderProps) => {
             <div
               className={`${setSearchByClientName && setSearchByDeviceKey ? '   py-2 px-4' : ''}`}
             >
-              <div className="container mx-auto md:flex items-center justify-between">
-                {(setSearchByClientName || setSearchByDeviceKey) && (
-                  <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
-                    {setSearchByClientName && (
-                      <input
-                        className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition "
-                        type="text"
-                        placeholder="Search by Client Name"
-                        value={searchByClientName}
-                        onChange={(e) => setSearchByClientName(e.target.value)}
-                      />
+              <div className="container mx-auto">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  {(setSearchByClientName || setSearchByDeviceKey) && (
+                    <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8 w-full md:w-auto">
+                      {setSearchByClientName && (
+                        <input
+                          className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition w-full md:w-auto"
+                          type="text"
+                          placeholder="Search by Client Name"
+                          value={searchByClientName}
+                          onChange={(e) => setSearchByClientName(e.target.value)}
+                        />
+                      )}
+                      {setSearchByDeviceKey && (
+                        <input
+                          className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition w-full md:w-auto"
+                          type="text"
+                          placeholder="Search by Device Key"
+                          value={searchByDeviceKey}
+                          onChange={(e) => setSearchByDeviceKey(e.target.value)}
+                        />
+                      )}
+                    </div>
+                  )}
+                  <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+                    {fetchDataAndUpdate && (
+                      <button
+                        onClick={handleFetchAndUpdate}
+                        className="focus:outline-none text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:shadow-md transition w-full sm:w-auto"
+                      >
+                        Fetch New Data
+                      </button>
                     )}
-                    {setSearchByDeviceKey && (
-                      <input
-                        className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition"
-                        type="text"
-                        placeholder="Search by Device Key"
-                        value={searchByDeviceKey}
-                        onChange={(e) => setSearchByDeviceKey(e.target.value)}
+                    <div className="flex items-center space-x-2 w-full sm:w-auto">
+                      <Switch
+                        checked={hideSelected}
+                        onCheckedChange={setHideSelected}
+                        id="airplane-mode"
                       />
-                    )}
+                      <label htmlFor="airplane-mode">Hide Null Values</label>
+                    </div>
                   </div>
-                )}
-                {fetchDataAndUpdate && (
-                  <div className="flex items-center space-x-2 mt-3 md:mt-0">
-                    <button
-                      onClick={handleFetchAndUpdate}
-                      className="hover:shadow-md bg-white border-b-4 rounded-2xl border-gray-100 text-gray-400 font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
-                    >
-                      Fetch New Data
-                    </button>
-                  </div>
-                )}
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    checked={hideSelected}
-                    onCheckedChange={setHideSelected}
-                    id="airplane-mode"
-                  />
-                  <label htmlFor="airplane-mode">Hide Devices with null values</label>
                 </div>
               </div>
             </div>
