@@ -197,7 +197,10 @@ export const getClientsOfflineCount = (flattenedData: DynamicMetricData[]): numb
   return uniqueClients.size
 }
 
-export function capitalizeWords(str: string): string {
+export function capitalizeWords(str: string | undefined): string {
+  if (typeof str === 'undefined' || str === null) {
+    return '';
+  }
   return str.replace(/\b\w/g, char => char.toUpperCase());
 }
 

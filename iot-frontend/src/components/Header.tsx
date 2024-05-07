@@ -106,12 +106,16 @@ HeaderProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="font-medium hidden sm:inline">{capitalizeWords(username)}</span>
+              <span className="font-medium hidden sm:inline">
+                {capitalizeWords(username ?? '')}
+              </span>
             </button>
             {isDropdownOpen && (
               <div className="z-50 absolute right-0 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow">
                 <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900">{capitalizeWords(username)}</span>
+                  <span className="block text-sm text-gray-900">
+                    {capitalizeWords(username ?? '')}
+                  </span>
                   <span className="block text-sm text-gray-500 truncate">{email}</span>
                 </div>
                 <ul
