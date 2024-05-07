@@ -197,6 +197,10 @@ export const getClientsOfflineCount = (flattenedData: DynamicMetricData[]): numb
   return uniqueClients.size
 }
 
+export function capitalizeWords(str: string): string {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
 /**
  * Retrieves the scan status from the provided device data.
  * @param {DynamicMetricData | null} deviceData - The device data object.
