@@ -5,6 +5,8 @@ import { useSession, signOut } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import LoginScreen from '@/pages/login';
 import { Switch } from '@/components/ui/switch';
+import { useAtom } from 'jotai';
+import { hideSelectedAtom } from './context/toggleAtom';
 import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png';
 import { capitalizeWords } from '@/utils';
 
@@ -25,7 +27,7 @@ HeaderProps) => {
   };
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [hideSelected, setHideSelected] = useState(false);
+  const [hideSelected, setHideSelected] = useAtom(hideSelectedAtom);
 
   if (hideSelected) {
     console.log('hideSelected');
@@ -38,6 +40,7 @@ HeaderProps) => {
   if (!session || !session.user) {
     return <LoginScreen />;
   }
+
   const { username } = session.user as CustomUser;
 
   const toggleDropdown = () => {
@@ -73,9 +76,9 @@ HeaderProps) => {
           >
             <Image
               alt="Logo of Spark x Adroit"
+              src={AdroitLogo}
               width={200}
               height={200}
-              src={AdroitLogo}
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />
@@ -138,7 +141,7 @@ HeaderProps) => {
                   <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8">
                     {setSearchByClientName && (
                       <input
-                        className="border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition "
+                        className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition "
                         type="text"
                         placeholder="Search by Client Name"
                         value={searchByClientName}
@@ -147,7 +150,7 @@ HeaderProps) => {
                     )}
                     {setSearchByDeviceKey && (
                       <input
-                        className="    border-b-4 rounded-2xl border-gray-100  text-black font-bold py-2 px-4     focus:ring-cyan-300 transition"
+                        className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition"
                         type="text"
                         placeholder="Search by Device Key"
                         value={searchByDeviceKey}
@@ -160,14 +163,13 @@ HeaderProps) => {
                   <div className="flex items-center space-x-2 mt-3 md:mt-0">
                     <button
                       onClick={handleFetchAndUpdate}
-                      className=" hover:shadow-md bg-white border-b-4 rounded-2xl border-gray-100 text-gray-400   font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
+                      className="hover:shadow-md bg-white border-b-4 rounded-2xl border-gray-100 text-gray-400 font-bold py-2 px-4     focus:ring-blue-500 transition focus:border-blue-500"
                     >
                       Fetch New Data
                     </button>
                   </div>
                 )}
 
-                {/* Would like to implement in future */}
                 <div className="flex items-center space-x-2">
                   <Switch
                     checked={hideSelected}
