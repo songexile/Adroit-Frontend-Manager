@@ -374,9 +374,9 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
         })}
       </div>
 
-      <div className="flex flex-wrap max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
-        <div className="flex flex-col gap-4 text-red-500">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Fault Identification:</h2>
+      <div className="flex sm:justify-evenly flex-col sm:flex-row gap-x-4 bg-gradient-to-t from-slate-100 to-blue-100 mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500 border-t-8">
+        <div className="flex flex-col gap-4 mb-4 sm:mb-0 text-red-500">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800 p-4 bg-gray-300  border-b-4 border-blue-500 rounded-sm">Fault Identification:</h2>
           {Object.entries(deviceData).map(([key, value], index) => {
             if (errorKeys.includes(key)) {
               if (typeof value === 'string') {
@@ -410,8 +410,8 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           })}
         </div>
 
-        <div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 mt-5 lg:mt-0">Metrics:</h2>
+        <div className='flex flex-col '>
+          <h2 className="text-2xl font-bold  p-4 bg-gray-300 rounded-sm text-gray-800 mb-8   border-b-4 border-blue-500 ">Metrics:</h2>
           {deviceData && renderMetrics(deviceData)}
         </div>
       </div>
