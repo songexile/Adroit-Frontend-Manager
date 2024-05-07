@@ -38,6 +38,7 @@ HeaderProps) => {
   }
 
   const { username } = session.user as CustomUser;
+  const { email } = session.user as CustomUser;
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -84,6 +85,7 @@ HeaderProps) => {
               <h1>Manager</h1>
             </div>
           </Link>
+          {/* Dropdown Profile Menu */}
           <div
             className="relative"
             ref={dropdownRef}
@@ -104,24 +106,35 @@ HeaderProps) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="font-medium">{capitalizeWords(username)}</span>
+              <span className="font-medium hidden sm:inline">{capitalizeWords(username)}</span>
             </button>
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
-                <div className="py-1">
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Profile Settings
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+              <div className="z-50 absolute right-0 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow">
+                <div className="px-4 py-3">
+                  <span className="block text-sm text-gray-900">{capitalizeWords(username)}</span>
+                  <span className="block text-sm text-gray-500 truncate">{email}</span>
                 </div>
+                <ul
+                  className="py-2"
+                  aria-labelledby="user-menu-button"
+                >
+                  <li>
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Profile Settings
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </ul>
               </div>
             )}
           </div>
