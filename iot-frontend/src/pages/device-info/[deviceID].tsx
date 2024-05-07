@@ -6,7 +6,8 @@ import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
 import Link from 'next/link';
 import LoginScreen from '../login';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { DynamicMetricData } from '@/types';
 import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
 
@@ -19,7 +20,8 @@ function fetchDeviceId() {
 }
 
 function DeviceID(data: any) {
-  const { data: session } = useSession();
+  const { isAuthenticated, isLoading } = useAuth();
+
   const deviceId = fetchDeviceId();
 
   const filteredData = useMemo(() => flattenNestedData(data, deviceId), [data, deviceId]);
@@ -30,10 +32,20 @@ function DeviceID(data: any) {
   // Breadcrumb items
   const breadcrumbs = [
     { name: 'Home', path: '/' },
-    { name: `Device ${deviceData?.device_id}`, path: `/new-device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
+    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
   ];
 
-  if (session) {
+  if (isLoading) {
+    return (
+      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
+        <div className="h-5/6 w-full"></div>
+        <LoadingSpinner className={'h-32 w-32'} />
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
     return (
       <>
         <Header />
@@ -117,8 +129,10 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'batt status',
     'DIAGNOSTICS',
   ];
+
   const errorKeys = relevantKeys.map((key) => prefix + key); // Concatenate prefix to each key
   const siteEntry = Object.entries(deviceData).find(([key]) => key === 'metric_site');
+
   let siteValue;
   if (siteEntry) {
     const [, siteData] = siteEntry;
@@ -140,36 +154,39 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           </button>
         </Link>
       </div>
+
       {/* Device Info Card */}
-      <div className="bg-gray-200 p-4 rounded-lg">
-        <div className="flex flex-wrap">
-          <div className="w-full md:w-1/5 mb-4">
-            <span className="font-bold text-gray-600">Device ID:</span>
-            <div className="text-right md:text-left md:pl-1">{deviceData?.device_id}</div>
+      <div className="bg-white p-6 rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="mb-4">
+            <div className="text-sm font-medium text-gray-500">Device ID</div>
+            <div className="mt-1 text-lg font-semibold text-gray-900">{deviceData?.device_id}</div>
           </div>
-          <div className="w-full md:w-1/5 mb-4">
-            <span className="font-bold text-gray-600">Device Key:</span>
-            <div className="text-right md:text-left md:pl-1">{deviceData?.device_key}</div>
+          <div className="mb-4">
+            <div className="text-sm font-medium text-gray-500">Device Key</div>
+            <div className="mt-1 text-lg font-semibold text-gray-900">{deviceData?.device_key}</div>
           </div>
-          <div className="w-full md:w-1/5 mb-4">
-            <span className="font-bold text-gray-600">Client Name:</span>
-            <div className="text-right md:text-left md:pl-1">{deviceData?.client_name}</div>
+          <div className="mb-4">
+            <div className="text-sm font-medium text-gray-500">Client Name</div>
+            <div className="mt-1 text-lg font-semibold text-gray-900">
+              {deviceData?.client_name}
+            </div>
           </div>
-          <div className="w-full md:w-1/5 mb-4">
-            <span className="font-bold text-gray-600">Last Online:</span>
-            <div className="text-right md:text-left md:pl-1">
+          <div className="mb-4">
+            <div className="text-sm font-medium text-gray-500">Last Online</div>
+            <div className="mt-1 text-lg font-semibold text-gray-900">
               {typeof deviceData?.last_online === 'string'
                 ? deviceData.last_online
                 : deviceData?.last_online?.value || 'N/A'}
             </div>
           </div>
-          <div className="w-full md:w-1/5 mb-4">
-            <span className="font-bold text-gray-600">Last Ticket Created:</span>
-            <div className="text-right md:text-left md:pl-1">Never</div>
+          <div className="mb-4">
+            <div className="text-sm font-medium text-gray-500">Last Ticket Created</div>
+            <div className="mt-1 text-lg font-semibold text-gray-900">Never</div>
           </div>
-          <div className="w-full md:w-1/5 mb-4">
-            <span className="font-bold text-gray-600">Location:</span>
-            <div className="text-right md:text-left md:pl-1">{siteValue}</div>
+          <div className="mb-4">
+            <div className="text-sm font-medium text-gray-500">Location</div>
+            <div className="mt-1 text-lg font-semibold text-gray-900">{siteValue}</div>
           </div>
         </div>
       </div>
@@ -326,7 +343,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
       </div>
 
       {/* Chart components */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {Object.entries(deviceData).map(([key, value], index) => {
           const metricIndex = fullMetricName.indexOf(key);
           if (metricIndex !== -1) {
@@ -334,37 +351,36 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
             if (typeof value === 'string') {
               return (
                 <div
-                  className="flex flex-wrap bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500"
                   key={`${key}-${index}`}
+                  className="bg-white rounded-lg shadow-xl p-6 flex flex-col items-center justify-center"
                 >
-                  <p>
-                    {formalName}: {value}
-                  </p>
+                  <p className="text-lg font-semibold text-gray-900">{formalName}</p>
+                  <p className="mt-2 text-xl font-bold text-red-500">{value}</p>
                 </div>
               );
             } else if (value && typeof value === 'object' && 'value' in value) {
               return (
                 <div
-                  className="flex flex-wrap items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black min-h-[16rem] justify-center"
                   key={`${key}-${index}`}
+                  className="bg-white rounded-lg shadow-xl p-6 flex flex-col items-center justify-center"
                 >
-                  <div className="mx-4 flex flex-col gap-4">
-                    <p className="font-bold text-xl">{formalName}</p>
-                    <p>{value.value}</p>
-                  </div>
-                  {/* SpeedoMeeter Chart */}
-                  <div>
-                    <SpeedometerChart
-                      value={parseFloat(value.value)}
-                      colors={['#38bdf8', '#EF4444']}
-                    />
-                  </div>
+                  <p className="text-lg font-semibold text-gray-900">{formalName}</p>
+                  <p className="mt-2 text-xl font-bold text-blue-500">{value.value}</p>
+                  {/* SpeedoMeter Chart */}
+                  <SpeedometerChart
+                    value={parseFloat(value.value)}
+                    colors={['#38bdf8', '#EF4444']}
+                  />
                 </div>
               );
             } else {
               return (
-                <div key={`${key}-${index}`}>
-                  <p>{formalName}: N/A</p>
+                <div
+                  key={`${key}-${index}`}
+                  className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center"
+                >
+                  <p className="text-lg font-semibold text-gray-900">{formalName}</p>
+                  <p className="mt-2 text-xl text-gray-500">N/A</p>
                 </div>
               );
             }
@@ -374,44 +390,57 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
         })}
       </div>
 
-      <div className="flex sm:justify-evenly flex-col sm:flex-row gap-x-4 bg-gradient-to-t from-slate-100 to-blue-100 mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500 border-t-8">
-        <div className="flex flex-col gap-4 mb-4 sm:mb-0 text-red-500">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 p-4 bg-gray-300  border-b-4 border-blue-500 rounded-sm">Fault Identification:</h2>
-          {Object.entries(deviceData).map(([key, value], index) => {
-            if (errorKeys.includes(key)) {
-              if (typeof value === 'string') {
-                return (
-                  <div key={`${key}-${index}`}>
-                    <p>
-                      {key}: {value}
-                    </p>
-                  </div>
-                );
-              } else if (value && typeof value === 'object' && 'value' in value) {
-                return (
-                  <div key={`${key}-${index}`}>
-                    <p>
-                      {key}: {value.value}
-                    </p>
-                  </div>
-                );
+      <div className="flex flex-col sm:flex-row gap-8 bg-gradient-to-t from-slate-100 to-blue-100 mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500 border-t-8">
+        <div className="w-full sm:w-1/2">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800 p-4 bg-gray-200 border-b-4 border-blue-500 rounded-sm">
+            Fault Identification:
+          </h2>
+          <div className="grid grid-cols-1 gap-6">
+            {Object.entries(deviceData).map(([key, value], index) => {
+              if (errorKeys.includes(key)) {
+                if (typeof value === 'string') {
+                  return (
+                    <div
+                      key={`${key}-${index}`}
+                      className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center"
+                    >
+                      <p className="text-lg font-semibold text-gray-900">{key}</p>
+                      <p className="mt-2 text-xl font-bold text-red-500">{value}</p>
+                    </div>
+                  );
+                } else if (value && typeof value === 'object' && 'value' in value) {
+                  return (
+                    <div
+                      key={`${key}-${index}`}
+                      className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center"
+                    >
+                      <p className="text-lg font-semibold text-gray-900">{key}</p>
+                      <p className="mt-2 text-xl font-bold text-red-500">{value.value}</p>
+                    </div>
+                  );
+                } else {
+                  // Handle undefined or unexpected value
+                  return (
+                    <div
+                      key={`${key}-${index}`}
+                      className="bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-center"
+                    >
+                      <p className="text-lg font-semibold text-gray-900">{key}</p>
+                      <p className="mt-2 text-xl text-gray-500">N/A</p>
+                    </div>
+                  );
+                }
               } else {
-                // Handle undefined or unexpected value
-                return (
-                  <div key={`${key}-${index}`}>
-                    <p>{key}: N/A</p>
-                  </div>
-                );
+                // Key is not in errorKeys, return null
+                return null;
               }
-            } else {
-              // Key is not in errorKeys, return null
-              return null;
-            }
-          })}
+            })}
+          </div>
         </div>
-
-        <div className='flex flex-col '>
-          <h2 className="text-2xl font-bold  p-4 bg-gray-300 rounded-sm text-gray-800 mb-8   border-b-4 border-blue-500 ">Metrics:</h2>
+        <div className="w-full sm:w-1/2">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800 p-4 bg-gray-200 border-b-4 border-blue-500 rounded-sm">
+            Metrics:
+          </h2>
           {deviceData && renderMetrics(deviceData)}
         </div>
       </div>

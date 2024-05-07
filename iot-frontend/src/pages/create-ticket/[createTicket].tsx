@@ -40,7 +40,7 @@ const CreateTicket = (data: any) => {
   // Breadcrumb items
   const breadcrumbs = [
     { name: 'Home', path: '/' },
-    { name: `Device ${deviceData?.device_id}`, path: `/new-device-info/${deviceData?.device_id}` },
+    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` },
     {
       name: `Create Ticket ${deviceData?.device_id}`,
       path: `/create-ticket/${deviceData?.device_id}`,
