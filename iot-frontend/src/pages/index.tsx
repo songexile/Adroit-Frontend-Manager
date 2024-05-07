@@ -46,15 +46,33 @@ export default function Home({
         .toLowerCase()
         .includes(searchByDeviceKey.toLowerCase());
 
-      // Extract the timestamp from the first available metric
+      // Extract and check if the timestamp from the first available metric is null or undefined
       const timestamp = Object.values(item).find(
         (value): value is { timestamp: number; value: string } =>
           value !== undefined && typeof value === 'object' && 'timestamp' in value
       )?.timestamp;
 
-      const hasTimestamp = hideSelected ? timestamp !== undefined : true;
+      // Check if Battery Percentage is null or undefined
+      const batteryPercentage = item.metric_battery_percentage;
+      const hasBatteryPercentage =
+        batteryPercentage &&
+        typeof batteryPercentage === 'object' &&
+        batteryPercentage.value !== undefined &&
+        batteryPercentage.value !== null;
 
-      return clientNameMatch && deviceKeyMatch && hasTimestamp;
+      // Check if Battery Voltage is null or undefined
+      const batteryVoltage = item.metric_battery_voltage;
+      const hasBatteryVoltage =
+        batteryVoltage &&
+        typeof batteryVoltage === 'object' &&
+        batteryVoltage.value !== undefined &&
+        batteryVoltage.value !== null;
+
+      const hasAllFields = hideSelected
+        ? timestamp !== undefined && hasBatteryPercentage && hasBatteryVoltage
+        : true;
+
+      return clientNameMatch && deviceKeyMatch && hasAllFields;
     });
     // console.log('Filtered Data:', filteredData)
     return filteredData;
