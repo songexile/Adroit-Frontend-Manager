@@ -38,7 +38,7 @@ function DeviceID(data: any) {
       <>
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <div className="flex mx-32 min-h-screen py-6 flex-col ">
+        <div className="flex mx-8 md:mx-32 min-h-screen py-6 flex-col ">
           {deviceData && debugMetrics(deviceData)}
         </div>
         <Footer />
@@ -103,7 +103,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'Battery Percentage %',
     'Solar Voltage',
     'Press',
-    'Battery Voltage'
+    'Battery Voltage',
   ];
 
   const fullMetricName = filterMetric.map((key) => prefix + key);
@@ -132,7 +132,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
   return (
     // Device Info and create Ticket button.
     <div>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
         <Link href={`/create-ticket/${deviceData?.device_id}`}>
           <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
@@ -178,47 +178,50 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
       <h3 className="text-xl font-bold mr-16 text-gray-800">Status</h3>
       <div className="bg-gray-200 p-4 rounded-lg flex flex-col items-center justify-center mt-4 mb-4">
         <div className="flex flex-col md:flex-row items-center justify-center">
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <span className="font-bold text-gray-600 mr-2">Scan:</span>
             <span
-              className={`px-3 py-1 rounded-full font-semibold ${getScanStatus(deviceData) === 'ONLINE'
-                ? 'bg-green-100 text-green-800'
-                : getScanStatus(deviceData) === 'ERROR'
+              className={`px-3 py-1 rounded-full font-semibold ${
+                getScanStatus(deviceData) === 'ONLINE'
+                  ? 'bg-green-100 text-green-800'
+                  : getScanStatus(deviceData) === 'ERROR'
                   ? 'bg-red-100 text-red-800'
                   : 'bg-gray-300 text-gray-800'
-                }`}
+              }`}
             >
               {getScanStatus(deviceData)}
             </span>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <span className="font-bold text-gray-600 ml-16 mr-2">Battery:</span>
             <span
-              className={`px-3 py-1 rounded-full font-semibold ${getBatteryStatus(deviceData) === 'ONLINE'
-                ? 'bg-green-100 text-green-800'
-                : getBatteryStatus(deviceData) === 'OFFLINE'
+              className={`px-3 py-1 rounded-full font-semibold ${
+                getBatteryStatus(deviceData) === 'ONLINE'
+                  ? 'bg-green-100 text-green-800'
+                  : getBatteryStatus(deviceData) === 'OFFLINE'
                   ? 'bg-red-100 text-red-800'
                   : 'bg-gray-300 text-gray-800'
-                }`}
+              }`}
             >
               {getBatteryStatus(deviceData)}
             </span>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <span className="font-bold text-gray-600 ml-16 mr-2">Insitu:</span>
             <span
-              className={`px-3 py-1 rounded-full font-semibold ${getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
-                ? 'bg-green-100 text-green-800'
-                : getInsituStatus(deviceData) === 'ERROR'
+              className={`px-3 py-1 rounded-full font-semibold ${
+                getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
+                  ? 'bg-green-100 text-green-800'
+                  : getInsituStatus(deviceData) === 'ERROR'
                   ? 'bg-red-100 text-red-800'
                   : getInsituStatus(deviceData) === 'POWER_CYCLED' ||
                     getInsituStatus(deviceData) === 'STARTUP' ||
                     getInsituStatus(deviceData) === 'AQUATROLL 500'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-gray-300 text-gray-800'
-                }`}
+                  ? 'bg-yellow-100 text-yellow-800'
+                  : 'bg-gray-300 text-gray-800'
+              }`}
             >
               {getInsituStatus(deviceData)}
             </span>
