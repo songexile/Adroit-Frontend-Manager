@@ -1,13 +1,13 @@
-import React from 'react'
+import React from 'react';
 
-function LoadingIndicator({ size = 50, color = 'blue', message = 'Loading...' }) {
+function LoadingIndicator({ size = 50, color = 'blue', message = 'Loading data...' }) {
   return (
     <>
       <div className="flex justify-center items-center h-screen">
         <div role="status">
           <svg
             aria-hidden="true"
-            className={`w-${size} h-${size} text-gray-200 animate-spin dark:text-gray-600 fill-${color}-600`}
+            className={`inline w-${size} h-${size} text-gray-200 animate-spin dark:text-gray-600 fill-${color}-600`}
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -21,11 +21,11 @@ function LoadingIndicator({ size = 50, color = 'blue', message = 'Loading...' })
               fill="currentFill"
             />
           </svg>
-          <p>{message}</p>
+          <span>{message}</span>
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default LoadingIndicator
+export default LoadingIndicator;

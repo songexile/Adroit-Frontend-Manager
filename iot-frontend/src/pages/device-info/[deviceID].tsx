@@ -6,7 +6,8 @@ import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
 import Link from 'next/link';
 import LoginScreen from '../login';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/hooks/useAuth';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { DynamicMetricData } from '@/types';
 import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
 
@@ -19,7 +20,8 @@ function fetchDeviceId() {
 }
 
 function DeviceID(data: any) {
-  const { data: session } = useSession();
+  const { isAuthenticated, isLoading } = useAuth();
+
   const deviceId = fetchDeviceId();
 
   const filteredData = useMemo(() => flattenNestedData(data, deviceId), [data, deviceId]);
@@ -33,7 +35,17 @@ function DeviceID(data: any) {
     { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
   ];
 
-  if (session) {
+  if (isLoading) {
+    return (
+      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
+        <div className="h-5/6 w-full"></div>
+        <LoadingSpinner className={'h-32 w-32'} />
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
     return (
       <>
         <Header />
