@@ -1,10 +1,10 @@
-import React from 'react'
-const currentYear = new Date().getFullYear()
-const establishedYear = 2015
+import React from 'react';
+const currentYear = new Date().getFullYear();
+const establishedYear = 2015;
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-800 text-white py-2 px-4">
+    <footer className="bg-gradient-to-b  from-cyan-600 to-blue-500 text-white py-2 px-4">
       <div className="container mx-auto flex items-center justify-center">
         <p className="text-sm text-center">
           Copyright © Adroit {establishedYear} - {currentYear}. All rights reserved.
@@ -12,10 +12,10 @@ const Footer = () => {
       </div>
 
       <div className="container mx-auto flex items-center justify-center">
-        <p className="text-sm text-center">v0.0.12</p>
+        <p className="text-sm text-center">v0.1.0</p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

@@ -1,5 +1,5 @@
-import { showToast } from "@/components/Toast"
-import { DynamicMetricData } from "@/types"
+import { showToast } from '@/components/Toast'
+import { DynamicMetricData } from '@/types'
 
 /**
  * Flattens nested data into an array of DynamicMetricData objects.
@@ -7,7 +7,11 @@ import { DynamicMetricData } from "@/types"
  * @param {number | undefined} targetDeviceId - (Optional) The ID of the target device to retrieve.
  * @returns {DynamicMetricData[]} An array of flattened DynamicMetricData objects.
  */
-export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMetricData[] {
+export function flattenNestedData(
+  data: any,
+  targetDeviceId?: number,
+  hideDeviceWithoutData?: boolean
+): DynamicMetricData[] {
   const flattenedData: DynamicMetricData[] = []
 
   // Check if targetDeviceId is provided (e.g. device stat page)
@@ -40,7 +44,6 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
         const firstMetric = firstMetricKey ? device[firstMetricKey] : undefined
 
         let extractedTimestamp: number | undefined
-
         if (firstMetric && 'timestamp' in firstMetric) {
           extractedTimestamp = firstMetric.timestamp
           flattenedDevice.last_online = extractedTimestamp
@@ -48,11 +51,7 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
             : ''
         }
 
-        // TEST - Log extracted timestamp and flattened device
-        // console.log("Extracted Timestamp:", extractedTimestamp);
-        // console.log("Flattened Device:", flattenedDevice);
-
-        // Push the flattened device to the array
+        // Add the flattened device to the array
         flattenedData.push(flattenedDevice)
 
         // Exit loop after finding the first matching device
@@ -92,8 +91,17 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           }
         }
 
-        // Push the flattened device to the array
-        flattenedData.push(flattenedDevice)
+        // Check if the device has the required data or if hideDeviceWithoutData is false
+        const hasTimestamp = flattenedDevice.last_online !== ''
+        const hasBatteryPercentage = !!flattenedDevice['metric_battery_percentage']
+        const hasBatteryVoltage = !!flattenedDevice['metric_battery_voltage']
+
+        if (
+          !hideDeviceWithoutData ||
+          (hasTimestamp && (hasBatteryPercentage || hasBatteryVoltage))
+        ) {
+          flattenedData.push(flattenedDevice)
+        }
       }
     }
   }
@@ -188,3 +196,100 @@ export const getClientsOfflineCount = (flattenedData: DynamicMetricData[]): numb
   }
   return uniqueClients.size
 }
+
+export function capitalizeWords(str: string): string {
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+/**
+ * Retrieves the scan status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The scan status string.
+ */
+export const getScanStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const scanStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_scanStatus'
+  );
+
+  if (!scanStatusEntry) return 'N/A';
+
+  const [, value] = scanStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: scanStatus } = value;
+
+    if (scanStatus === 'OK') {
+      return 'ONLINE';
+    } else if (scanStatus === 'Modbus error') {
+      return 'ERROR';
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Retrieves the battery status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The battery status string.
+ */
+export const getBatteryStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const batteryStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_batt status'
+  );
+
+  if (!batteryStatusEntry) return 'N/A';
+
+  const [, value] = batteryStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: batteryStatus } = value;
+
+    if (batteryStatus === 'On') {
+      return 'ONLINE';
+    } else if (batteryStatus === 'Off') {
+      return 'OFFLINE';
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Retrieves the Insitu status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The Insitu status string.
+ */
+export const getInsituStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const insituStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_insituStatus'
+  );
+
+  if (!insituStatusEntry) return 'N/A';
+
+  const [, value] = insituStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: insituStatus } = value;
+
+    if (insituStatus === 'Normal' || insituStatus === 'OK') {
+      return 'NORMAL';
+    } else if (insituStatus === 'COMS_ERROR') {
+      return 'ERROR';
+    } else if (
+      insituStatus === 'POWER_CYCLED' ||
+      insituStatus === 'STARTUP' ||
+      insituStatus === 'AQUATROLL 500'
+    ) {
+      return insituStatus;
+    }
+  }
+
+  return 'N/A';
+};

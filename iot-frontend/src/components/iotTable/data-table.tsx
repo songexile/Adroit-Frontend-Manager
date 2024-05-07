@@ -43,6 +43,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       minSize: 80, //enforced during column resizing
       maxSize: 100, //enforced during column resizing
     },
+    initialState: {
+      pagination: {
+        pageSize: 25, //custom default page size
+      },
+    },
   })
 
   return (
@@ -76,7 +81,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
-                    className="table-row" // Add CSS class for row height
+                    className="table-row " 
+                    style={{
+                      height: '150px',
+                    }} //Sizes the table row, 150px so that each row is same height
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
@@ -134,7 +142,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 table.setPageSize(Number(e.target.value))
               }}
             >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {[25, 50, 75, 100].map((pageSize) => (
                 <option key={pageSize} value={pageSize}>
                   Show {pageSize}
                 </option>

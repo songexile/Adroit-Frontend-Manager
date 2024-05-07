@@ -1,5 +1,5 @@
 module.exports = {
-  semi: false,
+  semi: true,
   singleQuote: true,
   printWidth: 100,
   trailingComma: 'es5',
@@ -10,4 +10,5 @@ module.exports = {
   jsxSingleQuote: false,
   bracketSpacing: true,
   bracketSameLine: false,
-}
+  singleAttributePerLine: true,
+};
