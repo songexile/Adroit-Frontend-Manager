@@ -174,57 +174,153 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
         </div>
       </div>
 
-      {/*  Status Card */}
-      <h3 className="text-xl font-bold mr-16 text-gray-800">Status</h3>
-      <div className="bg-gray-200 p-4 rounded-lg flex flex-col items-center justify-center mt-4 mb-4">
-        <div className="flex flex-col md:flex-row items-center justify-center">
-          <div className="flex items-center justify-center">
-            <span className="font-bold text-gray-600 mr-2">Scan:</span>
-            <span
-              className={`px-3 py-1 rounded-full font-semibold ${
-                getScanStatus(deviceData) === 'ONLINE'
-                  ? 'bg-green-100 text-green-800'
-                  : getScanStatus(deviceData) === 'ERROR'
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-gray-300 text-gray-800'
-              }`}
-            >
-              {getScanStatus(deviceData)}
-            </span>
+      {/* Status Card */}
+      <h3 className="text-xl font-bold text-gray-800 mt-4 mb-4">Status</h3>
+      <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
+        <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="flex flex-col items-center gap-2">
+            <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-6 h-6 text-gray-500 dark:text-gray-400"
+              >
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+              </svg>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Scan</p>
+              <p
+                className={`text-lg font-semibold ${
+                  getScanStatus(deviceData) === 'ONLINE'
+                    ? 'text-green-500'
+                    : getScanStatus(deviceData) === 'ERROR'
+                    ? 'text-red-500'
+                    : 'text-gray-500'
+                }`}
+              >
+                {getScanStatus(deviceData)}
+              </p>
+            </div>
           </div>
-
-          <div className="flex items-center justify-center">
-            <span className="font-bold text-gray-600 ml-16 mr-2">Battery:</span>
-            <span
-              className={`px-3 py-1 rounded-full font-semibold ${
-                getBatteryStatus(deviceData) === 'ONLINE'
-                  ? 'bg-green-100 text-green-800'
-                  : getBatteryStatus(deviceData) === 'OFFLINE'
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-gray-300 text-gray-800'
-              }`}
-            >
-              {getBatteryStatus(deviceData)}
-            </span>
+          <div className="flex flex-col items-center gap-2">
+            <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-6 h-6 text-gray-500 dark:text-gray-400"
+              >
+                <rect
+                  width="16"
+                  height="10"
+                  x="2"
+                  y="7"
+                  rx="2"
+                  ry="2"
+                ></rect>
+                <line
+                  x1="22"
+                  x2="22"
+                  y1="11"
+                  y2="13"
+                ></line>
+              </svg>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Battery</p>
+              <p
+                className={`text-lg font-semibold ${
+                  getBatteryStatus(deviceData) === 'ONLINE'
+                    ? 'text-green-500'
+                    : getBatteryStatus(deviceData) === 'OFFLINE'
+                    ? 'text-red-500'
+                    : 'text-gray-500'
+                }`}
+              >
+                {getBatteryStatus(deviceData)}
+              </p>
+            </div>
           </div>
-
-          <div className="flex items-center justify-center">
-            <span className="font-bold text-gray-600 ml-16 mr-2">Insitu:</span>
-            <span
-              className={`px-3 py-1 rounded-full font-semibold ${
-                getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
-                  ? 'bg-green-100 text-green-800'
-                  : getInsituStatus(deviceData) === 'ERROR'
-                  ? 'bg-red-100 text-red-800'
-                  : getInsituStatus(deviceData) === 'POWER_CYCLED' ||
-                    getInsituStatus(deviceData) === 'STARTUP' ||
-                    getInsituStatus(deviceData) === 'AQUATROLL 500'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-gray-300 text-gray-800'
-              }`}
-            >
-              {getInsituStatus(deviceData)}
-            </span>
+          <div className="flex flex-col items-center gap-2">
+            <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-6 h-6 text-gray-500 dark:text-gray-400"
+              >
+                <line
+                  x1="2"
+                  x2="5"
+                  y1="12"
+                  y2="12"
+                ></line>
+                <line
+                  x1="19"
+                  x2="22"
+                  y1="12"
+                  y2="12"
+                ></line>
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="2"
+                  y2="5"
+                ></line>
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="19"
+                  y2="22"
+                ></line>
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="7"
+                ></circle>
+              </svg>
+            </div>
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Insitu</p>
+              <p
+                className={`text-lg font-semibold ${
+                  getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
+                    ? 'text-green-500'
+                    : getInsituStatus(deviceData) === 'ERROR'
+                    ? 'text-red-500'
+                    : getInsituStatus(deviceData) === 'POWER_CYCLED' ||
+                      getInsituStatus(deviceData) === 'STARTUP' ||
+                      getInsituStatus(deviceData) === 'AQUATROLL 500'
+                    ? 'text-yellow-500'
+                    : 'text-gray-500'
+                }`}
+              >
+                {getInsituStatus(deviceData)}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -279,11 +375,6 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
       </div>
 
       <div className="flex flex-wrap max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
-        <div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
-          {deviceData && renderMetrics(deviceData)}
-        </div>
-
         <div className="flex flex-col gap-4 text-red-500">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">Fault Identification:</h2>
           {Object.entries(deviceData).map(([key, value], index) => {
@@ -317,6 +408,11 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
               return null;
             }
           })}
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800 mt-5 lg:mt-0">Metrics:</h2>
+          {deviceData && renderMetrics(deviceData)}
         </div>
       </div>
     </div>
