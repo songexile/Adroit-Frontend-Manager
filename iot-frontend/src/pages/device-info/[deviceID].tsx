@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { flattenNestedData } from '@/utils';
+import { flattenNestedData, getBatteryStatus, getInsituStatus, getScanStatus } from '@/utils';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -8,6 +8,7 @@ import Link from 'next/link';
 import LoginScreen from '../login';
 import { useSession } from 'next-auth/react';
 import { DynamicMetricData } from '@/types';
+import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -20,8 +21,10 @@ function fetchDeviceId() {
 function DeviceID(data: any) {
   const { data: session } = useSession();
   const deviceId = fetchDeviceId();
-  const filteredData = flattenNestedData(data, deviceId);
+
+  const filteredData = useMemo(() => flattenNestedData(data, deviceId), [data, deviceId]);
   const deviceData = filteredData[0];
+
   console.log(deviceData); // Returns the array of the device.
 
   // Breadcrumb items
@@ -35,80 +38,8 @@ function DeviceID(data: any) {
       <>
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
-
-        <div className="flex-grow flex flex-col container mx-auto p-6 py-5">
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden animate-slide-in border-2 border-blue-500">
-            <div className="p-8">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
-                <Link href={`/create-ticket/${deviceData?.device_id}`}>
-                  <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
-                    Create Ticket
-                  </button>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Device ID:</span>{' '}
-                    {deviceData?.device_id}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Device Key:</span>{' '}
-                    {deviceData?.device_key}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Client Name:</span>{' '}
-                    {deviceData?.client_name}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Last Online:</span>{' '}
-                    {typeof deviceData?.last_online === 'string'
-                      ? deviceData.last_online
-                      : deviceData?.last_online?.value || 'N/A'}
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">Last ticket created:</span> Never
-                  </div>
-                  <div className="mb-4">
-                    <span className="font-semibold text-gray-600">
-                      {' '}
-                      {deviceData && debugMetrics(deviceData)}{' '}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-lg shadow-md border-2 border-blue-500">
-                  <h3 className="text-xl font-bold mb-4 text-gray-800">Status</h3>
-                  <div className="flex flex-col space-y-2">
-                    <div className="flex items-center">
-                      <span className="font-semibold text-gray-600 mr-2">Scan:</span>
-                      <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full font-semibold">
-                        ONLINE
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="font-semibold text-gray-600 mr-2">Battery:</span>
-                      <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
-                        OFFLINE
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="font-semibold text-gray-600 mr-2">Insitu:</span>
-                      <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">
-                        ERROR
-                      </span>
-                    </div>
-                  </div>
-                  <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
-                    {deviceData && renderMetrics(deviceData)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="flex mx-32 min-h-screen py-6 flex-col ">
+          {deviceData && debugMetrics(deviceData)}
         </div>
         <Footer />
       </>
@@ -133,13 +64,10 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
       If the value is a string, it displays the string value directly.
       If the value is an object and has a 'value' property, it accesses and displays the 'value' property.
       Otherwise, it returns null to handle undefined or unexpected values. */}
-      {Object.entries(deviceData).map(([key, value], index) => {
-        // Use index and key together to ensure unique key for each entry
-        const uniqueKey = `${key}_${index}`;
-
+      {Object.entries(deviceData).map(([key, value]) => {
         if (typeof value === 'string') {
           return (
-            <div key={uniqueKey}>
+            <div key={key}>
               <p>
                 {key}: {value}
               </p>
@@ -147,14 +75,14 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
           );
         } else if (value && typeof value === 'object' && 'value' in value) {
           return (
-            <div key={uniqueKey}>
+            <div key={key}>
               <p>
                 {key}: {value.value}
               </p>
             </div>
           );
         } else {
-          return null; // Handle undefined or unexpected value
+          return null; // handle undefined or unexpected value
         }
       })}
     </div>
@@ -166,6 +94,20 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
   if (!deviceData) return null;
 
+  const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS', 'battery_voltage'];
+  const prefix = 'metric_';
+
+  const formalMetricName = [
+    'pH Level',
+    'Temperature',
+    'Battery Percentage %',
+    'Solar Voltage',
+    'Press',
+    'Battery Voltage'
+  ];
+
+  const fullMetricName = filterMetric.map((key) => prefix + key);
+
   const relevantKeys = [
     'signal quality',
     'MESSAGE',
@@ -175,44 +117,205 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
     'batt status',
     'DIAGNOSTICS',
   ];
-  const prefix = 'metric_';
-
   const errorKeys = relevantKeys.map((key) => prefix + key); // Concatenate prefix to each key
+  const siteEntry = Object.entries(deviceData).find(([key]) => key === 'metric_site');
+  let siteValue;
+  if (siteEntry) {
+    const [, siteData] = siteEntry;
+    if (typeof siteData === 'string') {
+      siteValue = siteData;
+    } else if (typeof siteData === 'object' && 'value' in siteData) {
+      siteValue = siteData.value;
+    }
+  }
 
   return (
-    <div className="flex flex-col gap-4 text-red-500">
-      {Object.entries(deviceData).map(([key, value], index) => {
-        // Use index and key together to ensure unique key for each entry
-        const uniqueKey = `${key}_${index}`;
+    // Device Info and create Ticket button.
+    <div>
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
+        <Link href={`/create-ticket/${deviceData?.device_id}`}>
+          <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
+            Create Ticket
+          </button>
+        </Link>
+      </div>
+      {/* Device Info Card */}
+      <div className="bg-gray-200 p-4 rounded-lg">
+        <div className="flex flex-wrap">
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Device ID:</span>
+            <div className="text-right md:text-left md:pl-1">{deviceData?.device_id}</div>
+          </div>
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Device Key:</span>
+            <div className="text-right md:text-left md:pl-1">{deviceData?.device_key}</div>
+          </div>
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Client Name:</span>
+            <div className="text-right md:text-left md:pl-1">{deviceData?.client_name}</div>
+          </div>
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Last Online:</span>
+            <div className="text-right md:text-left md:pl-1">
+              {typeof deviceData?.last_online === 'string'
+                ? deviceData.last_online
+                : deviceData?.last_online?.value || 'N/A'}
+            </div>
+          </div>
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Last Ticket Created:</span>
+            <div className="text-right md:text-left md:pl-1">Never</div>
+          </div>
+          <div className="w-full md:w-1/5 mb-4">
+            <span className="font-bold text-gray-600">Location:</span>
+            <div className="text-right md:text-left md:pl-1">{siteValue}</div>
+          </div>
+        </div>
+      </div>
 
-        if (errorKeys.includes(key)) {
-          if (typeof value === 'string') {
-            return (
-              <div key={uniqueKey}>
-                <p>
-                  {key}: {value}
-                </p>
-              </div>
-            );
-          } else if (value && typeof value === 'object' && 'value' in value) {
-            return (
-              <div key={uniqueKey}>
-                <p>
-                  {key}: {value.value}
-                </p>
-              </div>
-            );
+      {/*  Status Card */}
+      <h3 className="text-xl font-bold mr-16 text-gray-800">Status</h3>
+      <div className="bg-gray-200 p-4 rounded-lg flex flex-col items-center justify-center mt-4 mb-4">
+        <div className="flex flex-col md:flex-row items-center justify-center">
+          <div className="flex items-center">
+            <span className="font-bold text-gray-600 mr-2">Scan:</span>
+            <span
+              className={`px-3 py-1 rounded-full font-semibold ${getScanStatus(deviceData) === 'ONLINE'
+                ? 'bg-green-100 text-green-800'
+                : getScanStatus(deviceData) === 'ERROR'
+                  ? 'bg-red-100 text-red-800'
+                  : 'bg-gray-300 text-gray-800'
+                }`}
+            >
+              {getScanStatus(deviceData)}
+            </span>
+          </div>
+
+          <div className="flex items-center">
+            <span className="font-bold text-gray-600 ml-16 mr-2">Battery:</span>
+            <span
+              className={`px-3 py-1 rounded-full font-semibold ${getBatteryStatus(deviceData) === 'ONLINE'
+                ? 'bg-green-100 text-green-800'
+                : getBatteryStatus(deviceData) === 'OFFLINE'
+                  ? 'bg-red-100 text-red-800'
+                  : 'bg-gray-300 text-gray-800'
+                }`}
+            >
+              {getBatteryStatus(deviceData)}
+            </span>
+          </div>
+
+          <div className="flex items-center">
+            <span className="font-bold text-gray-600 ml-16 mr-2">Insitu:</span>
+            <span
+              className={`px-3 py-1 rounded-full font-semibold ${getInsituStatus(deviceData) === 'NORMAL' || getInsituStatus(deviceData) === 'OK'
+                ? 'bg-green-100 text-green-800'
+                : getInsituStatus(deviceData) === 'ERROR'
+                  ? 'bg-red-100 text-red-800'
+                  : getInsituStatus(deviceData) === 'POWER_CYCLED' ||
+                    getInsituStatus(deviceData) === 'STARTUP' ||
+                    getInsituStatus(deviceData) === 'AQUATROLL 500'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-gray-300 text-gray-800'
+                }`}
+            >
+              {getInsituStatus(deviceData)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Chart components */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Object.entries(deviceData).map(([key, value], index) => {
+          const metricIndex = fullMetricName.indexOf(key);
+          if (metricIndex !== -1) {
+            const formalName = formalMetricName[metricIndex];
+            if (typeof value === 'string') {
+              return (
+                <div
+                  className="flex flex-wrap bg-gray-200 bg- rounded-md flex-col gap-4 text-red-500"
+                  key={`${key}-${index}`}
+                >
+                  <p>
+                    {formalName}: {value}
+                  </p>
+                </div>
+              );
+            } else if (value && typeof value === 'object' && 'value' in value) {
+              return (
+                <div
+                  className="flex flex-wrap items-start border-blue-500 border-b-2 hover:bg-gray-300 transition bg-blue-200 rounded-md flex-col gap-4 text-black min-h-[16rem] justify-center"
+                  key={`${key}-${index}`}
+                >
+                  <div className="mx-4 flex flex-col gap-4">
+                    <p className="font-bold text-xl">{formalName}</p>
+                    <p>{value.value}</p>
+                  </div>
+                  {/* SpeedoMeeter Chart */}
+                  <div>
+                    <SpeedometerChart
+                      value={parseFloat(value.value)}
+                      colors={['#38bdf8', '#EF4444']}
+                    />
+                  </div>
+                </div>
+              );
+            } else {
+              return (
+                <div key={`${key}-${index}`}>
+                  <p>{formalName}: N/A</p>
+                </div>
+              );
+            }
           } else {
-            return (
-              <div key={uniqueKey}>
-                <p>{key}: N/A</p>
-              </div>
-            );
+            return null;
           }
-        } else {
-          return null; // Key is not in errorKeys, return null
-        }
-      })}
+        })}
+      </div>
+
+      <div className="flex flex-wrap max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500">
+        <div>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Metrics:</h2>
+          {deviceData && renderMetrics(deviceData)}
+        </div>
+
+        <div className="flex flex-col gap-4 text-red-500">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Fault Identification:</h2>
+          {Object.entries(deviceData).map(([key, value], index) => {
+            if (errorKeys.includes(key)) {
+              if (typeof value === 'string') {
+                return (
+                  <div key={`${key}-${index}`}>
+                    <p>
+                      {key}: {value}
+                    </p>
+                  </div>
+                );
+              } else if (value && typeof value === 'object' && 'value' in value) {
+                return (
+                  <div key={`${key}-${index}`}>
+                    <p>
+                      {key}: {value.value}
+                    </p>
+                  </div>
+                );
+              } else {
+                // Handle undefined or unexpected value
+                return (
+                  <div key={`${key}-${index}`}>
+                    <p>{key}: N/A</p>
+                  </div>
+                );
+              }
+            } else {
+              // Key is not in errorKeys, return null
+              return null;
+            }
+          })}
+        </div>
+      </div>
     </div>
   );
 };

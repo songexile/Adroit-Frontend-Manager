@@ -19,7 +19,7 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
         data: {
           datasets: [
             {
-              data: [value, 20 - value],
+              data: [value, -20],
               backgroundColor: colors,
               hoverBackgroundColor: colors,
               borderWidth: 0,
@@ -31,7 +31,8 @@ const SpeedometerChart: React.FC<GaugeProps> = ({ value, colors }) => {
           //@ts-ignore
           circumference: 180,
           rotation: 270,
-          cutoutPercentage: 80, // This is for the thickness of the gauge
+          //cutout: '80%',
+          //cutoutPercentage: 80, // This is for the thickness of the gauge
           tooltips: { enabled: false },
           hover: { mode: 'nearest' },
           responsive: true,
