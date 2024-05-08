@@ -4,9 +4,13 @@ import Header from '@/components/Header';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import LoginScreen from '../login';
 import { useAuth } from '@/hooks/useAuth';
+import SEO from '@/components/SEO';
 
 const ClientPage = () => {
   const { isAuthenticated, isLoading } = useAuth();
+
+  const title = `Client Page | 123 | Adroit Front End Manager`;
+  const description = `Client Info Page for Device ID: 123`;
 
   if (isLoading) {
     return (
@@ -21,6 +25,11 @@ const ClientPage = () => {
   if (isAuthenticated) {
     return (
       <>
+        <SEO
+          title={title}
+          description={description}
+          deviceId={123}
+        />
         <Header />
         <div className="bg-gray-50">
           <div className="container mx-auto p-4">

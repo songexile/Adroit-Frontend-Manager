@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { DynamicMetricData } from '@/types';
 import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
+import SEO from '@/components/SEO';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -27,7 +28,10 @@ function DeviceID(data: any) {
   const filteredData = useMemo(() => flattenNestedData(data, deviceId), [data, deviceId]);
   const deviceData = filteredData[0];
 
-  console.log(deviceData); // Returns the array of the device.
+  // console.log(deviceData); // Returns the array of the device.
+
+  const title = `Check Device | ${deviceId} | Adroit Front End Manager`;
+  const description = `Device Info Page for Device ID: ${deviceId}`;
 
   // Breadcrumb items
   const breadcrumbs = [
@@ -48,6 +52,11 @@ function DeviceID(data: any) {
   if (isAuthenticated) {
     return (
       <>
+        <SEO
+          title={title}
+          description={description}
+          deviceId={deviceId}
+        />
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <div className="flex mx-8 md:mx-32 min-h-screen py-6 flex-col ">
