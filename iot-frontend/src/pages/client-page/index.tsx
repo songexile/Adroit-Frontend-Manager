@@ -28,7 +28,6 @@ const ClientPage = () => {
         <SEO
           title={title}
           description={description}
-          deviceId={123}
         />
         <Header />
         <div className="bg-gray-50">

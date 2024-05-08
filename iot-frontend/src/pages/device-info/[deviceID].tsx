@@ -55,7 +55,6 @@ function DeviceID(data: any) {
         <SEO
           title={title}
           description={description}
-          deviceId={deviceId}
         />
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />

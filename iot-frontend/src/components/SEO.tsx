@@ -1,14 +1,16 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 interface SEOProps {
-  title?: string;
-  description?: string;
-  deviceId?: string | number;
+  title: string;
+  description: string;
 }
 
-const SEO: React.FC<SEOProps> = ({ title, description, deviceId }) => {
-  const currentDomain = typeof window !== 'undefined' ? window.location.origin : '';
-  const canonicalUrl = `${currentDomain}/devices/${deviceId}`;
+const SEO: React.FC<SEOProps> = ({ title, description }) => {
+  const router = useRouter();
+  const currentLink = router.asPath;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
+  const canonicalUrl = `${baseUrl}${currentLink}`.replace(/\/\//g, '/');
 
   return (
     <Head>
