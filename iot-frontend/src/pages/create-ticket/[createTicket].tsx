@@ -203,12 +203,12 @@ const CreateTicket = (data: any) => {
                 </p>
               </div>
               {/* Status Card */}
-              <div>
+              <div className="md:col-span-2">
                 <h3 className="text-xl font-bold text-gray-800 mt-4 mb-4">Status</h3>
                 <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
-                  <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
+                  <div className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-gray-100 rounded-full p-4 dark:bg-gray-800">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -242,8 +242,8 @@ const CreateTicket = (data: any) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-gray-100 rounded-full p-4 dark:bg-gray-800">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
@@ -289,8 +289,8 @@ const CreateTicket = (data: any) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-gray-100 rounded-full p-4 dark:bg-gray-800">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="24"
