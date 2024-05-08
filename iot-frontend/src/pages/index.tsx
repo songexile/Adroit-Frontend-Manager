@@ -4,7 +4,7 @@ import { DataTable } from '@/components/iotTable/data-table';
 import { initializeColumns, columns } from '@/components/iotTable/columns';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import Footer from '@/components/Footer';
-import LoginScreen from './login';
+import Hero from './landing-page';
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils';
 import { DynamicMetricData } from '@/types';
 import { useAtom } from 'jotai';
@@ -105,7 +105,7 @@ export default function Home({
   }
 
   if (!isAuthenticated) {
-    return <LoginScreen />;
+    return <Hero />;
   }
 
   return (
