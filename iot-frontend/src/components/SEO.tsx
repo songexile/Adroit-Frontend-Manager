@@ -1,9 +1,9 @@
 import Head from 'next/head';
 
 interface SEOProps {
-  title: string;
-  description: string;
-  deviceId: string | number;
+  title?: string;
+  description?: string;
+  deviceId?: string | number;
 }
 
 const SEO: React.FC<SEOProps> = ({ title, description, deviceId }) => {
