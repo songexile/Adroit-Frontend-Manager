@@ -7,6 +7,7 @@ import { useDataFetch } from '@/hooks/useDataFetch'
 import { AuthCheckAndAction } from '@/components/AuthCheckAndAction'
 import NextTopLoader from 'nextjs-toploader'
 import { Inter } from 'next/font/google'
+import Head from 'next/head'
  
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,6 +16,10 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+     <Head>
+      <title>Adroit Frontend Manager</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    </Head>
      <style jsx global>{`
         html {
           font-family: ${inter.style.fontFamily};
