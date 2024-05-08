@@ -1,5 +1,6 @@
-import AdroitImage from "@/public/assets/img/adroit_frontendblur.png";
+import Link from 'next/link';
 import Image from "next/image";
+import AdroitImage from "@/public/assets/img/adroit_frontendblur.png";
 
 export default function Hero() {
   return (
@@ -31,7 +32,7 @@ export default function Hero() {
               <p className="text-xl text-gray-600 mb-8" data-aos="zoom-y-out" data-aos-delay="150">An application which allows monitoring of IoT Devices.</p>
               <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center" data-aos="zoom-y-out" data-aos-delay="300">
                 <div>
-                  <a className="btn p-4 px-16 rounded-md border-b-2 border-blue-200 shadow-sm text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0" href="/">Login</a>
+                  <Link className="btn p-4 px-16 rounded-md border-b-2 border-blue-200 shadow-sm text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0" href="/api/auth/signin">Login</Link>
                 </div>
               </div>
             </div>
