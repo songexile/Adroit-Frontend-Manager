@@ -8,6 +8,7 @@ import LoginScreen from '../login';
 import Breadcrumb from '@/components/Breadcrumb';
 import { useAuth } from '@/hooks/useAuth';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import SEO from '@/components/SEO';
 
 function fetchDeviceId() {
   // Fetches deviceId from URL
@@ -36,6 +37,9 @@ const CreateTicket = (data: any) => {
   const deviceId = fetchDeviceId();
   const filteredData = flattenNestedData(data, deviceId);
   const deviceData = filteredData[0];
+
+  const title = `Create Ticket | ${deviceId} | Adroit Front End Manager`;
+  const description = `Create Ticket Page for Device ID: ${deviceId}`;
 
   // Breadcrumb items
   const breadcrumbs = [
@@ -106,6 +110,11 @@ const CreateTicket = (data: any) => {
   if (isAuthenticated) {
     return (
       <>
+        <SEO
+          title={title}
+          description={description}
+          deviceId={deviceId}
+        />
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <div className="min-h-screen bg-gray-100 flex items-center justify-center">
