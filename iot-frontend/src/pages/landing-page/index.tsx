@@ -40,16 +40,51 @@ export default function Hero() {
 
           <Image src={AdroitImage} alt="Adroit Frontend" className="p-1 shadow-lg rounded-md bg-gradient-to-r from-cyan-100 to-gray-100" />
 
-          <div className="flex-col flex items-center mt-16  gap-4">
+          <section className="flex-col flex items-center mt-16  gap-4">
             <h1 className="bg-clip-text text-transparent bg-gradient-to-b from-cyan-500 to-blue-500 hover:text-blue-500 transition-all  text-5xl  md:text-6xl font-extrabold leading-tighter tracking-tighter   px-32 py-2  border-b-4 border-blue-500">Featuring</h1>
             <div className="flex flex-col list-disc items-start gap-4 text-2xl md:text-3xl  leading-tighter tracking-tighter">
+              <div className='flex flex-col gap-1'>
               <h1>Realtime reporting of offline devices</h1>
-              <h1>Email integration for reporting devices</h1>
-              <h1>Next.js, React & AWS</h1>
-            </div>
-          </div>
+              <h1 className='text-md md:text-xl font-light'> Using AWS S3, Lambda, API Gateway</h1>
 
-        </div>
+              </div>
+              <div className='flex flex-col gap-1'>
+              <h1>Email integration for reporting devices</h1>
+              <h1 className='text-md md:text-xl font-light'> Fire off emails straight from the app, with one-click CC and BCC capabilities</h1>
+              </div>
+              <div className='flex flex-col gap-1'>
+              <h1> Statisics monitoring</h1>
+              <h1 className='text-md md:text-xl font-light'> Gain deep insights into every device's performance through data visualizations  formatted text reports</h1>
+
+              </div>
+            </div>
+          </section>
+
+          <section className="flex-col flex items-center mt-16  text-center  gap-4">
+            <h1 className="bg-clip-text text-transparent bg-gradient-to-b from-cyan-500  to-blue-500 hover:text-blue-500 transition-all  text-3xl  md:text-4xl font-extrabold leading-tighter tracking-tighter   px-32 py-2   border-blue-500">Additional information</h1>
+<h1 className='md:w-1/2'>The project was initially conceived and undertaken as a research and development endeavor by students at 
+<span className='font-bold'> Auckland University of Technology </span> during the academic year spanning August 2023 to July 2024.</h1>
+<div className='flex gap-1'>
+<h1 className='font-bold  '>Credits:</h1>
+<a className='hover:text-blue-500 transition-all' href='https://github.com/munishk686'>
+Munish Kumar,
+</a>
+<a className='hover:text-blue-500 transition-all' href='https://github.com/songexile'>
+Otis Wales,
+</a>
+<a className='hover:text-blue-500 transition-all' href='https://github.com/MiguelEmmara-ai'>
+Miguel Emmara 
+</a>
+<h1>and</h1>
+<a className='hover:text-blue-500 transition-all' href='https://github.com/Glennpgp'>
+Glenn Neil
+</a>
+</div>
+
+
+
+        </section>
+      </div>
       </div>
     </section>
   );
