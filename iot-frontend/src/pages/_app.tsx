@@ -6,12 +6,20 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useDataFetch } from '@/hooks/useDataFetch'
 import { AuthCheckAndAction } from '@/components/AuthCheckAndAction'
 import NextTopLoader from 'nextjs-toploader'
+import { Inter } from 'next/font/google'
+ 
+const inter = Inter({ subsets: ['latin'] })
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { data, loading, hasFetchedData, fetchDataAndUpdate } = useDataFetch()
 
   return (
     <>
+     <style jsx global>{`
+        html {
+          font-family: ${inter.style.fontFamily};
+        }
+      `}</style>
       <SessionProvider session={pageProps.session}>
         <ToastContainer
           position="top-right"
