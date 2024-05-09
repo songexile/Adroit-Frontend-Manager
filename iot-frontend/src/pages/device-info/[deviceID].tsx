@@ -7,7 +7,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import Link from 'next/link';
 import LoginScreen from '../login';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import { DynamicMetricData } from '@/types';
 import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
 import SEO from '@/components/SEO';
@@ -41,11 +41,9 @@ function DeviceID(data: any) {
 
   if (isLoading) {
     return (
-      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
-        <div className="h-5/6 w-full"></div>
-        <LoadingSpinner className={'h-32 w-32'} />
-        <h1>Loading...</h1>
-      </div>
+      <>
+        <LoadingIndicator />
+      </>
     );
   }
 

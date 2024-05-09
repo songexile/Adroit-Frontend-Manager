@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { DataTable } from '@/components/iotTable/data-table';
 import { initializeColumns, columns } from '@/components/iotTable/columns';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import Footer from '@/components/Footer';
 import Hero from './landing-page';
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils';
@@ -10,6 +9,7 @@ import { DynamicMetricData } from '@/types';
 import { useAtom } from 'jotai';
 import { hideSelectedAtom } from '@/components/context/toggleAtom';
 import { useAuth } from '@/hooks/useAuth';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
 
 export default function Home({
   data,
@@ -96,11 +96,9 @@ export default function Home({
 
   if (isLoading) {
     return (
-      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
-        <div className="h-5/6 w-full"></div>
-        <LoadingSpinner className={'h-32 w-32'} />
-        <h1>Loading...</h1>
-      </div>
+      <>
+        <LoadingIndicator />
+      </>
     );
   }
 

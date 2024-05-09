@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { DynamicMetricData } from '@/types';
 // import { showToast } from '@/components/Toast'
-import LoadingIndicator from '@/components/LoadingIndicator';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
 
 interface AuthCheckAndActionProps {
   children: React.ReactNode;
@@ -29,9 +29,5 @@ export function AuthCheckAndAction({
     }
   }, [status, hasFetchedData, fetchDataAndUpdate]);
 
-  return (
-    <>
-      {loading ? <LoadingIndicator size={50} color="blue" message="Loading data..." /> : children}
-    </>
-  );
+  return <>{loading ? <LoadingIndicator /> : children}</>;
 }

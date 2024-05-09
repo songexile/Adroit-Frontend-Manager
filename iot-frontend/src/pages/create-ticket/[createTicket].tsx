@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 import LoginScreen from '../login';
 import Breadcrumb from '@/components/Breadcrumb';
 import { useAuth } from '@/hooks/useAuth';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import SEO from '@/components/SEO';
 import Modal from '@/components/Modal';
 
@@ -124,11 +124,9 @@ const CreateTicket = (data: any) => {
 
   if (isLoading) {
     return (
-      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
-        <div className="h-5/6 w-full"></div>
-        <LoadingSpinner className={'h-32 w-32'} />
-        <h1>Loading...</h1>
-      </div>
+      <>
+        <LoadingIndicator />
+      </>
     );
   }
 
