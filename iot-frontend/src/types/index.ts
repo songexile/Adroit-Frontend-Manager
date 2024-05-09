@@ -57,3 +57,14 @@ export interface ToggleSwitchProps {
   text: string
   initialValue?: boolean
 }
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  description: string;
+  buttonText: string;
+  buttonColor?: string;
+  linkUrl?: string;
+  icon?: React.ReactNode;
+}
