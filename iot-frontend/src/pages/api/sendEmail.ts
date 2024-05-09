@@ -52,12 +52,20 @@ export default async function handler(
           <li><strong>Last Online:</strong> ${typeof deviceData?.last_online === 'string' ? deviceData.last_online : deviceData?.last_online?.value || 'N/A'}</li>
         </ul>
       `,
-    })
+    });
 
-    console.log('Email sent successfully:', emailData)
-    res.status(200).json({ success: true })
-  } catch (error) {
-    console.error('Error sending email:', error)
-    res.status(500).json({ message: 'Error sending email' })
+    if (emailData.error && emailData.error.message === 'API key is invalid') {
+      throw new Error('Invalid API key');
+    }
+
+    console.log('Email sent successfully:', emailData);
+    res.status(200).json({ success: true });
+  } catch (error: any) {
+    console.error('Error sending email:', error);
+    if (error.message === 'Invalid API key') {
+      res.status(400).json({ message: 'Invalid API key' });
+    } else {
+      res.status(500).json({ message: 'Error sending email' });
+    }
   }
 }
