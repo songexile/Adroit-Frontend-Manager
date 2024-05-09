@@ -74,7 +74,6 @@ const CreateTicket = (data: any) => {
   const handleCreateTicket = async () => {
     // Reset errors
     setErrors({});
-
     setIsSubmitLoading(true);
 
     // Validate fields
@@ -88,6 +87,7 @@ const CreateTicket = (data: any) => {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setIsSubmitLoading(false);
       return;
     }
 
@@ -117,9 +117,9 @@ const CreateTicket = (data: any) => {
       } else {
         showToast({ message: 'Unknown error occurred while creating ticket', type: 'error' });
       }
+    } finally {
+      setIsSubmitLoading(false);
     }
-
-    setIsSubmitLoading(false);
   };
 
   if (isLoading) {
