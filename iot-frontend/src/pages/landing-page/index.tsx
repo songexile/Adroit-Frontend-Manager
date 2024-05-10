@@ -49,7 +49,7 @@ export default function Hero() {
         aria-hidden="true"
       >
         <svg
-          className={styles.responsiveSvg}
+          className="hidden md:block"
           width="1360"
           height="578"
           viewBox="0 0 1360 578"
@@ -110,7 +110,7 @@ export default function Hero() {
         </svg>{" "}
       </div> */}
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="max-w-6xl  mx-auto px-4 sm:px-6">
         {/* Hero content */}
         <div className="pt-32 pb-12 md:pt-40 md:pb-20">
           {/* Section header */}
