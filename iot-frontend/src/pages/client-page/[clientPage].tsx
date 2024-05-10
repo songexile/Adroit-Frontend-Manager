@@ -296,22 +296,22 @@ const ClientPage = (data: any) => {
                   <li>
                     Battery:
                     <span
-                      className="a ml-2 rounded-lg bg-green-100 px-2 py-1 text-green-800 cursor-pointer"
+                      className="ml-2 rounded-lg bg-green-100 px-2 py-1 text-green-800 cursor-pointer"
                       data-tooltip-id="batteryOnlineTooltip"
                       data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
                         "batteryOnline"
                       ).join(", ")}`}
                     >
-                      ONLINE ({statusCounts.batteryOnline})
+                      ONLINE ({getDeviceIdsByStatus("batteryOnline").length})
                     </span>
                     <span
-                      className="b ml-2 rounded-lg bg-red-100 px-2 py-1 text-red-800 cursor-pointer"
+                      className="ml-2 rounded-lg bg-red-100 px-2 py-1 text-red-800 cursor-pointer"
                       data-tooltip-id="batteryOfflineTooltip"
                       data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
                         "batteryOffline"
                       ).join(", ")}`}
                     >
-                      OFFLINE ({statusCounts.batteryOffline})
+                      OFFLINE ({getDeviceIdsByStatus("batteryOffline").length})
                     </span>
                     {Object.entries(statusCounts)
                       .filter(
@@ -323,7 +323,7 @@ const ClientPage = (data: any) => {
                       .map(([status, count]) => (
                         <span
                           key={status}
-                          className="c ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
+                          className="ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
                           data-tooltip-id={`${status}Tooltip`}
                           data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
                             status
@@ -333,7 +333,7 @@ const ClientPage = (data: any) => {
                         </span>
                       ))}
                     <span
-                      className="d ml-2 rounded-lg bg-gray-100 px-2 py-1 text-gray-800 cursor-pointer"
+                      className="ml-2 rounded-lg bg-gray-100 px-2 py-1 text-gray-800 cursor-pointer"
                       data-tooltip-id="batteryNATooltip"
                       data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
                         "N/A"
