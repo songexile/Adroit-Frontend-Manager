@@ -329,11 +329,7 @@ export const getInsituStatus = (deviceData: DynamicMetricData | null): string =>
       return 'NORMAL';
     } else if (insituStatus === 'COMS_ERROR') {
       return 'ERROR';
-    } else if (
-      insituStatus === 'POWER_CYCLED' ||
-      insituStatus === 'STARTUP' ||
-      insituStatus === 'AQUATROLL 500'
-    ) {
+    } else {
       return insituStatus;
     }
   }
@@ -353,20 +349,23 @@ export const getStatusCounts = (clientData: DynamicMetricData[]): {
   batteryOffline: number;
   insituNormal: number;
   insituError: number;
-  insituPowerCycled: number;
-  insituStartup: number;
-  insituAquatroll500: number;
+  [key: string]: number;
 } => {
-  const statusCounts = {
+  const statusCounts: {
+    scanOnline: number;
+    scanError: number;
+    batteryOnline: number;
+    batteryOffline: number;
+    insituNormal: number;
+    insituError: number;
+    [key: string]: number;
+  } = {
     scanOnline: 0,
     scanError: 0,
     batteryOnline: 0,
     batteryOffline: 0,
     insituNormal: 0,
     insituError: 0,
-    insituPowerCycled: 0,
-    insituStartup: 0,
-    insituAquatroll500: 0,
   };
 
   clientData.forEach((deviceData) => {
@@ -378,24 +377,24 @@ export const getStatusCounts = (clientData: DynamicMetricData[]): {
       statusCounts.scanOnline++;
     } else if (scanStatus === 'ERROR') {
       statusCounts.scanError++;
+    } else {
+      statusCounts[scanStatus] = (statusCounts[scanStatus] || 0) + 1;
     }
 
     if (batteryStatus === 'ONLINE') {
       statusCounts.batteryOnline++;
     } else if (batteryStatus === 'OFFLINE') {
       statusCounts.batteryOffline++;
+    } else {
+      statusCounts[batteryStatus] = (statusCounts[batteryStatus] || 0) + 1;
     }
 
     if (insituStatus === 'NORMAL') {
       statusCounts.insituNormal++;
     } else if (insituStatus === 'ERROR') {
       statusCounts.insituError++;
-    } else if (insituStatus === 'POWER_CYCLED') {
-      statusCounts.insituPowerCycled++;
-    } else if (insituStatus === 'STARTUP') {
-      statusCounts.insituStartup++;
-    } else if (insituStatus === 'AQUATROLL 500') {
-      statusCounts.insituAquatroll500++;
+    } else {
+      statusCounts[insituStatus] = (statusCounts[insituStatus] || 0) + 1;
     }
   });
 

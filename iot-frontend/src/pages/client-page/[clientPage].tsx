@@ -35,6 +35,28 @@ const ClientPage = (data: any) => {
   const { isAuthenticated, isLoading } = useAuth();
   const { id, type } = fetchIdAndType();
 
+  const getDeviceIdsByMetric = (metricName: string) => {
+    return clientData
+      .filter((device) => {
+        return device[`metric_${metricName}`] !== undefined;
+      })
+      .map((device) => device.device_id);
+  };
+
+  const getDeviceIdsBySite = (siteName: string) => {
+    return clientData
+      .filter((device) => {
+        const siteValue = device.metric_SITE;
+        if (typeof siteValue === "string") {
+          return siteValue === siteName;
+        } else if (typeof siteValue === "object" && "value" in siteValue) {
+          return siteValue.value === siteName;
+        }
+        return false;
+      })
+      .map((device) => device.device_id);
+  };
+
   const getDeviceIdsByStatus = (status: string) => {
     return clientData
       .filter((device) => {
@@ -50,12 +72,7 @@ const ClientPage = (data: any) => {
           return true;
         if (status === "insituNormal" && insituStatus === "NORMAL") return true;
         if (status === "insituError" && insituStatus === "ERROR") return true;
-        if (status === "insituPowerCycled" && insituStatus === "POWER_CYCLED")
-          return true;
-        if (status === "insituStartup" && insituStatus === "STARTUP")
-          return true;
-        if (status === "insituAquatroll500" && insituStatus === "AQUATROLL 500")
-          return true;
+        if (insituStatus === status) return true;
 
         return false;
       })
@@ -75,18 +92,17 @@ const ClientPage = (data: any) => {
 
   const clientData = filteredData;
 
-  // console.log(clientData);
+  console.log(clientData);
 
   if (!clientData) return null;
-
-  const title = `Client Page | 1 | Adroit Front End Manager`;
-  const description = `Client Info Page for Device ID: 1`;
 
   // Get client name, ID, and total devices
   const clientName =
     clientData.length > 0 ? clientData[0]?.client_name || "" : "";
   const clientId = clientData.length > 0 ? clientData[0]?.client_id || "" : "";
   const totalDevices = clientData.length;
+  const title = `Client Info | ${clientId} | Adroit Front End Manager`;
+  const description = `Client Info Page for Device ID: ${clientId}`;
 
   // Get all metrics and their counts
   const metricCounts = clientData.reduce(
@@ -153,6 +169,7 @@ const ClientPage = (data: any) => {
             <h1 className="mb-4 text-4xl font-bold">Client Details</h1>
 
             <div className="rounded-lg bg-white p-6 shadow-md">
+              {/* Client Normal Detail */}
               <div className="mb-4 flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-semibold">
@@ -167,35 +184,66 @@ const ClientPage = (data: any) => {
                 </div>
               </div>
 
+              {/* Metrics */}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="rounded-lg bg-gray-100 p-4">
                   <h3 className="mb-2 text-xl font-semibold">Metrics</h3>
                   <ul className="list-inside list-disc">
                     {metricCountsArray.map(({ metricName, count }) => (
-                      <li key={metricName}>
+                      <li
+                        key={metricName}
+                        className="cursor-pointer"
+                        data-tooltip-id={`metric-${metricName}-tooltip`}
+                        data-tooltip-content={`Devices with ${metricName}: ${getDeviceIdsByMetric(
+                          metricName
+                        ).join(", ")}`}
+                      >
                         {metricName} ({count})
                       </li>
                     ))}
                   </ul>
+                  {metricCountsArray.map(({ metricName }) => (
+                    <Tooltip
+                      key={metricName}
+                      place="top"
+                      id={`metric-${metricName}-tooltip`}
+                    />
+                  ))}
                 </div>
 
+                {/* Sites */}
                 <div className="rounded-lg bg-gray-100 p-4">
                   <h3 className="mb-2 text-xl font-semibold">Sites</h3>
                   <ul className="list-inside list-disc">
                     {siteCountsArray.map(({ siteName, count }) => (
-                      <li key={siteName}>
+                      <li
+                        key={siteName}
+                        className="cursor-pointer"
+                        data-tooltip-id={`site-${siteName}-tooltip`}
+                        data-tooltip-content={`Devices at ${siteName}: ${getDeviceIdsBySite(
+                          siteName
+                        ).join(", ")}`}
+                      >
                         {siteName} ({count})
                       </li>
                     ))}
                   </ul>
+                  {siteCountsArray.map(({ siteName }) => (
+                    <Tooltip
+                      key={siteName}
+                      place="top"
+                      id={`site-${siteName}-tooltip`}
+                    />
+                  ))}
                 </div>
               </div>
 
               {/* Statuses */}
               <div>
                 <h3 className="mb-4 text-xl font-bold">Status</h3>
-                <ul>
-                  <li className="mb-2">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                  {/* Scan Status */}
+                  <li>
                     Scan:
                     <span
                       className="ml-2 rounded-lg bg-green-100 px-2 py-1 text-green-800 cursor-pointer"
@@ -215,11 +263,40 @@ const ClientPage = (data: any) => {
                     >
                       ERROR ({statusCounts.scanError})
                     </span>
+                    {Object.entries(statusCounts)
+                      .filter(
+                        ([status]) =>
+                          status.startsWith("metric_scanStatus") &&
+                          status !== "scanOnline" &&
+                          status !== "scanError"
+                      )
+                      .map(([status, count]) => (
+                        <span
+                          key={status}
+                          className="ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
+                          data-tooltip-id={`${status}Tooltip`}
+                          data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
+                            status
+                          ).join(", ")}`}
+                        >
+                          {status.replace("scan", "")} ({count})
+                        </span>
+                      ))}
+                    <span
+                      className="ml-2 rounded-lg bg-gray-100 px-2 py-1 text-gray-800 cursor-pointer"
+                      data-tooltip-id="scanNATooltip"
+                      data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
+                        "N/A"
+                      ).join(", ")}`}
+                    >
+                      N/A ({getDeviceIdsByStatus("N/A").length})
+                    </span>
                   </li>
-                  <li className="mb-2">
+                  {/* Battery Status */}
+                  <li>
                     Battery:
                     <span
-                      className="ml-2 rounded-lg bg-green-100 px-2 py-1 text-green-800 cursor-pointer"
+                      className="a ml-2 rounded-lg bg-green-100 px-2 py-1 text-green-800 cursor-pointer"
                       data-tooltip-id="batteryOnlineTooltip"
                       data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
                         "batteryOnline"
@@ -228,7 +305,7 @@ const ClientPage = (data: any) => {
                       ONLINE ({statusCounts.batteryOnline})
                     </span>
                     <span
-                      className="ml-2 rounded-lg bg-red-100 px-2 py-1 text-red-800 cursor-pointer"
+                      className="b ml-2 rounded-lg bg-red-100 px-2 py-1 text-red-800 cursor-pointer"
                       data-tooltip-id="batteryOfflineTooltip"
                       data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
                         "batteryOffline"
@@ -236,7 +313,36 @@ const ClientPage = (data: any) => {
                     >
                       OFFLINE ({statusCounts.batteryOffline})
                     </span>
+                    {Object.entries(statusCounts)
+                      .filter(
+                        ([status]) =>
+                          status.startsWith("metric_batt status") &&
+                          status !== "batteryOnline" &&
+                          status !== "batteryOffline"
+                      )
+                      .map(([status, count]) => (
+                        <span
+                          key={status}
+                          className="c ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
+                          data-tooltip-id={`${status}Tooltip`}
+                          data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
+                            status
+                          ).join(", ")}`}
+                        >
+                          {status.replace("battery", "")} ({count})
+                        </span>
+                      ))}
+                    <span
+                      className="d ml-2 rounded-lg bg-gray-100 px-2 py-1 text-gray-800 cursor-pointer"
+                      data-tooltip-id="batteryNATooltip"
+                      data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
+                        "N/A"
+                      ).join(", ")}`}
+                    >
+                      N/A ({getDeviceIdsByStatus("N/A").length})
+                    </span>
                   </li>
+                  {/* Insitu Status */}
                   <li>
                     Insitu:
                     <span
@@ -257,60 +363,87 @@ const ClientPage = (data: any) => {
                     >
                       ERROR ({statusCounts.insituError})
                     </span>
-                    <span
-                      className="ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
-                      data-tooltip-id="insituPowerCycledTooltip"
-                      data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
-                        "insituPowerCycled"
-                      ).join(", ")}`}
-                    >
-                      POWER_CYCLED ({statusCounts.insituPowerCycled})
-                    </span>
-                    <span
-                      className="ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
-                      data-tooltip-id="insituStartupTooltip"
-                      data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
-                        "insituStartup"
-                      ).join(", ")}`}
-                    >
-                      STARTUP ({statusCounts.insituStartup})
-                    </span>
-                    <span
-                      className="ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
-                      data-tooltip-id="insituAquatroll500Tooltip"
-                      data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
-                        "insituAquatroll500"
-                      ).join(", ")}`}
-                    >
-                      AQUATROLL 500 ({statusCounts.insituAquatroll500})
-                    </span>
+                    {Object.entries(statusCounts)
+                      .filter(
+                        ([status]) =>
+                          status !== "scanOnline" &&
+                          status !== "scanError" &&
+                          status !== "batteryOnline" &&
+                          status !== "batteryOffline" &&
+                          status !== "insituNormal" &&
+                          status !== "insituError" &&
+                          status !== "N/A"
+                      )
+                      .map(([status, count]) => (
+                        <span
+                          key={status}
+                          className="ml-2 rounded-lg bg-yellow-100 px-2 py-1 text-yellow-800 cursor-pointer"
+                          data-tooltip-id={`${status}Tooltip`}
+                          data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
+                            status
+                          ).join(", ")}`}
+                        >
+                          {status} ({count})
+                        </span>
+                      ))}
                     <span
                       className="ml-2 rounded-lg bg-gray-100 px-2 py-1 text-gray-800 cursor-pointer"
                       data-tooltip-id="insituNATooltip"
                       data-tooltip-content={`Device IDs: ${getDeviceIdsByStatus(
-                        "insituNA"
+                        "N/A"
                       ).join(", ")}`}
                     >
-                      N/A (
-                      {clientData.length -
-                        (statusCounts.insituNormal +
-                          statusCounts.insituError +
-                          statusCounts.insituPowerCycled +
-                          statusCounts.insituStartup +
-                          statusCounts.insituAquatroll500)}
-                      )
+                      N/A ({getDeviceIdsByStatus("N/A").length})
                     </span>
                   </li>
                 </ul>
+
                 <Tooltip place="top" id="scanOnlineTooltip" />
                 <Tooltip place="top" id="scanErrorTooltip" />
+                {Object.entries(statusCounts)
+                  .filter(
+                    ([status]) =>
+                      status.startsWith("metric_scanStatus") &&
+                      status !== "scanOnline" &&
+                      status !== "scanError" &&
+                      status !== "N/A"
+                  )
+                  .map(([status]) => (
+                    <Tooltip key={status} place="top" id={`${status}Tooltip`} />
+                  ))}
+                <Tooltip place="top" id="scanNATooltip" />
+
                 <Tooltip place="top" id="batteryOnlineTooltip" />
                 <Tooltip place="top" id="batteryOfflineTooltip" />
+                {Object.entries(statusCounts)
+                  .filter(
+                    ([status]) =>
+                      status.startsWith("metric_batt status") &&
+                      status !== "batteryOnline" &&
+                      status !== "batteryOffline" &&
+                      status !== "N/A"
+                  )
+                  .map(([status]) => (
+                    <Tooltip key={status} place="top" id={`${status}Tooltip`} />
+                  ))}
+                <Tooltip place="top" id="batteryNATooltip" />
+
                 <Tooltip place="top" id="insituNormalTooltip" />
                 <Tooltip place="top" id="insituErrorTooltip" />
-                <Tooltip place="top" id="insituPowerCycledTooltip" />
-                <Tooltip place="top" id="insituStartupTooltip" />
-                <Tooltip place="top" id="insituAquatroll500Tooltip" />
+                {Object.entries(statusCounts)
+                  .filter(
+                    ([status]) =>
+                      status !== "scanOnline" &&
+                      status !== "scanError" &&
+                      status !== "batteryOnline" &&
+                      status !== "batteryOffline" &&
+                      status !== "insituNormal" &&
+                      status !== "insituError" &&
+                      status !== "N/A"
+                  )
+                  .map(([status]) => (
+                    <Tooltip key={status} place="top" id={`${status}Tooltip`} />
+                  ))}
                 <Tooltip place="top" id="insituNATooltip" />
               </div>
 
