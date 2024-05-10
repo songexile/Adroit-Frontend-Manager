@@ -147,12 +147,12 @@ const CreateTicket = (data: any) => {
               <h1 className="text-2xl font-bold text-gray-800">Create Ticket</h1>
               <p className="text-sm text-gray-500">
                 Ticket will be sent to{' '}
-                <a
-                  href="#"
-                  className="text-blue-500 hover:text-blue-600"
+                <span
+                  
+                  className="text-blue-500  hover:text-blue-600"
                 >
                   support@adroit.co.nz
-                </a>
+                </span>
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
