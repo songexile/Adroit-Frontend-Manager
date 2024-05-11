@@ -2,7 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import AdroitImage from "@/public/assets/img/adroit_frontendblur.png";
 import AutLoge from "@/public/assets/img/AUT_Logo_New.jpg";
-import styles from "@/pages/landing-page/style.module.css";
 
 export default function Hero() {
   return (
