@@ -10,9 +10,6 @@ interface BreadcrumbProps {
   breadcrumbs: BreadcrumbItem[];
 }
 
-console.log("Test Husky 17");
-
-
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ breadcrumbs }) => {
   return (
     <nav
@@ -20,16 +17,16 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ breadcrumbs }) => {
       aria-label="Breadcrumb"
     >
       <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-        {breadcrumbs.map((breadcrumb, index) => (
+        {breadcrumbs.map((breadcrumb) => (
           <li
-            key={index}
+            key={breadcrumb.path}
             className="inline-flex items-center"
           >
             <Link
               href={breadcrumb.path}
               className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
             >
-              {index !== 0 && (
+              {breadcrumbs.indexOf(breadcrumb) !== 0 && (
                 <svg
                   className="mx-1 block size-3 text-gray-400 rtl:rotate-180"
                   aria-hidden="true"
