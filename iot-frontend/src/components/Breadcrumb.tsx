@@ -10,7 +10,7 @@ interface BreadcrumbProps {
   breadcrumbs: BreadcrumbItem[];
 }
 
-console.log("Test Husky 8");
+console.log("Test Husky 9");
 
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ breadcrumbs }) => {
