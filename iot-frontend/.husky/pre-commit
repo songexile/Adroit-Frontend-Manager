@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+. "$(dirname "$0")/_/husky.sh"
 
-cd ./iot-frontend
-pnpm lint-staged
+cd ./iot-frontend && pnpm lint-staged

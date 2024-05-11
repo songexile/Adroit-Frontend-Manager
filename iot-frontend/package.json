@@ -15,9 +15,11 @@
     "prepare": "cd .. && husky install iot-frontend/.husky"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "pnpm lint",
-      "pnpm format"
+    "src/**/*.+(js|json|ts|tsx)": [
+      "eslint"
+    ],
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
     ]
   },
   "dependencies": {
