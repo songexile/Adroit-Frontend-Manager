@@ -7,6 +7,7 @@ export const routes = {
   adriotFrontEnd: {
     homePage: '/',
     viewDevicePage: `/device-info/${deviceID}`,
+    clientPage: `client-page/${clientID}`,
     createTicketPage: `create-ticket/${deviceID}`,
     profilePage: '/profile',
   },
