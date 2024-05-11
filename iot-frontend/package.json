@@ -12,7 +12,7 @@
     "test": "jest --watchAll",
     "test:ci": "jest --ci",
     "clear-jest-cache": "jest --clearCache",
-    "prepare": "husky"
+    "prepare": "cd .. && husky install iot-frontend/.husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -76,7 +76,7 @@
     "eslint-plugin-tailwindcss": "^3.15.1",
     "eslint-plugin-testing-library": "^6.2.2",
     "eslint-plugin-unused-imports": "^3.2.0",
-    "husky": "^9.0.11",
+    "husky": "^8.0.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^15.2.2",
