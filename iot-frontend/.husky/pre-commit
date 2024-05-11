@@ -1,1 +1,6 @@
-pnpm test
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running Husky pre-commit hook..."
+
+cd ./iot-frontend && pnpm test && pnpm lint-staged
