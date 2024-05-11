@@ -71,7 +71,9 @@ const CreateTicket = (data: any) => {
     },
   ];
 
-  const handleCreateTicket = async () => {
+  const handleCreateTicket = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     // Reset errors
     setErrors({});
     setIsSubmitLoading(true);
@@ -145,12 +147,12 @@ const CreateTicket = (data: any) => {
               <h1 className="text-2xl font-bold text-gray-800">Create Ticket</h1>
               <p className="text-sm text-gray-500">
                 Ticket will be sent to{' '}
-                <a
-                  href="#"
-                  className="text-blue-500 hover:text-blue-600"
+                <span
+                  
+                  className="text-blue-500  hover:text-blue-600"
                 >
                   support@adroit.co.nz
-                </a>
+                </span>
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
@@ -366,7 +368,10 @@ const CreateTicket = (data: any) => {
                 </div>
               </div>
               {/* Create Ticket */}
-              <div className="md:col-span-2">
+              <form
+                onSubmit={handleCreateTicket}
+                className="md:col-span-2"
+              >
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Ticket Details</h2>
 
                 <div className="space-y-4 mb-4">
@@ -384,6 +389,7 @@ const CreateTicket = (data: any) => {
                       type="email"
                       value={to}
                       onChange={(e) => setTo(e.target.value)}
+                      required
                     />
                     {errors.to && <p className="text-red-500 mt-1">{errors.to}</p>}
                   </div>
@@ -435,6 +441,7 @@ const CreateTicket = (data: any) => {
                       type="text"
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
+                      required
                     />
                     {errors.subject && <p className="text-red-500 mt-1">{errors.subject}</p>}
                   </div>
@@ -451,13 +458,14 @@ const CreateTicket = (data: any) => {
                       placeholder="Describe your issue"
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
+                      required
                     ></textarea>
                     {errors.message && <p className="text-red-500 mt-1">{errors.message}</p>}
                   </div>
                 </div>
                 <button
+                  type="submit"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-500 text-primary-foreground hover:bg-blue-600 h-10 px-4 py-2 w-full"
-                  onClick={handleCreateTicket}
                   disabled={isSubmitLoading}
                 >
                   {isSubmitLoading ? (
@@ -484,7 +492,7 @@ const CreateTicket = (data: any) => {
                   ) : null}
                   {isSubmitLoading ? 'Submitting...' : 'Submit Ticket'}
                 </button>
-              </div>
+              </form>
             </div>
           </div>
           {/* Modal */}

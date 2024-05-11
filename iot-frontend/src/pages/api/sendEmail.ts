@@ -50,6 +50,12 @@ export default async function handler(
           <li><strong>Device Key:</strong> ${deviceData?.device_key}</li>
           <li><strong>Client Name:</strong> ${deviceData?.client_name}</li>
           <li><strong>Last Online:</strong> ${typeof deviceData?.last_online === 'string' ? deviceData.last_online : deviceData?.last_online?.value || 'N/A'}</li>
+          <li>
+            <strong>Device Info Page Link:</strong>
+            <a href="${process.env.NEXT_PUBLIC_BASE_URL}/device-info/${deviceData?.device_id}" target="_blank" rel="noopener noreferrer">
+              View Device Info
+            </a>
+          </li>
         </ul>
       `,
     });
