@@ -1,17 +1,65 @@
-import { showToast } from "@/components/Toast"
-import { DynamicMetricData } from "@/types"
+import { showToast } from '@/components/Toast'
+import { DynamicMetricData } from '@/types'
 
 /**
  * Flattens nested data into an array of DynamicMetricData objects.
  * @param {any} data - The nested data object containing device and metric information.
- * @param {number | undefined} targetDeviceId - (Optional) The ID of the target device to retrieve.
+ * @param {number | undefined} targetDeviceId - (Optional) The ID of the target device data to retrieve.
+ * @param {number | undefined} targetClientId - (Optional) The ID of the target cleint data to retrieve.
  * @returns {DynamicMetricData[]} An array of flattened DynamicMetricData objects.
  */
-export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMetricData[] {
+export function flattenNestedData(
+  data: any,
+  targetDeviceId?: number,
+  targetClientId?: number,
+  hideDeviceWithoutData?: boolean
+): DynamicMetricData[] {
   const flattenedData: DynamicMetricData[] = []
 
-  // Check if targetDeviceId is provided (e.g. device stat page)
-  if (targetDeviceId !== undefined) {
+  // Check if targetClientId is provided (e.g. client page)
+  if (targetClientId !== undefined) {
+    // Assuming "data" is an array of device objects
+    const devices = data.data;
+
+    // Filter the devices based on the target client ID
+    const targetClientDevices = devices.filter((device: any) => device.client_id === targetClientId);
+
+    // Iterate over the target client's devices
+    for (const device of targetClientDevices) {
+      const flattenedDevice: DynamicMetricData = {
+        client_name: device.client_name,
+        client_id: device.client_id.toString(),
+        device_id: device.device_id.toString(),
+        device_key: device.device_key,
+      };
+
+      // Copy over metrics properties
+      for (const key in device) {
+        if (key.startsWith('metric_')) {
+          flattenedDevice[key] = device[key];
+        }
+      }
+
+      // Extract the timestamp from the very first metric of the device
+      const metricKeys = Object.keys(device);
+      const firstMetricKey = metricKeys.find((key) => key.startsWith('metric_'));
+      const firstMetric = firstMetricKey ? device[firstMetricKey] : undefined;
+      let extractedTimestamp: number | undefined;
+      if (firstMetric && 'timestamp' in firstMetric) {
+        extractedTimestamp = firstMetric.timestamp;
+        flattenedDevice.last_online = extractedTimestamp
+          ? new Date(extractedTimestamp).toLocaleString()
+          : '';
+      }
+
+      // Add the flattened device to the array
+      flattenedData.push(flattenedDevice);
+    }
+
+    return flattenedData;
+
+    // Check if targetDeviceId is provided (e.g. device stat page)
+  } else if (targetDeviceId !== undefined) {
     // Assuming "data" is the top-level object containing the devices array
     const devices = data.data
 
@@ -40,7 +88,6 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
         const firstMetric = firstMetricKey ? device[firstMetricKey] : undefined
 
         let extractedTimestamp: number | undefined
-
         if (firstMetric && 'timestamp' in firstMetric) {
           extractedTimestamp = firstMetric.timestamp
           flattenedDevice.last_online = extractedTimestamp
@@ -48,11 +95,7 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
             : ''
         }
 
-        // TEST - Log extracted timestamp and flattened device
-        // console.log("Extracted Timestamp:", extractedTimestamp);
-        // console.log("Flattened Device:", flattenedDevice);
-
-        // Push the flattened device to the array
+        // Add the flattened device to the array
         flattenedData.push(flattenedDevice)
 
         // Exit loop after finding the first matching device
@@ -92,8 +135,17 @@ export function flattenNestedData(data: any, targetDeviceId?: number): DynamicMe
           }
         }
 
-        // Push the flattened device to the array
-        flattenedData.push(flattenedDevice)
+        // Check if the device has the required data or if hideDeviceWithoutData is false
+        const hasTimestamp = flattenedDevice.last_online !== ''
+        const hasBatteryPercentage = !!flattenedDevice['metric_battery_percentage']
+        const hasBatteryVoltage = !!flattenedDevice['metric_battery_voltage']
+
+        if (
+          !hideDeviceWithoutData ||
+          (hasTimestamp && (hasBatteryPercentage || hasBatteryVoltage))
+        ) {
+          flattenedData.push(flattenedDevice)
+        }
       }
     }
   }
@@ -188,3 +240,163 @@ export const getClientsOfflineCount = (flattenedData: DynamicMetricData[]): numb
   }
   return uniqueClients.size
 }
+
+export function capitalizeWords(str: string | undefined): string {
+  if (typeof str === 'undefined' || str === null) {
+    return '';
+  }
+  return str.replace(/\b\w/g, char => char.toUpperCase());
+}
+
+/**
+ * Retrieves the scan status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The scan status string.
+ */
+export const getScanStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const scanStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_scanStatus'
+  );
+
+  if (!scanStatusEntry) return 'N/A';
+
+  const [, value] = scanStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: scanStatus } = value;
+
+    if (scanStatus === 'OK') {
+      return 'ONLINE';
+    } else if (scanStatus === 'Modbus error') {
+      return 'ERROR';
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Retrieves the battery status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The battery status string.
+ */
+export const getBatteryStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const batteryStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_batt status'
+  );
+
+  if (!batteryStatusEntry) return 'N/A';
+
+  const [, value] = batteryStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: batteryStatus } = value;
+
+    if (batteryStatus === 'On') {
+      return 'ONLINE';
+    } else if (batteryStatus === 'Off') {
+      return 'OFFLINE';
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Retrieves the Insitu status from the provided device data.
+ * @param {DynamicMetricData | null} deviceData - The device data object.
+ * @returns {string} The Insitu status string.
+ */
+export const getInsituStatus = (deviceData: DynamicMetricData | null): string => {
+  if (!deviceData) return 'N/A';
+
+  const insituStatusEntry = Object.entries(deviceData).find(
+    ([key]) => key === 'metric_insituStatus'
+  );
+
+  if (!insituStatusEntry) return 'N/A';
+
+  const [, value] = insituStatusEntry;
+
+  if (typeof value === 'object' && 'value' in value) {
+    const { value: insituStatus } = value;
+
+    if (insituStatus === 'Normal' || insituStatus === 'OK') {
+      return 'NORMAL';
+    } else if (insituStatus === 'COMS_ERROR') {
+      return 'ERROR';
+    } else {
+      return insituStatus;
+    }
+  }
+
+  return 'N/A';
+};
+
+/**
+ * Calculates the count of each status for all devices.
+ * @param {DynamicMetricData[]} clientData - The array of client data.
+ * @returns {Object} An object containing the counts of each status.
+ */
+export const getStatusCounts = (clientData: DynamicMetricData[]): {
+  scanOnline: number;
+  scanError: number;
+  batteryOnline: number;
+  batteryOffline: number;
+  insituNormal: number;
+  insituError: number;
+  [key: string]: number;
+} => {
+  const statusCounts: {
+    scanOnline: number;
+    scanError: number;
+    batteryOnline: number;
+    batteryOffline: number;
+    insituNormal: number;
+    insituError: number;
+    [key: string]: number;
+  } = {
+    scanOnline: 0,
+    scanError: 0,
+    batteryOnline: 0,
+    batteryOffline: 0,
+    insituNormal: 0,
+    insituError: 0,
+  };
+
+  clientData.forEach((deviceData) => {
+    const scanStatus = getScanStatus(deviceData);
+    const batteryStatus = getBatteryStatus(deviceData);
+    const insituStatus = getInsituStatus(deviceData);
+
+    if (scanStatus === 'ONLINE') {
+      statusCounts.scanOnline++;
+    } else if (scanStatus === 'ERROR') {
+      statusCounts.scanError++;
+    } else {
+      statusCounts[scanStatus] = (statusCounts[scanStatus] || 0) + 1;
+    }
+
+    if (batteryStatus === 'ONLINE') {
+      statusCounts.batteryOnline++;
+    } else if (batteryStatus === 'OFFLINE') {
+      statusCounts.batteryOffline++;
+    } else {
+      statusCounts[batteryStatus] = (statusCounts[batteryStatus] || 0) + 1;
+    }
+
+    if (insituStatus === 'NORMAL') {
+      statusCounts.insituNormal++;
+    } else if (insituStatus === 'ERROR') {
+      statusCounts.insituError++;
+    } else {
+      statusCounts[insituStatus] = (statusCounts[insituStatus] || 0) + 1;
+    }
+  });
+
+  return statusCounts;
+};

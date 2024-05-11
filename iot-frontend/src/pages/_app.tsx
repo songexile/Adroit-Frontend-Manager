@@ -1,17 +1,39 @@
-import '@/styles/globals.css'
-import { SessionProvider } from 'next-auth/react'
-import type { AppProps } from 'next/app'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { useDataFetch } from '@/hooks/useDataFetch'
-import { AuthCheckAndAction } from '@/components/AuthCheckAndAction'
-import NextTopLoader from 'nextjs-toploader'
+import '@/styles/globals.css';
+import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useDataFetch } from '@/hooks/useDataFetch';
+import { AuthCheckAndAction } from '@/components/AuthCheckAndAction';
+import NextTopLoader from 'nextjs-toploader';
+import { Inter } from 'next/font/google';
+import Head from 'next/head';
+import SEO from '@/components/SEO';
+
+const inter = Inter({ subsets: ['latin'] });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { data, loading, hasFetchedData, fetchDataAndUpdate } = useDataFetch()
+  const { data, loading, hasFetchedData, fetchDataAndUpdate } = useDataFetch();
+
+  const title = `Adroit Front End Manager`;
+  const description = `An application which allows monitoring of IoT Devices.`;
 
   return (
     <>
+      <SEO
+        title={title}
+        description={description}
+      />
+      <Head>
+        <title>Adroit Frontend Manager</title>
+        <link rel="icon" href="assets/img/favicon.png" />
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <style jsx global>{`
+        html {
+          font-family: ${inter.style.fontFamily};
+        }
+      `}</style>
       <SessionProvider session={pageProps.session}>
         <ToastContainer
           position="top-right"
@@ -50,7 +72,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </AuthCheckAndAction>
       </SessionProvider>
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

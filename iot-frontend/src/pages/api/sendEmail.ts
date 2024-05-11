@@ -1,4 +1,4 @@
-import { RequestBody } from '@/types'
+import { EmailRequestBody } from '@/types'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Resend } from 'resend'
 
@@ -10,7 +10,7 @@ export default async function handler(
     return res.status(405).json({ message: 'Method not allowed' })
   }
 
-  const { to, subject, message, deviceData }: RequestBody = req.body
+  const { to, cc, bcc, subject, message, deviceData }: EmailRequestBody = req.body
 
   // Validate required fields
   if (!to || !subject || !message) {
@@ -20,9 +20,26 @@ export default async function handler(
   const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY_MINE)
 
   try {
+    let ccEmails: string[] = [];
+    let bccEmails: string[] = [];
+
+    if (typeof cc === 'string') {
+      ccEmails = cc.split(',').map((email: string) => email.trim());
+    } else if (Array.isArray(cc)) {
+      ccEmails = cc.map((email: string) => email.trim());
+    }
+
+    if (typeof bcc === 'string') {
+      bccEmails = bcc.split(',').map((email: string) => email.trim());
+    } else if (Array.isArray(bcc)) {
+      bccEmails = bcc.map((email: string) => email.trim());
+    }
+
     const emailData = await resend.emails.send({
-      from: 'EMAIL DEV TEST <noreply@miguelemmara.me>',
+      from: 'Adroit Ticketing <noreply@miguelemmara.me>',
       to,
+      cc: ccEmails,
+      bcc: bccEmails,
       subject,
       html: `
         <h1>${subject}</h1>
@@ -35,12 +52,20 @@ export default async function handler(
           <li><strong>Last Online:</strong> ${typeof deviceData?.last_online === 'string' ? deviceData.last_online : deviceData?.last_online?.value || 'N/A'}</li>
         </ul>
       `,
-    })
+    });
 
-    console.log('Email sent successfully:', emailData)
-    res.status(200).json({ success: true })
-  } catch (error) {
-    console.error('Error sending email:', error)
-    res.status(500).json({ message: 'Error sending email' })
+    if (emailData.error && emailData.error.message === 'API key is invalid') {
+      throw new Error('Invalid API key');
+    }
+
+    console.log('Email sent successfully:', emailData);
+    res.status(200).json({ success: true });
+  } catch (error: any) {
+    console.error('Error sending email:', error);
+    if (error.message === 'Invalid API key') {
+      res.status(400).json({ message: 'Invalid API key' });
+    } else {
+      res.status(500).json({ message: 'Error sending email' });
+    }
   }
 }
