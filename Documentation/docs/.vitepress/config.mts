@@ -28,7 +28,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Routes', link: '/configurations/routes' },
-          { text: 'Site Config', link: '/configurations/site-config' },
           { text: 'Environment', link: '/configurations/environment' },
           { text: 'Scripts', link: '/configurations/scripts' },
 
@@ -61,6 +60,21 @@ export default defineConfig({
           { text: 'Navbar', link: '/components/navbar' },
           { text: 'Tables', link: '/components/tables' },
           { text: 'Gauge Chart', link: '/components/gauge-chart' },
+
+        ],
+      },
+      {
+        text: 'Pages',
+        collapsed: false,
+        items: [
+          { text: 'Home Page', link: '/pages/home-page' },
+          { text: 'Client Page', link: '/pages/client-page' },
+          { text: 'Create Ticket', link: '/pages/create-ticket' },
+          { text: 'Device Info', link: '/pages/device-info' },
+          { text: 'Landing Page', link: '/pages/landing-page' },
+          { text: 'Login', link: '/pages/login' },
+          { text: 'Profile', link: '/pages/profile' },
+          { text: '404', link: '/pages/404' },
 
         ],
       },
