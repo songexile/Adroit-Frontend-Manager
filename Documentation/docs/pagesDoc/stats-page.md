@@ -78,3 +78,21 @@ function DeviceID(data: any) {
 ```
 
 This function checks if the user is authenticated, it grabs the device ID and then passes in the flattened data for that device.
+
+### renderMetrics
+`const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {`
+
+This function's primary purpose is to iterate through the data object provided and render out all of the metrics into JSX since each device has metrics we need to render it.
+
+For example, it will render the `key` and the `value`, an example of a key would be **client_name** and the value would be **Spark**
+
+### debugMetrics
+`const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {`
+
+This prints out the metrics which are more useful than base metrics.
+
+#### How to add more metrics
+
+Add more here
+
+### How Chart components work (Add here Munish) - talk about how it works in the code
