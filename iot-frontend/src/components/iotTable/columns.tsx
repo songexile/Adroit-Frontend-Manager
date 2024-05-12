@@ -17,7 +17,7 @@ import { DynamicMetricData } from '@/types';
 // Declare an empty array initially
 let columns: ColumnDef<DynamicMetricData>[] = [];
 
-//Modifed Sorting function to handle undefined values
+// Modifed Sorting function to handle undefined values
 function createSortingFn<T>(getValueFromRow: (row: T) => number | null | undefined) {
   return (rowA: { original: T }, rowB: { original: T }) => {
     const valueA = getValueFromRow(rowA.original);
@@ -105,26 +105,43 @@ export const initializeColumns = () => {
 
         // Render the timestamp
         const now = new Date();
-        const daysAgo = timestamp
-          ? Math.floor((now.getTime() - new Date(timestamp).getTime()) / (1000 * 60 * 60 * 24))
-          : undefined;
+        const timeDiff = timestamp ? now.getTime() - new Date(timestamp).getTime() : undefined;
 
-        var bgColor = 'inherit';
+        let timeAgo;
+        let bgColor = 'inherit';
 
-        if (daysAgo !== undefined) {
-          if (daysAgo > 7) {
-            bgColor = 'bg-red-500'; // Red for over 7 days
-          } else if (daysAgo > 3) {
-            bgColor = 'bg-orange-500'; // Orange for 3-7 days
+        if (timeDiff !== undefined) {
+          const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+          if (days < 0) {
+            // Handle negative days
+            timeAgo = `+${Math.abs(days)} day${Math.abs(days) > 1 ? 's' : ''}`;
+            // or timeAgo = `${Math.abs(days)} day${Math.abs(days) > 1 ? 's' : ''} in the future`;
+            bgColor = 'bg-purple-500'; // Purple for future dates
+          } else if (days > 0) {
+            timeAgo = `${days} day${days > 1 ? 's' : ''} ago`;
+            if (days > 7) {
+              bgColor = 'bg-red-500'; // Red for over 7 days
+            } else if (days > 3) {
+              bgColor = 'bg-orange-500'; // Orange for 3-7 days
+            } else {
+              bgColor = 'bg-amber-300'; // Amber for 1-3 days ago
+            }
           } else {
-            bgColor = 'bg-amber-300'; // AMber for date in the past (eg, 40 years ago)
+            timeAgo = 'Today';
+            bgColor = 'bg-green-500'; // Green for today
           }
+        } else {
+          timeAgo = 'N/A';
+          bgColor = 'bg-gray-500'; // Gray for N/A
         }
 
-        // Render the number of days ago
+        // Render the time ago
         return (
-          <span className={`${bgColor} p-4 rounded-md text-white font-medium`}>
-            {timestamp ? `${daysAgo} days ago` : 'N/A'}
+          <span
+            className={`${bgColor} p-2 sm:p-2 md:p-3 rounded-md text-white font-medium text-xs sm:text-sm md:text-base`}
+          >
+            {timeAgo}
           </span>
         );
       },
