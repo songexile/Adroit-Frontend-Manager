@@ -40,7 +40,6 @@ export default defineConfig({
         items: [
           { text: 'Project Structure', link: '/development/project-structure' },
           { text: 'Create New Page', link: '/development/create-new-page' },
-          { text: 'Environment', link: '/development/environment' },
           { text: 'Build And Deploy', link: '/development/build-deploy' },
           { text: 'Resource Credits', link: '/development/resource-credits' },
 
