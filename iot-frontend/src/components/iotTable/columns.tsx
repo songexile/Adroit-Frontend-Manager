@@ -15,11 +15,10 @@ import tagsData from './tagsdata.json'; // Importing the JSON file
 import { DynamicMetricData } from '@/types';
 import { Button } from '../ui/button';
 
-interface TagsData {
-  tags: string[];
+interface RowOriginalType {
+  // Other properties...
+  tags: string[] | undefined; // Adjusted to allow an array of strings or undefined
 }
-
-const typedTagsData: TagsData = tagsData;
 
 let columns: ColumnDef<DynamicMetricData>[] = [];
 
@@ -235,33 +234,50 @@ export const initializeColumns = () => {
       size: 200, // Adjusting the width
       header: 'Tags',
       cell: ({ row }) => {
-        const [selectedTag, setSelectedTag] = React.useState(row.original.tags || '');
+        const [selectedTags, setSelectedTags] = React.useState<string[]>(
+          Array.isArray(row.original.tags) ? row.original.tags : []
+        );
 
-        const handleTagChange = (e: any) => {
-          const newTag = e.target.value;
-          setSelectedTag(newTag);
-          row.original.tags = newTag;
+        const handleTagChange = (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter' && e.currentTarget.value.trim() !== '') {
+            const newTag = e.currentTarget.value.trim();
+            setSelectedTags([...selectedTags, newTag]);
+            e.currentTarget.value = ''; // Clear the input field after adding the tag
+            row.original.tags = [...selectedTags, newTag]; // Update the tags in the row's data
+          }
+        };
+
+        const handleDeleteTag = (tagToDelete: string) => {
+          const updatedTags = selectedTags.filter((tag) => tag !== tagToDelete);
+          setSelectedTags(updatedTags);
+          row.original.tags = updatedTags; // Update the tags in the row's data
         };
 
         return (
           <div className="relative">
-            <select
-              value={selectedTag}
-              onChange={(e) => {
-                handleTagChange(e);
-              }}
-              className="w-full px-2 py-1 border border-gray-300 rounded-md pr-8"
-            >
-              <option value="">Select Tag</option>
-              {tagsData.tags.map((tag, index) => (
-                <option
+            <div className="flex flex-wrap">
+              {selectedTags.map((tag, index) => (
+                <div
                   key={index}
-                  value={tag}
+                  className="flex items-center mr-2 mb-2"
                 >
-                  {tag}
-                </option>
+                  <span className="px-2 py-1 bg-gray-200 rounded-md mr-1">{tag}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteTag(tag)}
+                    className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    &#10005;
+                  </button>
+                </div>
               ))}
-            </select>
+              <input
+                type="text"
+                className="flex-grow px-2 py-1 border border-gray-300 rounded-md"
+                onKeyDown={handleTagChange}
+                placeholder="Add tags..."
+              />
+            </div>
           </div>
         );
       },
