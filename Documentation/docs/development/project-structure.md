@@ -15,21 +15,24 @@
 │   └── svg                     // Public SVG files
 |  |
 └── src
-    ├── app                     // Next.js app directory
+    ├── app                     // Next.js App router directory
     ├── components
     │   ├── charts              // Chart components
     │   ├── context             // React context providers
     │   ├── iotTable            // IoT table components
+    │   ├── speedoMeterChart    // Speedo Meter (Gauge) Chartcomponents
     │   └── ui                  // Reusable UI components
     ├── constants               // Constants and configuration
     ├── hooks                   // Custom React hooks
     ├── layouts                 // Page layout components
     ├── libs                    // Utility libraries
-    ├── pages
+    ├── pages                   // Next.js Pages router directory (Use)
     │   ├── api
     │   │   └── auth            // Authentication API routes
+    │   ├── client-page         // CLient info page
     │   ├── create-ticket       // Create ticket page
     │   ├── device-info         // Device information page
+    │   ├── Landinge Page       // Landinge page
     │   ├── login               // Login page
     │   └── profile             // User profile page
     ├── styles                  // Global styles
@@ -42,14 +45,15 @@
 ├── .eslintrc.json              // ESLint configuration (JSON)
 ├── .gitignore                  // Git ignore file
 ├── .npmrc                      // NPM configuration
-├── README.md                   // Project documentation
+├── .prettierignore             // Prettier Git ignore file
 ├── components.json             // Component metadata
 ├── jest.config.js              // Jest configuration
 ├── next.config.mjs             // Next.js configuration
-├── package-lock.json           // NPM package lock file
 ├── package.json                // NPM package manifest
+├── pnpm-lock.yaml              // PNPM package lock file
 ├── postcss.config.js           // PostCSS configuration
 ├── prettier.config.js          // Prettier configuration
+├── README.md                   // Project Readme documentation
 ├── tailwind.config.ts          // Tailwind CSS configuration
 └── tsconfig.json               // TypeScript configuration
 └── ...
