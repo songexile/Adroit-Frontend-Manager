@@ -7,6 +7,6 @@
 	  "dev": "cd ./iot-frontend && pnpm i && pnpm dev",
 	  "build": "cd ./iot-frontend && pnpm i && pnpm build && pnpm start",
 	  "docs:dev": "cd ./Documentation && pnpm i && pnpm docs:dev",
-	  "test": ""
+	  "test": "cd ./iot-frontend && pnpm test"
 	}
   }

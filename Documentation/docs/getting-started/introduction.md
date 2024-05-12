@@ -36,8 +36,8 @@ On the left side of the screen, the user can click the three dots menu, this men
 
 Otis Wales - 19078635 - Team Leader
 <br>
-Munish Kumar - 19083476
+Munish Kumar - 19083476 - Software Engineer
 <br>
-Miguel Emmara - 18022146
+Miguel Emmara - 18022146 - Software Engineer
 <br>
-Glenn Neil - 21132847
+Glenn Neil - 21132847 - Software Engineer
