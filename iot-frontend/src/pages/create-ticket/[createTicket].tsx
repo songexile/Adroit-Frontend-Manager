@@ -148,7 +148,7 @@ const CreateTicket = (data: any) => {
               <p className="text-sm text-gray-500">
                 Ticket will be sent to{' '}
                 <span
-                  
+
                   className="text-blue-500  hover:text-blue-600"
                 >
                   support@adroit.co.nz

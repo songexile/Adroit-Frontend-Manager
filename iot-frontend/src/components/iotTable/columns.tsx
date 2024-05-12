@@ -116,6 +116,8 @@ export const initializeColumns = () => {
             bgColor = 'bg-red-500'; // Red for over 7 days
           } else if (daysAgo > 3) {
             bgColor = 'bg-orange-500'; // Orange for 3-7 days
+          } else {
+            bgColor = 'bg-amber-300'; // AMber for date in the past (eg, 40 years ago)
           }
         }
 
