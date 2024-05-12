@@ -12,7 +12,7 @@ hero:
       link: /getting-started/introduction
     - theme: alt
       text: Live Website
-      link: https://www.google.com/
+      link: https://iot.miguelemmara.me/
     - theme: alt
       text: GitHub
       link: https://github.com/songexile/Adroit-Frontend-Manager
