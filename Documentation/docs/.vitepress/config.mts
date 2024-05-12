@@ -64,6 +64,21 @@ export default defineConfig({
 
         ],
       },
+      {
+        text: 'Pages',
+        collapsed: false,
+        items: [
+          { text: 'Home Page', link: '/pages/home-page' },
+          { text: 'Client Page', link: '/pages/client-page' },
+          { text: 'Create Ticket', link: '/pages/create-ticket' },
+          { text: 'Device Info', link: '/pages/device-info' },
+          { text: 'Landing Page', link: '/pages/landing-page' },
+          { text: 'Login', link: '/pages/login' },
+          { text: 'Profile', link: '/pages/profile' },
+          { text: '404', link: '/pages/404' },
+
+        ],
+      },
     ],
 
     socialLinks: [
