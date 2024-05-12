@@ -52,7 +52,7 @@ export const initializeColumns = () => {
       cell: ({ row }) => {
         const rowData = row.original;
         const deviceID = rowData.device_id;
-        const createTicket = rowData.device_id;
+        const clientID = rowData.client_id;
 
         return (
           <DropdownMenu>
@@ -68,12 +68,19 @@ export const initializeColumns = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
-                <Link href={`/device-info/${deviceID}`}>View device stats</Link>
+                <Link href={`/device-info/${deviceID}`}>View Device Info</Link>
               </DropdownMenuItem>
+
               <DropdownMenuSeparator />
 
               <DropdownMenuItem>
-                <Link href={`/create-ticket/${createTicket}`}>Create Ticket</Link>
+                <Link href={`/client-page/${clientID}`}>View Client Detail</Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem>
+                <Link href={`/create-ticket/${deviceID}`}>Create Ticket</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
