@@ -8,6 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { useAtom } from 'jotai';
 import { hideSelectedAtom } from './context/toggleAtom';
 import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png';
+import AutLoge from '@/public/assets/img/AUT_Logo_New.jpg';
 import { capitalizeWords } from '@/utils';
 
 const Header = ({
@@ -19,7 +20,7 @@ const Header = ({
   totalDevicesOfflineCount,
   clientsOfflineCount,
 }: // recentlyOfflineCount,
-HeaderProps) => {
+  HeaderProps) => {
   const handleFetchAndUpdate = async () => {
     if (fetchDataAndUpdate) {
       await fetchDataAndUpdate();
@@ -79,11 +80,18 @@ HeaderProps) => {
               style={{ width: '120px', height: 'auto' }}
               priority={true}
             />
-
             <div className="font-thin text-sm mt-[1.3rem]">
               <h1 className="">Frontend </h1>
               <h1>Manager</h1>
             </div>
+            <Image
+              alt="Logo of AUT"
+              src={AutLoge}
+              width={200}
+              height={200}
+              style={{ width: '90px', height: 'auto' }}
+              priority={true}
+            />
           </Link>
           {/* Dropdown Profile Menu */}
           <div
