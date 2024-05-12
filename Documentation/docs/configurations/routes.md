@@ -9,7 +9,9 @@ export const routes = {
     viewDevicePage: `/device-info/${deviceID}`,
     clientPage: `client-page/${clientID}`,
     createTicketPage: `create-ticket/${deviceID}`,
+    login: '/login',
     profilePage: '/profile',
+    404: '/404',
   },
 };
 ```

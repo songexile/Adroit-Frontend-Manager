@@ -28,7 +28,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Routes', link: '/configurations/routes' },
-          { text: 'Site Config', link: '/configurations/site-config' },
           { text: 'Environment', link: '/configurations/environment' },
           { text: 'Scripts', link: '/configurations/scripts' },
 
