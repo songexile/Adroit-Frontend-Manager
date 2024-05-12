@@ -48,7 +48,7 @@ This will create a new route, and you can visit it at `http://localhost:3000/new
 
 ## Explanation
 
-- The use`Auth hook is used to check the authentication status of the user.
+- The `useAuth` hook is used to check the authentication status of the user.
 - If the user is not authenticated, the `LoginScreen` component is rendered, prompting the user to log in.
 - If the user is authenticated, the page content is rendered, including the `Header`, `Footer`, and the main content of the page.
 - The `LoadingIndicator` component is displayed while the authentication status is being checked.
