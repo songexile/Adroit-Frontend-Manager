@@ -2,7 +2,7 @@
 
 ## Next Auth with AWS Cognito
 
-We use seamlessly integration with Next Auth authentication and AWS Cognito, providing a robust and flexible authentication solution for your Next.js projects. With Next Auth and AWS Cognito, you can easily implement authentication features and manage user sessions with minimal effort.
+This project uses Next Auth authentication and AWS Cognito, providing a robust and flexible authentication solution for the project. With Next Auth and AWS Cognito, you can easily implement authentication features and manage user sessions with minimal effort.
 
 ## Configuration
 
@@ -107,4 +107,4 @@ The `useAuth` hook provides the following properties:
 
 You can use these properties to conditionally render content based on the user's authentication status.
 
-That's it! You now have a basic understanding of how Next Auth is integrated with AWS Cognito in the Isomorphic Furyroad project. Feel free to explore the code further and customize it to fit your specific requirements.
+That's it! You now have a basic understanding of how Next Auth.
