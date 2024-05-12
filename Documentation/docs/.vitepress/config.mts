@@ -4,6 +4,21 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Frontend Documentation",
   description: "Adroit Frontend Manager Dashboard Documentation Website",
+
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    ['meta', { name: 'theme-color', content: '#5f67ee' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:locale', content: 'en' }],
+    ['meta', { property: 'og:title', content: 'Adroit Frontend Manager Dashboard Documentation Website' }],
+    ['meta', { property: 'og:site_name', content: 'Frontend Documentation' }],
+    // ['meta', { property: 'og:image', content: 'https://vitepress.dev/vitepress-og.jpg' }],
+    // ['meta', { property: 'og:url', content: 'https://vitepress.dev/' }],
+    // ['script', { src: 'https://cdn.usefathom.com/script.js', 'data-site': 'AZBRSFGG', 'data-spa': 'auto', defer: '' }]
+  ],
+
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
