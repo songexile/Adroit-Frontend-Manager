@@ -153,6 +153,39 @@ const ClientPage = (data: any) => {
     count,
   }));
 
+  // Get Device Types
+  const getDeviceType = (device: any) => {
+    if (device.metric_scanStatus && device.metric_insituStatus) {
+      return 'Spectrolyser';
+    } else if (
+      device.metric_din4150_x_mag &&
+      device.metric_din4150_y_mag &&
+      device.metric_din4150_z_mag
+    ) {
+      return 'Vibration Sensor';
+    } else if (device.metric_pm1 && device.metric_pm25 && device.metric_pm10) {
+      return 'Particulate Matter Sensor';
+    } else if (device.metric_sound_125ms && device.metric_sound_1s) {
+      return 'Noise Sensor';
+    } else if (device.metric_lmax_limit && device.metric_leq_limit) {
+      return 'Sound Level Meter';
+    } else if (device.metric_NO3N_mgl && device.metric_NO3N_ugl) {
+      return 'Nitrate Sensor';
+    } else {
+      return 'Unknown';
+    }
+  };
+
+  // Iterate over the devices and determine their types
+  const deviceTypeCounts: { [key: string]: number } = {};
+
+  clientData.forEach((device) => {
+    const deviceType = getDeviceType(device);
+    deviceTypeCounts[deviceType] = (deviceTypeCounts[deviceType] || 0) + 1;
+  });
+
+  // console.log('Device Type Counts:', deviceTypeCounts);
+
   // Get status counts
   const statusCounts = getStatusCounts(clientData);
 
@@ -186,6 +219,21 @@ const ClientPage = (data: any) => {
                 <div className="text-right">
                   <p className="text-lg font-semibold">Total Devices: {totalDevices}</p>
                 </div>
+              </div>
+
+              {/* Device Type Counts */}
+              <div className="mb-4">
+                <h3 className="text-xl font-semibold mb-2">Device Type Counts:</h3>
+                <ul className="list-disc list-inside">
+                  {Object.entries(deviceTypeCounts).map(([deviceType, count]) => (
+                    <li
+                      key={deviceType}
+                      className="text-gray-600"
+                    >
+                      {deviceType}: {count}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
