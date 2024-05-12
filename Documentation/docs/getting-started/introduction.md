@@ -52,9 +52,11 @@ The landing page is located at `iot-frontend/src/pages/landing-page/index.tsx`. 
 
 The 404 page is located at `iot-frontend/src/pages/404.tsx`. It is displayed when a user tries to access a page that doesn't exist. The page provides a user-friendly message indicating that the requested page could not be found and includes a link to return to the home page.
 
-## Initialy Made By
+## Created by Adroit Frontend Manager R&D Team
 
-Otis Wales - 19078635 - Team Leader
+Many thanks to **AUT** & **Adroit** for the opportunity to work on this project.
+
+Otis Wales - 19078635 - Team Leader & Software Engineer
 <br>
 Munish Kumar - 19083476 - Software Engineer
 <br>
