@@ -91,8 +91,53 @@ For example, it will render the `key` and the `value`, an example of a key would
 
 This prints out the metrics which are more useful than base metrics.
 
-#### How to add more metrics
 
-Add more here
+### How to Add More Metrics
 
-### How Chart components work (Add here Munish) - talk about how it works in the code
+To add more metrics to the device stats page, follow these steps:
+
+**Identify the New Metric**: Determine the new metric you want to add and ensure that it is available in the `deviceData` object.
+ ```jsx
+ const newMetric = deviceData?.humidity;
+```
+
+**Update the `filterMetric` Array**: Add the key of the new metric to the `filterMetric` array in the `debugMetrics` function. This array filters out only the metrics you want to display in red for debugging purposes.
+ ```jsx
+
+const filterMetric = ['PH', 'TEMP', 'BattP', 'solar volt', 'PRESS', 'battery_voltage', 'humidity'];
+```
+
+**Update the `formalMetricName` Array**: Add the formal name of the new metric to the `formalMetricName` array. This array provides human-readable names for the metrics.
+ ```jsx
+
+const formalMetricName = [
+  'pH Level',
+  'Temperature',
+  'Battery Percentage %',
+  'Solar Voltage',
+  'Press',
+  'Battery Voltage',
+  'Humidity'
+];
+ ```
+
+
+**Update the `fullMetricName` Array**: Add the new metric's key prefixed with `metric_` to the `fullMetricName` array. This array is used to check if a key belongs to a metric that should be displayed in the chart components.
+```jsx
+const fullMetricName = filterMetric.map((key) => prefix + key);
+```
+
+**Update the Chart Components**: If the new metric should be displayed using a chart component, ensure that the chart component is capable of displaying the new metric. Update the `SpeedometerChart` component or add a new chart component as needed.
+
+### How Chart Components Work
+
+The stats page uses various chart components to display metric data. Here's how the chart components work:
+
+**Speedometer Chart**: The `SpeedometerChart` component is used to display numeric values as a gauge on the page. It takes the `value` prop, which should be a numeric value, and the `colors` prop, which is an array of two colors representing the range of the gauge. For example:
+   ```jsx
+   <SpeedometerChart value={50} colors={['#38bdf8', '#EF4444']} />
+   ```
+   This will display a gauge with a value of 50, where values between 0 and 50 are in the first color (`#38bdf8`) and values between 50 and 100 are in the second color (`#EF4444`).
+
+
+
