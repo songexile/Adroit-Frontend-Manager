@@ -18,11 +18,11 @@ if (isLoading) {
 }
 ```
 
-- If `isAuthenticated` is `false`, it means the user is not `authenticated`. In this case, the `Hero` component is rendered, which represents the landing page of the application. For more information about the landing page, refer to the Landing Page Documentation.
+- If `isAuthenticated` is `false`, it means the user is not `authenticated`. In this case, the `LandingPage` component is rendered, which represents the landing page of the application. For more information about the landing page, refer to the Landing Page Documentation.
 
 ```ts
 if (!isAuthenticated) {
-  return <Hero />;
+  return <LandingPage />;
 }
 ```
 

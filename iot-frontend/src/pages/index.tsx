@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import { DataTable } from '@/components/iotTable/data-table';
 import { initializeColumns, columns } from '@/components/iotTable/columns';
 import Footer from '@/components/Footer';
-import Hero from './landing-page';
+import LandingPage from './landing-page';
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils';
 import { DynamicMetricData } from '@/types';
 import { useAtom } from 'jotai';
@@ -103,7 +103,7 @@ export default function Home({
   }
 
   if (!isAuthenticated) {
-    return <Hero />;
+    return <LandingPage />;
   }
 
   return (

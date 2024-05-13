@@ -3,7 +3,7 @@ import Image from "next/image";
 import AdroitImage from "@/public/assets/img/adroit_frontendblur.png";
 import AutLoge from "@/public/assets/img/AUT_Logo_New.jpg";
 
-export default function Hero() {
+export default function LandingPage() {
   return (
     <section className="relative">
       {/* The Grid */}
