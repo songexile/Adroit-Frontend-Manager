@@ -36,7 +36,8 @@ function DeviceID(data: any) {
   // Breadcrumb items
   const breadcrumbs = [
     { name: 'Home', path: '/' },
-    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` }, // Adjusted path to include device_id
+    { name: `Client ${deviceData?.client_id}`, path: `/client-page/${deviceData?.client_id}` },
+    { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` },
   ];
 
   if (isLoading) {
@@ -150,15 +151,22 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
   }
 
   return (
-    // Device Info and create Ticket button.
-    <div>
+    <>
+      {/* Device Info and create Ticket button. */}
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
-        <Link href={`/create-ticket/${deviceData?.device_id}`}>
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
-            Create Ticket
-          </button>
-        </Link>
+        <div className="flex gap-4">
+          <Link href={`/create-ticket/${deviceData?.device_id}`}>
+            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
+              Create Ticket
+            </button>
+          </Link>
+          <Link href={`/client-page/${deviceData?.client_id}`}>
+            <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 shadow-md">
+              Client Page
+            </button>
+          </Link>
+        </div>
       </div>
 
       {/* Device Info Card */}
@@ -450,7 +458,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
           {deviceData && renderMetrics(deviceData)}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

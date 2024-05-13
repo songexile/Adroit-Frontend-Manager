@@ -67,14 +67,15 @@ export const initializeColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
               <DropdownMenuItem>
-                <Link href={`/device-info/${deviceID}`}>View Device Info</Link>
+                <Link href={`/client-page/${clientID}`}>View Client Detail</Link>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
 
               <DropdownMenuItem>
-                <Link href={`/client-page/${clientID}`}>View Client Detail</Link>
+                <Link href={`/device-info/${deviceID}`}>View Device Info</Link>
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />

@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import { DataTable } from '@/components/iotTable/data-table';
 import { initializeColumns, columns } from '@/components/iotTable/columns';
 import Footer from '@/components/Footer';
-import LandingPage from './landing-page';
+import Hero from './landing-page';
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils';
 import { DynamicMetricData } from '@/types';
 import { useAtom } from 'jotai';
@@ -35,7 +35,7 @@ export default function Home({
     if (data != null) {
       initializeColumns();
       setFilteredData(data);
-      console.log(data);
+      // console.log(data);
       setTotalDevicesOfflineCount(getTotalDevicesOfflineCount(data));
       setClientsOfflineCount(getClientsOfflineCount(data));
     }
@@ -103,7 +103,7 @@ export default function Home({
   }
 
   if (!isAuthenticated) {
-    return <LandingPage />;
+    return <Hero />;
   }
 
   return (

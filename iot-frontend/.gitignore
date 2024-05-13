@@ -45,3 +45,5 @@ yarn-error.log*
 next-env.d.ts
 
 certificates
+full_device_stats.json
+full_device_metrics.txt

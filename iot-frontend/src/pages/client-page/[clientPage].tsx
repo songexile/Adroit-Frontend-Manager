@@ -9,10 +9,13 @@ import { usePathname } from 'next/navigation';
 import {
   flattenNestedData,
   getBatteryStatus,
+  getDeviceType,
   getInsituStatus,
   getScanStatus,
   getStatusCounts,
 } from '@/utils';
+import Breadcrumb from '@/components/Breadcrumb';
+import Link from 'next/link';
 
 function fetchIdAndType() {
   // Fetches ID from URL
@@ -56,6 +59,7 @@ const ClientPage = (data: any) => {
 
     return deviceIds;
   };
+
   const getDeviceIdsByStatus = (status: string) => {
     return clientData
       .filter((device) => {
@@ -119,6 +123,15 @@ const ClientPage = (data: any) => {
   const title = `Client Info | ${clientId} | Adroit Front End Manager`;
   const description = `Client Info Page for Device ID: ${clientId}`;
 
+  // Breadcrumb items
+  const breadcrumbs = [
+    { name: 'Home', path: '/' },
+    {
+      name: `Client ${clientData[0]?.client_id}`,
+      path: `/client-page/${clientData[0]?.client_id}`,
+    },
+  ];
+
   // Get all metrics and their counts
   const metricCounts = clientData.reduce((counts: { [key: string]: number }, device: any) => {
     for (const key in device) {
@@ -153,29 +166,6 @@ const ClientPage = (data: any) => {
     count,
   }));
 
-  // Get Device Types
-  const getDeviceType = (device: any) => {
-    if (device.metric_scanStatus && device.metric_insituStatus) {
-      return 'Spectrolyser';
-    } else if (
-      device.metric_din4150_x_mag &&
-      device.metric_din4150_y_mag &&
-      device.metric_din4150_z_mag
-    ) {
-      return 'Vibration Sensor';
-    } else if (device.metric_pm1 && device.metric_pm25 && device.metric_pm10) {
-      return 'Particulate Matter Sensor';
-    } else if (device.metric_sound_125ms && device.metric_sound_1s) {
-      return 'Noise Sensor';
-    } else if (device.metric_lmax_limit && device.metric_leq_limit) {
-      return 'Sound Level Meter';
-    } else if (device.metric_NO3N_mgl && device.metric_NO3N_ugl) {
-      return 'Nitrate Sensor';
-    } else {
-      return 'Unknown';
-    }
-  };
-
   // Iterate over the devices and determine their types
   const deviceTypeCounts: { [key: string]: number } = {};
 
@@ -205,6 +195,7 @@ const ClientPage = (data: any) => {
           description={description}
         />
         <Header />
+        <Breadcrumb breadcrumbs={breadcrumbs} />
         <div className="bg-gray-50">
           <div className="container mx-auto p-4">
             <h1 className="mb-4 text-4xl font-bold">Client Details</h1>
@@ -277,7 +268,18 @@ const ClientPage = (data: any) => {
                         className="hidden"
                       >
                         <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
-                          Devices with {metricName}: {getDeviceIdsByMetric(metricName).join(', ')}
+                          Devices with {metricName}:{' '}
+                          {getDeviceIdsByMetric(metricName).map((deviceId, index) => (
+                            <span key={deviceId}>
+                              <Link
+                                href={`/device-info/${deviceId}`}
+                                className="text-blue-500 hover:text-blue-700"
+                              >
+                                {deviceId}
+                              </Link>
+                              {index !== getDeviceIdsByMetric(metricName).length - 1 && ', '}
+                            </span>
+                          ))}
                         </p>
                       </div>
                     </div>
@@ -327,7 +329,18 @@ const ClientPage = (data: any) => {
                           className="hidden"
                         >
                           <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
-                            Devices at {siteName}: {deviceIds.join(', ')}
+                            Devices at {siteName}:{' '}
+                            {deviceIds.map((deviceId, index) => (
+                              <span key={deviceId}>
+                                <Link
+                                  href={`/device-info/${deviceId}`}
+                                  className="text-blue-500 hover:text-blue-700"
+                                >
+                                  {deviceId}
+                                </Link>
+                                {index !== deviceIds.length - 1 && ', '}
+                              </span>
+                            ))}
                           </p>
                         </div>
                       </div>
@@ -383,7 +396,17 @@ const ClientPage = (data: any) => {
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                   Device IDs for Scan Online:{' '}
-                                  {getDeviceIdsByStatus('scanOnline').join(', ')}
+                                  {getDeviceIdsByStatus('scanOnline').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link href={`/device-info/${deviceId}`}>
+                                        <span className="text-blue-500 hover:text-blue-700 cursor-pointer">
+                                          {deviceId}
+                                        </span>
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('scanOnline').length - 1 &&
+                                        ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
@@ -423,7 +446,17 @@ const ClientPage = (data: any) => {
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                   Device IDs for Scan Error:{' '}
-                                  {getDeviceIdsByStatus('scanError').join(', ')}
+                                  {getDeviceIdsByStatus('scanError').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link href={`/device-info/${deviceId}`}>
+                                        <span className="text-blue-500 hover:text-blue-700 cursor-pointer">
+                                          {deviceId}
+                                        </span>
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('scanError').length - 1 &&
+                                        ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
@@ -462,7 +495,17 @@ const ClientPage = (data: any) => {
                                 className="hidden"
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
-                                  Device IDs for Scan N/A: {getDeviceIdsByStatus('N/A').join(', ')}
+                                  Device IDs for Scan N/A:{' '}
+                                  {getDeviceIdsByStatus('N/A').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link href={`/device-info/${deviceId}`}>
+                                        <span className="text-blue-500 hover:text-blue-700 cursor-pointer">
+                                          {deviceId}
+                                        </span>
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('N/A').length - 1 && ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
@@ -475,11 +518,12 @@ const ClientPage = (data: any) => {
                   {/* Battery Status */}
                   <div className="rounded-lg bg-white shadow-md p-6">
                     <h3 className="mb-4 text-2xl font-bold text-gray-800">Status</h3>
+                    {/* Battery Status */}
                     <div>
                       <h4 className="text-lg font-semibold mb-2">Battery:</h4>
                       {statusCounts && (
                         <>
-                          {getDeviceIdsByStatus('batteryOnline').length > 0 && (
+                          {statusCounts.batteryOnline > 0 && (
                             <div className="mb-4">
                               <button
                                 type="button"
@@ -493,7 +537,7 @@ const ClientPage = (data: any) => {
                                 }}
                               >
                                 <span className="text-lg font-semibold">
-                                  ONLINE ({getDeviceIdsByStatus('batteryOnline').length})
+                                  ONLINE ({statusCounts.batteryOnline})
                                 </span>
                                 <svg
                                   className="w-5 h-5 transform transition-transform"
@@ -515,12 +559,22 @@ const ClientPage = (data: any) => {
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                   Device IDs for Battery Online:{' '}
-                                  {getDeviceIdsByStatus('batteryOnline').join(', ')}
+                                  {getDeviceIdsByStatus('batteryOnline').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link href={`/device-info/${deviceId}`}>
+                                        <span className="text-blue-500 hover:text-blue-700 cursor-pointer">
+                                          {deviceId}
+                                        </span>
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('batteryOnline').length - 1 &&
+                                        ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
                           )}
-                          {getDeviceIdsByStatus('batteryOffline').length > 0 && (
+                          {statusCounts.batteryOffline > 0 && (
                             <div className="mb-4">
                               <button
                                 type="button"
@@ -535,7 +589,7 @@ const ClientPage = (data: any) => {
                                 }}
                               >
                                 <span className="text-lg font-semibold">
-                                  OFFLINE ({getDeviceIdsByStatus('batteryOffline').length})
+                                  OFFLINE ({statusCounts.batteryOffline})
                                 </span>
                                 <svg
                                   className="w-5 h-5 transform transition-transform"
@@ -557,100 +611,70 @@ const ClientPage = (data: any) => {
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                   Device IDs for Battery Offline:{' '}
-                                  {getDeviceIdsByStatus('batteryOffline').join(', ')}
+                                  {getDeviceIdsByStatus('batteryOffline').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link href={`/device-info/${deviceId}`}>
+                                        <span className="text-blue-500 hover:text-blue-700 cursor-pointer">
+                                          {deviceId}
+                                        </span>
+                                      </Link>
+                                      {index !==
+                                        getDeviceIdsByStatus('batteryOffline').length - 1 && ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
                           )}
-                          {Object.entries(statusCounts)
-                            .filter(
-                              ([status]) =>
-                                status.startsWith('metric_batt status') &&
-                                status !== 'batteryOnline' &&
-                                status !== 'batteryOffline'
-                            )
-                            .map(([status, count]) => (
+                          {getDeviceIdsByStatus('N/A').length > 0 && (
+                            <div className="mb-4">
+                              <button
+                                type="button"
+                                className="w-full px-6 py-3 flex justify-between items-center bg-gray-100 rounded-lg border border-gray-300 focus:ring-4 focus:ring-gray-200 text-gray-800 hover:bg-gray-200 transition duration-300"
+                                onClick={() => {
+                                  const collapse = document.getElementById('battery-na-collapse');
+                                  if (collapse) {
+                                    collapse.classList.toggle('hidden');
+                                  }
+                                }}
+                              >
+                                <span className="text-lg font-semibold">
+                                  N/A ({getDeviceIdsByStatus('N/A').length})
+                                </span>
+                                <svg
+                                  className="w-5 h-5 transform transition-transform"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </button>
                               <div
-                                key={status}
-                                className="mb-4"
+                                id="battery-na-collapse"
+                                className="hidden"
                               >
-                                <button
-                                  type="button"
-                                  className="w-full px-6 py-3 flex justify-between items-center bg-yellow-100 rounded-lg border border-yellow-300 focus:ring-4 focus:ring-yellow-200 text-yellow-800 hover:bg-yellow-200 transition duration-300"
-                                  onClick={() => {
-                                    const collapse = document.getElementById(
-                                      `battery-${status.toLowerCase()}-collapse`
-                                    );
-                                    if (collapse) {
-                                      collapse.classList.toggle('hidden');
-                                    }
-                                  }}
-                                >
-                                  <span className="text-lg font-semibold">
-                                    {status.replace('battery', '')} ({count})
-                                  </span>
-                                  <svg
-                                    className="w-5 h-5 transform transition-transform"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M19 9l-7 7-7-7"
-                                    />
-                                  </svg>
-                                </button>
-                                <div
-                                  id={`battery-${status.toLowerCase()}-collapse`}
-                                  className="hidden"
-                                >
-                                  <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
-                                    Device IDs for {status.replace('battery', '')}:{' '}
-                                    {getDeviceIdsByStatus(status).join(', ')}
-                                  </p>
-                                </div>
+                                <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
+                                  Device IDs for Battery N/A:{' '}
+                                  {getDeviceIdsByStatus('N/A').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link href={`/device-info/${deviceId}`}>
+                                        <span className="text-blue-500 hover:text-blue-700 cursor-pointer">
+                                          {deviceId}
+                                        </span>
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('N/A').length - 1 && ', '}
+                                    </span>
+                                  ))}
+                                </p>
                               </div>
-                            ))}
-                          <div className="mb-4">
-                            <button
-                              type="button"
-                              className="w-full px-6 py-3 flex justify-between items-center bg-gray-100 rounded-lg border border-gray-300 focus:ring-4 focus:ring-gray-200 text-gray-800 hover:bg-gray-200 transition duration-300"
-                              onClick={() => {
-                                const collapse = document.getElementById('battery-na-collapse');
-                                if (collapse) {
-                                  collapse.classList.toggle('hidden');
-                                }
-                              }}
-                            >
-                              <span className="text-lg font-semibold">
-                                N/A ({getDeviceIdsByStatus('N/A').length})
-                              </span>
-                              <svg
-                                className="w-5 h-5 transform transition-transform"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M19 9l-7 7-7-7"
-                                />
-                              </svg>
-                            </button>
-                            <div
-                              id="battery-na-collapse"
-                              className="hidden"
-                            >
-                              <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
-                                Device IDs for N/A: {getDeviceIdsByStatus('N/A').join(', ')}
-                              </p>
                             </div>
-                          </div>
+                          )}
                         </>
                       )}
                     </div>
@@ -699,7 +723,18 @@ const ClientPage = (data: any) => {
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                   Device IDs for Insitu Normal:{' '}
-                                  {getDeviceIdsByStatus('insituNormal').join(', ')}
+                                  {getDeviceIdsByStatus('insituNormal').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link
+                                        href={`/device-info/${deviceId}`}
+                                        className="text-blue-500 hover:text-blue-700"
+                                      >
+                                        {deviceId}
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('insituNormal').length - 1 &&
+                                        ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
@@ -739,7 +774,18 @@ const ClientPage = (data: any) => {
                               >
                                 <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                   Device IDs for Insitu Error:{' '}
-                                  {getDeviceIdsByStatus('insituError').join(', ')}
+                                  {getDeviceIdsByStatus('insituError').map((deviceId, index) => (
+                                    <span key={deviceId}>
+                                      <Link
+                                        href={`/device-info/${deviceId}`}
+                                        className="text-blue-500 hover:text-blue-700"
+                                      >
+                                        {deviceId}
+                                      </Link>
+                                      {index !== getDeviceIdsByStatus('insituError').length - 1 &&
+                                        ', '}
+                                    </span>
+                                  ))}
                                 </p>
                               </div>
                             </div>
@@ -795,7 +841,17 @@ const ClientPage = (data: any) => {
                                 >
                                   <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
                                     Device IDs for {status}:{' '}
-                                    {getDeviceIdsByStatus(status).join(', ')}
+                                    {getDeviceIdsByStatus(status).map((deviceId, index) => (
+                                      <span key={deviceId}>
+                                        <Link
+                                          href={`/device-info/${deviceId}`}
+                                          className="text-blue-500 hover:text-blue-700"
+                                        >
+                                          {deviceId}
+                                        </Link>
+                                        {index !== getDeviceIdsByStatus(status).length - 1 && ', '}
+                                      </span>
+                                    ))}
                                   </p>
                                 </div>
                               </div>
@@ -833,7 +889,18 @@ const ClientPage = (data: any) => {
                               className="hidden"
                             >
                               <p className="px-6 py-3 border-t border-gray-300 text-gray-600">
-                                Device IDs for N/A: {getDeviceIdsByStatus('N/A').join(', ')}
+                                Device IDs for Insitu Error:{' '}
+                                {getDeviceIdsByStatus('N/A').map((deviceId, index) => (
+                                  <span key={deviceId}>
+                                    <Link
+                                      href={`/device-info/${deviceId}`}
+                                      className="text-blue-500 hover:text-blue-700"
+                                    >
+                                      {deviceId}
+                                    </Link>
+                                    {index !== getDeviceIdsByStatus('N/A').length - 1 && ', '}
+                                  </span>
+                                ))}
                               </p>
                             </div>
                           </div>

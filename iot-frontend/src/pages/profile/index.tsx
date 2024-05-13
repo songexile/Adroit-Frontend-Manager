@@ -33,7 +33,7 @@ const Profile = () => {
   const handleUpdateAttribute = async (attributeName: string, attributeValue: string) => {
     if (isAuthenticated && session) {
       try {
-        console.log('handleUpdateAttribute - session:', session);
+        // console.log('handleUpdateAttribute - session:', session);
 
         const client = new CognitoIdentityProviderClient({
           region: process.env.NEXT_PUBLIC_AWS_REGION,
@@ -72,7 +72,7 @@ const Profile = () => {
             break;
         }
       } catch (error: any) {
-        console.log('handleUpdateAttribute - error:', error);
+        // console.log('handleUpdateAttribute - error:', error);
         showToast({ message: 'Error updating user attribute: ' + error.message, type: 'error' });
       }
     }

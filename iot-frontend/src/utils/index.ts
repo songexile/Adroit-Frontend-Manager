@@ -300,6 +300,8 @@ export const getBatteryStatus = (deviceData: DynamicMetricData | null): string =
       return 'ONLINE';
     } else if (batteryStatus === 'Off') {
       return 'OFFLINE';
+    } else {
+      return batteryStatus;
     }
   }
 
@@ -400,3 +402,91 @@ export const getStatusCounts = (clientData: DynamicMetricData[]): {
 
   return statusCounts;
 };
+
+/**
+ * Determines the type of IoT device based on the available metrics.
+ *
+ * @param {Object} device - The device object containing metric data.
+ * @returns {string} The type of the device.
+ *
+ * See extractUniqueMetrics function
+ *
+ * Device types:
+ * - Spectrolyser: Determined by the presence of 'metric_scanStatus' and 'metric_insituStatus'.
+ * - Vibration Sensor: Determined by the presence of 'metric_din4150_x_mag', 'metric_din4150_y_mag', and 'metric_din4150_z_mag'.
+ * - Particulate Matter Sensor: Determined by the presence of 'metric_pm1', 'metric_pm25', and 'metric_pm10'.
+ * - Noise Sensor: Determined by the presence of 'metric_sound_125ms' and 'metric_sound_1s'.
+ * - Sound Level Meter: Determined by the presence of 'metric_lmax_limit' and 'metric_leq_limit'.
+ * - Nitrate Sensor: Determined by the presence of 'metric_NO3N_mgl' and 'metric_NO3N_ugl'.
+ * - Vibration Percentage Sensor: Determined by the presence of 'metric_xVIB', 'metric_yVIB', 'metric_zVIB', 'metric_xVIB5', 'metric_yVIB5', and 'metric_zVIB5'.
+ * - Weather Station: Determined by the presence of 'metric_windSpeed', 'metric_windDir', 'metric_avgWindSpeed', and 'metric_avgWindDir'.
+ * - Annual Particulate Matter Sensor: Determined by the presence of 'metric_pm1_annual', 'metric_pm25_annual', and 'metric_pm10_annual'.
+ * - Nutrient Analyzer: Determined by the presence of 'metric_NO3', 'metric_NH3', and 'metric_H4N'.
+ * - Soil Moisture and Temperature Sensor: Determined by the presence of 'metric_soil_moisture_ext_1', 'metric_soil_moisture_ext_2', and 'metric_soil_temperature'.
+ * - Water Quality Sensor: Determined by the presence of 'metric_ecoli', 'metric_tryptophan', and 'metric_cdom'.
+ * - Water Level Sensor: Determined by the presence of 'metric_calc_depth_bc' and 'metric_calc_depth_bgl'.
+ * - Unknown: If none of the above conditions are met.
+ */
+export const getDeviceType = (device: any) => {
+  if (device.metric_scanStatus && device.metric_insituStatus) {
+    return 'Spectrolyser';
+  } else if (device.metric_din4150_x_mag && device.metric_din4150_y_mag && device.metric_din4150_z_mag) {
+    return 'Vibration Sensor';
+  } else if (device.metric_pm1 && device.metric_pm25 && device.metric_pm10) {
+    return 'Particulate Matter Sensor';
+  } else if (device.metric_sound_125ms && device.metric_sound_1s) {
+    return 'Noise Sensor';
+  } else if (device.metric_lmax_limit && device.metric_leq_limit) {
+    return 'Sound Level Meter';
+  } else if (device.metric_NO3N_mgl && device.metric_NO3N_ugl) {
+    return 'Nitrate Sensor';
+  } else if (
+    device.metric_xVIB &&
+    device.metric_yVIB &&
+    device.metric_zVIB &&
+    device.metric_xVIB5 &&
+    device.metric_yVIB5 &&
+    device.metric_zVIB5
+  ) {
+    return 'Vibration Percentage Sensor';
+  } else if (
+    device.metric_windSpeed &&
+    device.metric_windDir &&
+    device.metric_avgWindSpeed &&
+    device.metric_avgWindDir
+  ) {
+    return 'Weather Station';
+  } else if (device.metric_pm1_annual && device.metric_pm25_annual && device.metric_pm10_annual) {
+    return 'Annual Particulate Matter Sensor';
+  } else if (device.metric_NO3 && device.metric_NH3 && device.metric_H4N) {
+    return 'Nutrient Analyzer';
+  } else if (device.metric_soil_moisture_ext_1 && device.metric_soil_moisture_ext_2 && device.metric_soil_temperature) {
+    return 'Soil Moisture and Temperature Sensor';
+  } else if (device.metric_ecoli && device.metric_tryptophan && device.metric_cdom) {
+    return 'Water Quality Sensor';
+  } else if (device.metric_calc_depth_bc && device.metric_calc_depth_bgl) {
+    return 'Water Level Sensor';
+  } else {
+    return 'Unknown';
+  }
+};
+
+/**
+ * Get all available metrics, no duplicates. from all devices.
+ * @param {data[]} data - The array of fulld device data.
+ * @returns {Array} An object containing all available metrics, no duplicates.
+ */
+export const extractUniqueMetrics = (data: any) => {
+  const metricSet = new Set();
+
+  // @ts-ignore
+  data.forEach(item => {
+    Object.keys(item).forEach(key => {
+      if (key.startsWith('metric_')) {
+        metricSet.add(key);
+      }
+    });
+  });
+
+  return Array.from(metricSet);
+}
