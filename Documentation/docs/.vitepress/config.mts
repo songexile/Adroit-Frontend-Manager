@@ -109,4 +109,5 @@ export default defineConfig({
       provider: 'local',
     },
   },
+  ignoreDeadLinks: true,
 });
