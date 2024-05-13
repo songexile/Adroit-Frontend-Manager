@@ -2,8 +2,23 @@ import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'Frontend Documentation',
-  description: 'Adroit Frontend Manager Dashboard Documentation Website',
+  title: "Frontend Documentation",
+  description: "Adroit Frontend Manager Dashboard Documentation Website",
+
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    ['meta', { name: 'theme-color', content: '#5f67ee' }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:locale', content: 'en' }],
+    ['meta', { property: 'og:title', content: 'Adroit Frontend Manager Dashboard Documentation Website' }],
+    ['meta', { property: 'og:site_name', content: 'Frontend Documentation' }],
+    // ['meta', { property: 'og:image', content: 'https://vitepress.dev/vitepress-og.jpg' }],
+    // ['meta', { property: 'og:url', content: 'https://vitepress.dev/' }],
+    // ['script', { src: 'https://cdn.usefathom.com/script.js', 'data-site': 'AZBRSFGG', 'data-spa': 'auto', defer: '' }]
+  ],
+
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -27,7 +42,6 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Routes', link: '/configurations/routes' },
-          { text: 'Site Config', link: '/configurations/site-config' },
           { text: 'Environment', link: '/configurations/environment' },
           { text: 'Scripts', link: '/configurations/scripts' },
         ],
@@ -38,7 +52,6 @@ export default defineConfig({
         items: [
           { text: 'Project Structure', link: '/development/project-structure' },
           { text: 'Create New Page', link: '/development/create-new-page' },
-          { text: 'Environment', link: '/development/environment' },
           { text: 'Build And Deploy', link: '/development/build-deploy' },
           { text: 'Resource Credits', link: '/development/resource-credits' },
         ],
@@ -59,15 +72,22 @@ export default defineConfig({
           { text: 'Navbar', link: '/components/navbar' },
           { text: 'Tables', link: '/components/tables' },
           { text: 'Gauge Chart', link: '/components/gauge-chart' },
+
         ],
       },
       {
         text: 'Pages',
         collapsed: false,
         items: [
-          { text: 'Main Page', link: '/pagesDoc/main-page' },
-          { text: 'Stats Page', link: '/pagesDoc/stats-page' },
-          { text: 'Ticket Page', link: '/pagesDoc/ticket-page' },
+          { text: 'Home Page', link: '/pages/home-page' },
+          { text: 'Client Page', link: '/pages/client-page' },
+          { text: 'Create Ticket', link: '/pages/create-ticket' },
+          { text: 'Device Info', link: '/pages/device-info' },
+          { text: 'Landing Page', link: '/pages/landing-page' },
+          { text: 'Login', link: '/pages/login' },
+          { text: 'Profile', link: '/pages/profile' },
+          { text: '404', link: '/pages/404' },
+
         ],
       },
     ],
