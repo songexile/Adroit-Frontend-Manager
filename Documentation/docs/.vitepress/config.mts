@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -35,7 +35,6 @@ export default defineConfig({
         items: [
           { text: 'Introduction', link: '/getting-started/introduction' },
           { text: 'Installation', link: '/getting-started/installation' },
-
         ],
       },
       {
@@ -45,7 +44,6 @@ export default defineConfig({
           { text: 'Routes', link: '/configurations/routes' },
           { text: 'Environment', link: '/configurations/environment' },
           { text: 'Scripts', link: '/configurations/scripts' },
-
         ],
       },
       {
@@ -56,7 +54,6 @@ export default defineConfig({
           { text: 'Create New Page', link: '/development/create-new-page' },
           { text: 'Build And Deploy', link: '/development/build-deploy' },
           { text: 'Resource Credits', link: '/development/resource-credits' },
-
         ],
       },
       {
@@ -96,16 +93,19 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/songexile/Adroit-Frontend-Manager' }
+      {
+        icon: 'github',
+        link: 'https://github.com/songexile/Adroit-Frontend-Manager',
+      },
     ],
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024 - Adriot Iot FrontEnd Manager Team'
+      copyright: 'Copyright © 2024 - Adriot Iot FrontEnd Manager Team',
     },
 
     search: {
-      provider: 'local'
-    }
-  }
-})
+      provider: 'local',
+    },
+  },
+});
