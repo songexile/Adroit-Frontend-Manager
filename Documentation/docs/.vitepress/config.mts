@@ -60,6 +60,7 @@ export default defineConfig({
         text: 'Integrations',
         collapsed: false,
         items: [
+          { text: 'AWS', link: '/integrations/aws' },
           { text: 'Next Auth', link: '/integrations/next-auth' },
           { text: 'React Email (Resend)', link: '/integrations/resend' },
           { text: 'Toastify', link: '/integrations/toastify' },
