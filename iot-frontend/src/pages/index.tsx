@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import { DataTable } from '@/components/iotTable/data-table';
 import { initializeColumns, columns } from '@/components/iotTable/columns';
 import Footer from '@/components/Footer';
-import Hero from './landing-page';
+import LandingPage from './landing-page';
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils';
 import { DynamicMetricData } from '@/types';
 import { useAtom } from 'jotai';
@@ -18,7 +18,7 @@ export default function Home({
   data?: DynamicMetricData[];
   fetchDataAndUpdate: () => Promise<void>;
 }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
   const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([]);
   const [searchByClientName, setSearchByClientName] = useState('');
   const [searchByDeviceKey, setSearchByDeviceKey] = useState('');
@@ -94,34 +94,34 @@ export default function Home({
     return filteredData;
   };
 
-  if (isLoading) {
+  if (isUnauthenticated) {
+    return <LandingPage />;
+  }
+
+  if (isAuthenticated) {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
+
     return (
-      <>
-        <LoadingIndicator />
-      </>
+      <div className="w-full flex flex-col">
+        <Header
+          fetchDataAndUpdate={fetchDataAndUpdate}
+          searchByClientName={searchByClientName}
+          setSearchByClientName={setSearchByClientName}
+          searchByDeviceKey={searchByDeviceKey}
+          setSearchByDeviceKey={setSearchByDeviceKey}
+          totalDevicesOfflineCount={totalDevicesOfflineCount}
+          clientsOfflineCount={clientsOfflineCount}
+        />
+        <DataTable
+          columns={columns}
+          data={filteredData || []}
+        />
+        <Footer />
+      </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <Hero />;
-  }
-
-  return (
-    <div className="w-full flex flex-col">
-      <Header
-        fetchDataAndUpdate={fetchDataAndUpdate}
-        searchByClientName={searchByClientName}
-        setSearchByClientName={setSearchByClientName}
-        searchByDeviceKey={searchByDeviceKey}
-        setSearchByDeviceKey={setSearchByDeviceKey}
-        totalDevicesOfflineCount={totalDevicesOfflineCount}
-        clientsOfflineCount={clientsOfflineCount}
-      />
-      <DataTable
-        columns={columns}
-        data={filteredData || []}
-      />
-      <Footer />
-    </div>
-  );
+  return null;
 }
