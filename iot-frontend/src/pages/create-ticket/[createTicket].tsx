@@ -10,6 +10,8 @@ import { useAuth } from '@/hooks/useAuth';
 import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import SEO from '@/components/SEO';
 import Modal from '@/components/Modal';
+import Joyride, { Step } from 'react-joyride';
+import { useTour } from '@/hooks/useTour';
 
 function fetchDeviceId() {
   // Fetches deviceId from URL
@@ -41,8 +43,6 @@ const CreateTicket = (data: any) => {
   const deviceId = fetchDeviceId();
   const filteredData = flattenNestedData(data, deviceId);
   const deviceData = filteredData[0];
-
-  if (!deviceData) return null;
 
   const prefix = 'metric_';
 
@@ -125,6 +125,39 @@ const CreateTicket = (data: any) => {
     }
   };
 
+  const { run } = useTour('ticket-page');
+
+  const steps: Step[] = [
+    {
+      target: '.create-ticket-header',
+      content: 'This is the header section for creating a new ticket.',
+    },
+    {
+      target: '.device-info-section',
+      content: 'This section displays information about the device you are creating a ticket for.',
+    },
+    {
+      target: '.fault-identification-section',
+      content: 'This section shows any fault identification information related to the device.',
+    },
+    {
+      target: '.status-section',
+      content:
+        'This section displays the current status of the device, including scan, battery, and insitu status.',
+    },
+    {
+      target: '.ticket-details-form',
+      content:
+        'This is the form where you can enter the details of your ticket, such as recipient emails, subject, and message.',
+    },
+    {
+      target: '.submit-button',
+      content: 'Click this button to submit your ticket after filling out the form.',
+    },
+  ];
+
+  if (!deviceData) return null;
+
   if (isLoading) {
     return (
       <>
@@ -144,21 +177,35 @@ const CreateTicket = (data: any) => {
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <div className="min-h-screen bg-gray-100 flex items-center justify-center">
           <div className="border text-card-foreground w-full max-w-6xl p-8 bg-white shadow-xl rounded-lg divide-y divide-gray-200">
-            <div className="pb-8">
-              <h1 className="text-2xl font-bold text-gray-800">Create Ticket</h1>
-              <p className="text-sm text-gray-500">
-                Ticket will be sent to{' '}
-                <span
-
-                  className="text-blue-500  hover:text-blue-600"
-                >
-                  support@adroit.co.nz
-                </span>
-              </p>
+            <Joyride
+              run={run}
+              steps={steps}
+              continuous={true}
+              scrollToFirstStep={true}
+              showSkipButton={true}
+              styles={{
+                options: {
+                  arrowColor: '#fff',
+                  backgroundColor: '#fff',
+                  primaryColor: '#000',
+                  textColor: '#004a14',
+                  width: 500,
+                  zIndex: 1000,
+                },
+              }}
+            />
+            <div className="create-ticket-header">
+              <div className="pb-8">
+                <h1 className="text-2xl font-bold text-gray-800">Create Ticket</h1>
+                <p className="text-sm text-gray-500">
+                  Ticket will be sent to{' '}
+                  <span className="text-blue-500  hover:text-blue-600">support@adroit.co.nz</span>
+                </p>
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
               {/* Device Info */}
-              <div>
+              <div className="device-info-section">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Device Information</h2>
                 <p className="text-sm text-gray-600">
                   <strong>Device ID:</strong> {deviceData?.device_id}
@@ -176,7 +223,7 @@ const CreateTicket = (data: any) => {
                 </p>
               </div>
               {/* Fault Identification */}
-              <div>
+              <div className="fault-identification-section">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Fault Identification</h2>
                 <p className="text-sm text-gray-600">
                   {Object.entries(deviceData).map(([key, value], index) => {
@@ -212,7 +259,7 @@ const CreateTicket = (data: any) => {
                 </p>
               </div>
               {/* Status Card */}
-              <div className="md:col-span-2">
+              <div className="status-section md:col-span-2">
                 <h3 className="text-xl font-bold text-gray-800 mt-4 mb-4">Status</h3>
                 <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
                   <div className="p-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -371,7 +418,7 @@ const CreateTicket = (data: any) => {
               {/* Create Ticket */}
               <form
                 onSubmit={handleCreateTicket}
-                className="md:col-span-2"
+                className="ticket-details-form md:col-span-2"
               >
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Ticket Details</h2>
 

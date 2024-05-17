@@ -11,6 +11,8 @@ import LoadingIndicator from '@/components/ui/LoadingIndicator';
 import { DynamicMetricData } from '@/types';
 import SpeedometerChart from '@/components/speedoMeterChart/SpeedoMeterChart';
 import SEO from '@/components/SEO';
+import Joyride from 'react-joyride';
+import { useTour } from '@/hooks/useTour';
 
 function fetchDeviceId() {
   // Fetches deviceId from Url
@@ -40,6 +42,40 @@ function DeviceID(data: any) {
     { name: `Device ${deviceData?.device_id}`, path: `/device-info/${deviceData?.device_id}` },
   ];
 
+  const { run } = useTour('device-page');
+
+  const steps = [
+    {
+      target: '.device-info-header',
+      content:
+        'This is the device information header. You can create ticket and go to client page.',
+    },
+    {
+      target: '.create-ticket-button',
+      content: 'Click this button to create a new ticket for the device.',
+    },
+    {
+      target: '.client-page-button',
+      content: 'This button takes you to the client page for the device.',
+    },
+    {
+      target: '.device-info-card',
+      content: 'This card displays detailed information about the device.',
+    },
+    {
+      target: '.status-card',
+      content: 'This card shows the current status of the device.',
+    },
+    {
+      target: '.metrics-section',
+      content: 'This section displays various metric charts for the device.',
+    },
+    {
+      target: '.fault-identification-section',
+      content: 'This section shows any fault identification information.',
+    },
+  ];
+
   if (isLoading) {
     return (
       <>
@@ -57,7 +93,24 @@ function DeviceID(data: any) {
         />
         <Header />
         <Breadcrumb breadcrumbs={breadcrumbs} />
-        <div className="flex mx-8 md:mx-32 min-h-screen py-6 flex-col ">
+        <div className="flex mx-8 md:mx-32 min-h-screen py-6 flex-col">
+          <Joyride
+            run={run}
+            steps={steps}
+            continuous={true}
+            scrollToFirstStep={true}
+            showSkipButton={true}
+            styles={{
+              options: {
+                arrowColor: '#fff',
+                backgroundColor: '#fff',
+                primaryColor: '#000',
+                textColor: '#004a14',
+                width: 500,
+                zIndex: 1000,
+              },
+            }}
+          />
           {deviceData && debugMetrics(deviceData)}
         </div>
         <Footer />
@@ -108,8 +161,11 @@ const renderMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null
   );
 };
 
-//**This function will look for specific keys in the deviceData object and display them in red but only for important debugging metrics . */
-
+/**
+ * This function will look for specific keys in the deviceData object and display them in red for important debugging metrics.
+ * @param {DynamicMetricData | null} deviceData - The object containing metric data or null if no data is available.
+ * @returns {JSX.Element | null} JSX representing the rendered debugging metric data, or null if deviceData is null.
+ */
 const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null => {
   if (!deviceData) return null;
 
@@ -152,25 +208,27 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
 
   return (
     <>
-      {/* Device Info and create Ticket button. */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
-        <div className="flex gap-4">
-          <Link href={`/create-ticket/${deviceData?.device_id}`}>
-            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
-              Create Ticket
-            </button>
-          </Link>
-          <Link href={`/client-page/${deviceData?.client_id}`}>
-            <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 shadow-md">
-              Client Page
-            </button>
-          </Link>
+      <div className="device-info-header">
+        {/* Device Info and create Ticket button. */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-800">Device Info</h2>
+          <div className="flex gap-4">
+            <Link href={`/create-ticket/${deviceData?.device_id}`}>
+              <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md">
+                Create Ticket
+              </button>
+            </Link>
+            <Link href={`/client-page/${deviceData?.client_id}`}>
+              <button className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 shadow-md">
+                Client Page
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Device Info Card */}
-      <div className="bg-white p-6 rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
+      <div className="device-info-card bg-white p-6 rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <div className="mb-4">
             <div className="text-sm font-medium text-gray-500">Device ID</div>
@@ -207,7 +265,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
 
       {/* Status Card */}
       <h3 className="text-xl font-bold text-gray-800 mt-4 mb-4">Status</h3>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
+      <div className="status-card rounded-lg border bg-card text-card-foreground shadow-sm mb-4">
         <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex flex-col items-center gap-2">
             <div className="bg-gray-100 rounded-full p-3 dark:bg-gray-800">
@@ -357,7 +415,7 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
       </div>
 
       {/* Chart components */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="metrics-section grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {Object.entries(deviceData).map(([key, value], index) => {
           const metricIndex = fullMetricName.indexOf(key);
           if (metricIndex !== -1) {
@@ -404,7 +462,8 @@ const debugMetrics = (deviceData: DynamicMetricData | null): JSX.Element | null 
         })}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-8 bg-gradient-to-t from-slate-100 to-blue-100 mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500 border-t-8">
+      {/* Fault Identification components */}
+      <div className="fault-identification-section flex flex-col sm:flex-row gap-8 bg-gradient-to-t from-slate-100 to-blue-100 mx-auto bg-white rounded-lg shadow-lg p-8 mt-8 border-2 border-blue-500 border-t-8">
         <div className="w-full sm:w-1/2">
           <h2 className="text-2xl font-bold mb-6 text-gray-800 p-4 bg-gray-200 border-b-4 border-blue-500 rounded-sm">
             Fault Identification:
