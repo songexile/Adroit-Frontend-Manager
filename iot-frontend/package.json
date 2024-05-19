@@ -7,6 +7,7 @@
     "dev:turbo": "next dev --turbo",
     "dev:ssl": "next dev --experimental-https",
     "build": "next build",
+    "build:turbo": "turbo build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watchAll",
