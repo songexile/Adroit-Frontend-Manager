@@ -5,6 +5,7 @@
 	"private": true,
 	"scripts": {
 	  "dev": "cd ./iot-frontend && pnpm i && pnpm dev",
+	  "dev:turbo": "cd ./iot-frontend && pnpm i && pnpm dev:turbo",
 	  "build": "cd ./iot-frontend && pnpm i && pnpm build && pnpm start",
 	  "docs:dev": "cd ./Documentation && pnpm i && pnpm docs:dev",
 	  "test": "cd ./iot-frontend && pnpm test"
