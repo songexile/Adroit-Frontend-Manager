@@ -20,7 +20,7 @@ const Header = ({
   totalDevicesOfflineCount,
   clientsOfflineCount,
 }: // recentlyOfflineCount,
-  HeaderProps) => {
+HeaderProps) => {
   const handleFetchAndUpdate = async () => {
     if (fetchDataAndUpdate) {
       await fetchDataAndUpdate();

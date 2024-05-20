@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Frontend Documentation",
-  description: "Adroit Frontend Manager Dashboard Documentation Website",
+  description: "Adroit Manager Frontend Project Documentation Website",
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.png' }],
@@ -11,7 +11,7 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#5f67ee' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en' }],
-    ['meta', { property: 'og:title', content: 'Adroit Frontend Manager Dashboard Documentation Website' }],
+    ['meta', { property: 'og:title', content: 'Adroit Manager Frontend Project Documentation Website' }],
     ['meta', { property: 'og:site_name', content: 'Frontend Documentation' }],
     // ['meta', { property: 'og:image', content: 'https://vitepress.dev/vitepress-og.jpg' }],
     // ['meta', { property: 'og:url', content: 'https://vitepress.dev/' }],
@@ -71,11 +71,23 @@ export default defineConfig({
         text: 'Components',
         collapsed: false,
         items: [
+          { text: 'Header', link: '/components/header' },
+          { text: 'Footer', link: '/components/footer' },
           { text: 'Navbar', link: '/components/navbar' },
           { text: 'Tables', link: '/components/tables' },
+          { text: 'Breadcrumb', link: '/components/breadcrumb' },
+          { text: 'ToggleSwitch', link: '/components/toggle-switch' },
           { text: 'Gauge Chart', link: '/components/gauge-chart' },
 
         ],
+      },
+      {
+        text: 'Custom Hooks',
+        collapsed: false,
+        items: [
+          { text: 'useAuth', link: '/custom-hooks/useAuth' },
+          { text: 'useDataFetch', link: '/custom-hooks/useDataFetch' },
+        ]
       },
       {
         text: 'Pages',
