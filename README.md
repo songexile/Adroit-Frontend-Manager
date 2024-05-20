@@ -1,8 +1,8 @@
 ## In progress...
 
-# Adroit Frontend Manager
+# Adroit Manager Frontend
 
-This repository contains the code for the Adroit Frontend Manager application, which allows monitoring and management of IoT devices.
+This repository contains the code for the Adroit Manager Frontend application, which allows monitoring and management of IoT devices.
 
 Running on Next.js, this is a awesome project that adds a easy to use monitoring dashboard for the delivery team and other members of Adroit.
 
@@ -27,7 +27,7 @@ The repository is structured as follows:
 
 ## Getting Started
 
-To get started with the Adroit Frontend Manager, follow these steps:
+To get started with the Adroit Manager Frontend, follow these steps:
 
 Live App Here: [iot.miguelemmara.me](https://iot.miguelemmara.me/)
 
@@ -42,7 +42,7 @@ For more detailed instructions and information about the frontend application, p
 
 ## Documentation
 
-The documentation for the Adroit Frontend Manager is built using VitePress and can be found in the `Documentation` directory. To run the documentation locally, follow these steps:
+The documentation for the Adroit Manager Frontend is built using VitePress and can be found in the `Documentation` directory. To run the documentation locally, follow these steps:
 
 Live Docs Here: [iot-docs.miguelemmara.me](https://iot-docs.miguelemmara.me/)
 

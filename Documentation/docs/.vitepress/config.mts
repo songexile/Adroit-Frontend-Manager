@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "Frontend Documentation",
+  title: "Iot Manager Frontend",
   description: "Adroit Manager Frontend Project Documentation Website",
 
   head: [
@@ -71,9 +71,8 @@ export default defineConfig({
         text: 'Components',
         collapsed: false,
         items: [
-          { text: 'Header', link: '/components/header' },
-          { text: 'Footer', link: '/components/footer' },
           { text: 'Navbar', link: '/components/navbar' },
+          { text: 'Footer', link: '/components/footer' },
           { text: 'Tables', link: '/components/tables' },
           { text: 'Breadcrumb', link: '/components/breadcrumb' },
           { text: 'ToggleSwitch', link: '/components/toggle-switch' },
@@ -115,7 +114,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2024 - Adriot Iot FrontEnd Manager Team',
+      copyright: 'Copyright © 2024 - Adriot Iot Manager Frontend Team',
     },
 
     search: {

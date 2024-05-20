@@ -1,6 +1,6 @@
 # Client Page
 
-The client page of the Adroit Frontend Manager is located at `iot-frontend/src/pages/client-page/[clientPage].tsx`. It displays detailed information about a specific client.
+The client page of the Adroit Manager Frontend is located at `iot-frontend/src/pages/client-page/[clientPage].tsx`. It displays detailed information about a specific client.
 
 ## Fetching Client ID
 

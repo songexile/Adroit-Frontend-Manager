@@ -1,6 +1,6 @@
 # Home Page
 
-The homepage of the Adroit Frontend Manager is located at `iot-frontend/src/pages/index.tsx`. It serves as the main entry point for the application.
+The homepage of the Adroit Manager Frontend is located at `iot-frontend/src/pages/index.tsx`. It serves as the main entry point for the application.
 
 ## Authentication Check
 

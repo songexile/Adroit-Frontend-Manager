@@ -1,6 +1,6 @@
 # Login Page
 
-The login page is the entry point for users to authenticate and access the Adroit Frontend Manager application. It provides a simple and visually appealing interface for users to sign in. The login page is located at `iot-frontend/src/pages/login/index.tsx`.
+The login page is the entry point for users to authenticate and access the Adroit Manager Frontend application. It provides a simple and visually appealing interface for users to sign in. The login page is located at `iot-frontend/src/pages/login/index.tsx`.
 
 ## Components
 
@@ -56,4 +56,4 @@ When a user tries to access authenticated pages without being logged in, they wi
 
 ## Conclusion
 
-The login page provides a simple and visually appealing interface for users to authenticate and access the Adroit Frontend Manager application. It uses Tailwind CSS classes for styling and ensures that only authenticated users can access protected routes.
+The login page provides a simple and visually appealing interface for users to authenticate and access the Adroit Manager Frontend application. It uses Tailwind CSS classes for styling and ensures that only authenticated users can access protected routes.

@@ -84,7 +84,7 @@ export default function LandingPage() {
             >
               Adroit{" "}
               <span className="bg-clip-text text-transparent bg-gradient-to-b from-cyan-500 to-blue-500">
-                Frontend Manager
+                Manager Frontend
               </span>
             </h1>
             <div className="flex justify-center">

@@ -1,6 +1,6 @@
 # Create New Page
 
-To create a new page in Adroit Frontend Manager, follow these steps:
+To create a new page in Adroit Manager Frontend, follow these steps:
 
 1. Create a new folder in `src/pages/`, for example, `new-page`.
 2. Inside the new folder, create a TypeScript file named `index.tsx`.

@@ -1,6 +1,6 @@
-# Adroit Frontend Manager - Documentation
+# Adroit Manager Frontend - Documentation
 
-This directory contains the documentation for the Adroit Frontend Manager, built with VitePress.
+This directory contains the documentation for the Adroit Manager Frontend, built with VitePress.
 
 ## Getting Started
 

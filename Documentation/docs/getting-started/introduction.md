@@ -1,6 +1,6 @@
 # Introduction 🎉
 
-Presenting Adroit Frontend Manager dashboard application developed with `React`, `NextJS 14`, `TypeScript`, `shadcn/ui`, and `TailwindCSS`. This dashboard was developed as part of a `AUT Research and Development` project which spanned from `2023-2024`.
+Presenting Adroit Manager Frontend dashboard application developed with `React`, `NextJS 14`, `TypeScript`, `shadcn/ui`, and `TailwindCSS`. This dashboard was developed as part of a `AUT Research and Development` project which spanned from `2023-2024`.
 
 The primary aim of the project was to solve Adroit's business problem in which they had to rely on emails to see which devices were offline.
 
@@ -46,13 +46,13 @@ The profile page is located at `iot-frontend/src/pages/profile/index.tsx`. It al
 
 ### Landing Page
 
-The landing page is located at `iot-frontend/src/pages/landing-page/index.tsx`. It serves as the entry point of the application for non-authenticated users. The page provides an overview of the Adroit Frontend Manager application, highlighting its key features and displaying a sample dashboard image. It also includes a login button that redirects users to the authentication page. [More Info](/pages/landing-page.html)
+The landing page is located at `iot-frontend/src/pages/landing-page/index.tsx`. It serves as the entry point of the application for non-authenticated users. The page provides an overview of the Adroit Manager Frontend application, highlighting its key features and displaying a sample dashboard image. It also includes a login button that redirects users to the authentication page. [More Info](/pages/landing-page.html)
 
 ### 404 Page
 
 The 404 page is located at `iot-frontend/src/pages/404.tsx`. It is displayed when a user tries to access a page that doesn't exist. The page provides a user-friendly message indicating that the requested page could not be found and includes a link to return to the home page. [More Info](/pages/404.html)
 
-## Created by Adroit Frontend Manager AUT R&D Team
+## Created by Adroit Manager Frontend AUT R&D Team
 
 Many thanks to **AUT** & **Adroit** for the opportunity to work on this project.
 

@@ -4,7 +4,7 @@ This documentation outlines the functionality of the `/api/resend` endpoint, par
 
 ## Sending Emails with Resend
 
-Adroit FrontEnd manager integrates with Resend, a powerful email sending service, to enable sending emails from your Next.js application. The `iot-frontend/src/pages/api/sendEmail.ts` file handles the email sending functionality.
+Adroit Manager Frontend integrates with Resend, a powerful email sending service, to enable sending emails from your Next.js application. The `iot-frontend/src/pages/api/sendEmail.ts` file handles the email sending functionality.
 
 ## Configuration
 

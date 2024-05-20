@@ -1,6 +1,6 @@
 # Landing Page
 
-The landing page is the entry point of the Adroit Frontend Manager application. It provides an overview of the application and its features, along with login functionality. The landing page is located at `iot-frontend/src/pages/landing-page/index.tsx`.
+The landing page is the entry point of the Adroit Manager Frontend application. It provides an overview of the application and its features, along with login functionality. The landing page is located at `iot-frontend/src/pages/landing-page/index.tsx`.
 
 ## Hero Section
 
@@ -37,7 +37,7 @@ The hero section is the main content of the landing page. It includes the follow
         >
           Adroit{' '}
           <span className='bg-clip-text text-transparent bg-gradient-to-b from-cyan-500 to-blue-500'>
-            Frontend Manager
+            Manager Frontend
           </span>
         </h1>
         <div className='flex justify-center'>
@@ -82,7 +82,7 @@ The hero section is the main content of the landing page. It includes the follow
 
 ## Dashboard Sample
 
-The landing page includes a sample image of the Adroit Frontend Manager dashboard. It provides a visual representation of what the application looks like.
+The landing page includes a sample image of the Adroit Manager Frontend dashboard. It provides a visual representation of what the application looks like.
 
 ```tsx
 <Image
@@ -94,7 +94,7 @@ The landing page includes a sample image of the Adroit Frontend Manager dashboar
 
 ## Featuring Section
 
-The featuring section highlights the key features of the Adroit Frontend Manager application. It includes a heading and a list of features with brief descriptions.
+The featuring section highlights the key features of the Adroit Manager Frontend application. It includes a heading and a list of features with brief descriptions.
 
 ```tsx
 <section className='flex flex-col items-center mt-16 gap-4'>
@@ -178,4 +178,4 @@ The additional information section provides details about the project's concepti
 
 ## Conclusion
 
-The landing page of the Adroit Frontend Manager application provides an attractive and informative introduction to the application. It showcases the key features, displays a sample dashboard image, and acknowledges the project's conception and contributors.
+The landing page of the Adroit Manager Frontend application provides an attractive and informative introduction to the application. It showcases the key features, displays a sample dashboard image, and acknowledges the project's conception and contributors.

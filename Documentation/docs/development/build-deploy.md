@@ -1,6 +1,6 @@
 # Build and Deploy Documentation
 
-This documentation provides an overview of the build and deploy process for the Adroit Frontend Manager project. `Next JS 14.`
+This documentation provides an overview of the build and deploy process for the Adroit Manager Frontend project. `Next JS 14.`
 
 ## Build Scripts
 
@@ -48,7 +48,7 @@ The project uses the following build scripts defined in the `package.json` files
 
 ## Deployment
 
-The project is deployed on AWS Amplify using two branches: `main` and `staging`. The project is connected to our GitHub repo: [Adroit Frontend Manager](https://github.com/songexile/Adroit-Frontend-Manager)
+The project is deployed on AWS Amplify using two branches: `main` and `staging`. The project is connected to our GitHub repo: [Adroit Manager Frontend](https://github.com/songexile/Adroit-Frontend-Manager)
 
 ### Links
 
@@ -180,4 +180,4 @@ The `preBuild` phase installs dependencies and sets up the environment variables
 
 ## Conclusion
 
-This documentation provides an overview of the build and deploy process for the Adroit Frontend Manager project. It covers the build scripts defined in the `package.json` files, the deployment setup on AWS Amplify with different branches and environment settings, and the Amplify configuration in the `amplify.yml` file.
+This documentation provides an overview of the build and deploy process for the Adroit Manager Frontend project. It covers the build scripts defined in the `package.json` files, the deployment setup on AWS Amplify with different branches and environment settings, and the Amplify configuration in the `amplify.yml` file.

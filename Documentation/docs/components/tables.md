@@ -1,6 +1,6 @@
 # Tables
 
-Adroit Frontend Manager utilises a headless implementation of the Tanstack table component, known as shad-cn, specifically designed for handling tables on the application's dashboard
+Adroit Manager Frontend utilises a headless implementation of the Tanstack table component, known as shad-cn, specifically designed for handling tables on the application's dashboard
 
 All table components are inside of `components/iotTable` and consists of two files `columns.tsx` and `data-table.tsx`
 

@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         description={description}
       />
       <Head>
-        <title>Adroit Frontend Manager</title>
+        <title>Adroit Manager Frontend</title>
         <link rel="icon" href="/assets/img/favicon.png" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>

@@ -1,6 +1,6 @@
 # AWS Resources
 
-The Adroit Frontend Manager application utilizes various AWS services to power its functionality and infrastructure. The following AWS resources are used:
+The Adroit Manager Frontend application utilizes various AWS services to power its functionality and infrastructure. The following AWS resources are used:
 
 ## AWS S3
 
@@ -16,7 +16,7 @@ API Gateway is used to create, publish, and manage APIs for the application. It 
 
 ## IoT Core
 
-AWS IoT Core is a managed cloud service that allows connected devices to easily and securely interact with cloud applications and other devices. In the context of the Adroit Frontend Manager application, IoT Core is used to manage and communicate with the IoT devices. It enables device registration, device shadows (virtual representations), and secure communication between devices and the cloud.
+AWS IoT Core is a managed cloud service that allows connected devices to easily and securely interact with cloud applications and other devices. In the context of the Adroit Manager Frontend application, IoT Core is used to manage and communicate with the IoT devices. It enables device registration, device shadows (virtual representations), and secure communication between devices and the cloud.
 
 ## AWS Cognito
 
@@ -24,4 +24,4 @@ AWS Cognito is used for user authentication and management in the application.Th
 
 ## AWS Amplify
 
-In the Adroit Frontend Manager application, Amplify is used for continuous deployment and hosting of the frontend. It simplifies the process of deploying the application to a production environment and provides features like automatic builds, previews, and custom domains. The frontend code is deployed to Amplify, which serves the application to end-users.
+In the Adroit Manager Frontend application, Amplify is used for continuous deployment and hosting of the frontend. It simplifies the process of deploying the application to a production environment and provides features like automatic builds, previews, and custom domains. The frontend code is deployed to Amplify, which serves the application to end-users.

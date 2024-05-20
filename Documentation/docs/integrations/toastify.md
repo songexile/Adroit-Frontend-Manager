@@ -2,7 +2,7 @@
 
 ## Toast Notifications with React Toastify
 
-Adroit Frontend Manager ueses React Toastify, a popular library for displaying toast notifications in React applications. The showToast function in the project is responsible for showing toast notifications with various options and types.
+Adroit Manager Frontend ueses React Toastify, a popular library for displaying toast notifications in React applications. The showToast function in the project is responsible for showing toast notifications with various options and types.
 
 ## Usage
 

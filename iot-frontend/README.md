@@ -1,6 +1,6 @@
-# Adroit Frontend Manager - Frontend
+# Adroit Manager Frontend - Frontend
 
-This is the frontend application for the Adroit Frontend Manager, built with Next.js.
+This is the frontend application for the Adroit Manager Frontend, built with Next.js.
 
 ## Getting Started
 
@@ -27,6 +27,11 @@ The following environment variables are required to run the frontend application
 - `NEXT_PUBLIC_BASE_URL`: Base URL for the application
 
 Create a `.env.development` (and or `.env.production`) file in the `iot-frontend` directory and add the above environment variables with their corresponding values.
+
+```
+cd iot-frontend/
+cp .env.example .env.development
+```
 
 ## Available Scripts
 

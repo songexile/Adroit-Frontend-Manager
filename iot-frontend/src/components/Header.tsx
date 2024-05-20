@@ -81,8 +81,8 @@ HeaderProps) => {
               priority={true}
             />
             <div className="font-thin text-sm mt-[1.3rem]">
-              <h1 className="">Frontend </h1>
-              <h1>Manager</h1>
+              <h1 className="">Manager </h1>
+              <h1>Frontend</h1>
             </div>
             <Image
               alt="Logo of AUT"
