@@ -1,4 +1,4 @@
-## In progress...
+
 
 # Adroit Manager Frontend
 
