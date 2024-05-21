@@ -1,20 +1,17 @@
-
-
 # Adroit Manager Frontend
 
 This repository contains the code for the Adroit Manager Frontend application, which allows monitoring and management of IoT devices.
 
 Running on Next.js, this is a awesome project that adds a easy to use monitoring dashboard for the delivery team and other members of Adroit.
 
-Created by
+## Created by
 
-Glenn
-<br>
-Munish
-<br>
-Miguel
-<br>
-Otis
+| Team Member   | Student ID | Role              | Links                                                                                                  |
+| ------------- | ---------- | ----------------- | ------------------------------------------------------------------------------------------------------ |
+| Otis Wales    | 19078635   | Team Leader       | [GitHub](https://github.com/songexile) \| [LinkedIn](https://www.linkedin.com/in/otiswales/)           |
+| Munish Kumar  | 19083476   | Software engineer | [GitHub](https://github.com/munishk686) \| [LinkedIn](https://www.linkedin.com/in/miguel-emmara/)      |
+| Miguel Emmara | 18022146   | Software engineer | [GitHub](https://github.com/MiguelEmmara-ai) \| [LinkedIn](https://www.linkedin.com/in/miguel-emmara/) |
+| Glenn Neil    | 21132847   | Software engineer | [GitHub](https://github.com/Glennpgp) \| [LinkedIn](https://www.linkedin.com/in/glenn-neil-15139b180/) |
 
 💪💪💪💪
 

@@ -56,9 +56,9 @@ The 404 page is located at `iot-frontend/src/pages/404.tsx`. It is displayed whe
 
 Many thanks to **AUT** & **Adroit** for the opportunity to work on this project.
 
-| Name          | Student ID | Role                            |
-| ------------- | ---------- | ------------------------------- |
-| Otis Wales    | 19078635   | Team Leader & Software Engineer |
-| Munish Kumar  | 19083476   | Software Engineer               |
-| Miguel Emmara | 18022146   | Software Engineer               |
-| Glenn Neil    | 21132847   | Software Engineer               |
+| Team Member   | Student ID | Role                            | Links                                                                                                  |
+| ------------- | ---------- | ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Otis Wales    | 19078635   | Team Leader & Software Engineer | [GitHub](https://github.com/songexile) \| [LinkedIn](https://www.linkedin.com/in/otiswales/)           |
+| Munish Kumar  | 19083476   | Software engineer               | [GitHub](https://github.com/munishk686) \| [LinkedIn](https://www.linkedin.com/in/miguel-emmara/)      |
+| Miguel Emmara | 18022146   | Software engineer               | [GitHub](https://github.com/MiguelEmmara-ai) \| [LinkedIn](https://www.linkedin.com/in/miguel-emmara/) |
+| Glenn Neil    | 21132847   | Software engineer               | [GitHub](https://github.com/Glennpgp) \| [LinkedIn](https://www.linkedin.com/in/glenn-neil-15139b180/) |
