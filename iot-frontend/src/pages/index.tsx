@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { DataTable } from '@/components/iotTable/data-table';
 import { initializeColumns, columns } from '@/components/iotTable/columns';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import Footer from '@/components/Footer';
-import LoginScreen from './login';
+import LandingPage from './landing-page';
 import { getClientsOfflineCount, getTotalDevicesOfflineCount } from '@/utils';
 import { DynamicMetricData } from '@/types';
 import { useAtom } from 'jotai';
 import { hideSelectedAtom } from '@/components/context/toggleAtom';
 import { useAuth } from '@/hooks/useAuth';
+import LoadingIndicator from '@/components/ui/LoadingIndicator';
 
 export default function Home({
   data,
@@ -18,7 +18,7 @@ export default function Home({
   data?: DynamicMetricData[];
   fetchDataAndUpdate: () => Promise<void>;
 }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isUnauthenticated, isLoading } = useAuth();
   const [filteredData, setFilteredData] = useState<DynamicMetricData[]>([]);
   const [searchByClientName, setSearchByClientName] = useState('');
   const [searchByDeviceKey, setSearchByDeviceKey] = useState('');
@@ -35,7 +35,7 @@ export default function Home({
     if (data != null) {
       initializeColumns();
       setFilteredData(data);
-      console.log(data);
+      // console.log(data);
       setTotalDevicesOfflineCount(getTotalDevicesOfflineCount(data));
       setClientsOfflineCount(getClientsOfflineCount(data));
     }
@@ -94,36 +94,34 @@ export default function Home({
     return filteredData;
   };
 
-  if (isLoading) {
+  if (isUnauthenticated) {
+    return <LandingPage />;
+  }
+
+  if (isAuthenticated) {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
+
     return (
-      <div className="h-screen mt-64 gap-2 flex flex-col items-center justify-center">
-        <div className="h-5/6 w-full"></div>
-        <LoadingSpinner className={'h-32 w-32'} />
-        <h1>Loading...</h1>
+      <div className="w-full flex flex-col">
+        <Header
+          fetchDataAndUpdate={fetchDataAndUpdate}
+          searchByClientName={searchByClientName}
+          setSearchByClientName={setSearchByClientName}
+          searchByDeviceKey={searchByDeviceKey}
+          setSearchByDeviceKey={setSearchByDeviceKey}
+          totalDevicesOfflineCount={totalDevicesOfflineCount}
+          clientsOfflineCount={clientsOfflineCount}
+        />
+        <DataTable
+          columns={columns}
+          data={filteredData || []}
+        />
+        <Footer />
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <LoginScreen />;
-  }
-
-  return (
-    <div className="w-full flex flex-col">
-      <Header
-        fetchDataAndUpdate={fetchDataAndUpdate}
-        searchByClientName={searchByClientName}
-        setSearchByClientName={setSearchByClientName}
-        searchByDeviceKey={searchByDeviceKey}
-        setSearchByDeviceKey={setSearchByDeviceKey}
-        totalDevicesOfflineCount={totalDevicesOfflineCount}
-        clientsOfflineCount={clientsOfflineCount}
-      />
-      <DataTable
-        columns={columns}
-        data={filteredData || []}
-      />
-      <Footer />
-    </div>
-  );
+  return null;
 }

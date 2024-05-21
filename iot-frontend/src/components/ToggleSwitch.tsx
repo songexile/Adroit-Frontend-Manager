@@ -1,12 +1,12 @@
-import { ToggleSwitchProps } from '@/types'
-import React, { useState } from 'react'
+import { ToggleSwitchProps } from '@/types';
+import React, { useState } from 'react';
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ text, initialValue = false }) => {
-  const [isChecked, setIsChecked] = useState(initialValue)
+  const [isChecked, setIsChecked] = useState(initialValue);
 
   const handleToggle = () => {
-    setIsChecked((prevState) => !prevState)
-  }
+    setIsChecked((prevState) => !prevState);
+  };
 
   return (
     <label className="inline-flex items-center cursor-pointer">
@@ -20,7 +20,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ text, initialValue = false 
       ></div>
       <span className="ms-3 text-sm font-medium ">{text}</span>
     </label>
-  )
-}
+  );
+};
 
-export default ToggleSwitch
+export default ToggleSwitch;

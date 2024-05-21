@@ -3,8 +3,8 @@
 layout: home
 
 hero:
-  name: 'Adroit Frontend Manager Dashboard'
-  text: 'Documentation Website'
+  name: 'Documentation'
+  text: 'Adroit Iot Manager Frontend Project'
   tagline: Building a Real-Time Monitoring Dashboard for Enhanced Efficiency
   actions:
     - theme: brand
@@ -12,7 +12,7 @@ hero:
       link: /getting-started/introduction
     - theme: alt
       text: Live Website
-      link: https://www.google.com/
+      link: https://iot.miguelemmara.me/
     - theme: alt
       text: GitHub
       link: https://github.com/songexile/Adroit-Frontend-Manager

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from 'next/link';
 
 export default function Custom404() {
   return (
@@ -60,7 +60,12 @@ export default function Custom404() {
             transform="translate(-169.93432 -164.42601)"
             fill="#f2f2f2"
           ></path>
-          <circle cx="649.24878" cy="51" r="51" fill="currentColor"></circle>
+          <circle
+            cx="649.24878"
+            cy="51"
+            r="51"
+            fill="currentColor"
+          ></circle>
           <path
             d="M911.21851,176.29639c-24.7168-3.34094-52.93512,10.01868-59.34131,34.12353a21.59653,21.59653,0,0,0-41.09351,2.10871l2.82972,2.02667a372.27461,372.27461,0,0,0,160.65881-.72638C957.07935,195.76,935.93537,179.63727,911.21851,176.29639Z"
             transform="translate(-169.93432 -164.42601)"
@@ -126,17 +131,47 @@ export default function Custom404() {
             transform="translate(-169.93432 -164.42601)"
             fill="#3f3d56"
           ></path>
-          <circle cx="95.24878" cy="439" r="11" fill="#3f3d56"></circle>
-          <circle cx="227.24878" cy="559" r="11" fill="#3f3d56"></circle>
-          <circle cx="728.24878" cy="559" r="11" fill="#3f3d56"></circle>
-          <circle cx="755.24878" cy="419" r="11" fill="#3f3d56"></circle>
-          <circle cx="723.24878" cy="317" r="11" fill="#3f3d56"></circle>
+          <circle
+            cx="95.24878"
+            cy="439"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
+          <circle
+            cx="227.24878"
+            cy="559"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
+          <circle
+            cx="728.24878"
+            cy="559"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
+          <circle
+            cx="755.24878"
+            cy="419"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
+          <circle
+            cx="723.24878"
+            cy="317"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
           <path
             d="M434.1831,583.426a10.949,10.949,0,1,1-.21-2.16A10.9921,10.9921,0,0,1,434.1831,583.426Z"
             transform="translate(-169.93432 -164.42601)"
             fill="#3f3d56"
           ></path>
-          <circle cx="484.24878" cy="349" r="11" fill="#3f3d56"></circle>
+          <circle
+            cx="484.24878"
+            cy="349"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
           <path
             d="M545.1831,513.426a10.949,10.949,0,1,1-.21-2.16A10.9921,10.9921,0,0,1,545.1831,513.426Z"
             transform="translate(-169.93432 -164.42601)"
@@ -147,8 +182,18 @@ export default function Custom404() {
             transform="translate(-169.93432 -164.42601)"
             fill="#3f3d56"
           ></path>
-          <circle cx="599.24878" cy="443" r="11" fill="#3f3d56"></circle>
-          <circle cx="426.24878" cy="338" r="16" fill="#3f3d56"></circle>
+          <circle
+            cx="599.24878"
+            cy="443"
+            r="11"
+            fill="#3f3d56"
+          ></circle>
+          <circle
+            cx="426.24878"
+            cy="338"
+            r="16"
+            fill="#3f3d56"
+          ></circle>
           <path
             d="M1028.875,735.26666l-857.75.30733a1.19068,1.19068,0,1,1,0-2.38136l857.75-.30734a1.19069,1.19069,0,0,1,0,2.38137Z"
             transform="translate(-169.93432 -164.42601)"
@@ -182,5 +227,5 @@ export default function Custom404() {
         </div>
       </div>
     </>
-  )
+  );
 }

@@ -1,0 +1,12 @@
+{
+	"name": "adroit-frontend-manager",
+	"//": "Adroit Manager Frontend - An application which allows monitoring of IoT Devices.",
+	"version": "v0.1.0",
+	"private": true,
+	"scripts": {
+	  "dev": "cd ./iot-frontend && pnpm i && pnpm dev",
+	  "build": "cd ./iot-frontend && pnpm i && pnpm build && pnpm start",
+	  "docs:dev": "cd ./Documentation && pnpm i && pnpm docs:dev",
+	  "test": "cd ./iot-frontend && pnpm test"
+	}
+  }
