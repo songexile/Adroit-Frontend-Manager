@@ -10,6 +10,8 @@ import { hideSelectedAtom } from './context/toggleAtom';
 import AdroitLogo from '@/public/assets/img/Adroit-environmental-monitoring2.png';
 import AutLoge from '@/public/assets/img/AUT_Logo_New.jpg';
 import { capitalizeWords } from '@/utils';
+import Joyride from 'react-joyride';
+import { useTour } from '@/hooks/useTour';
 
 const Header = ({
   fetchDataAndUpdate,
@@ -63,11 +65,57 @@ HeaderProps) => {
     };
   }, []);
 
+  const { run } = useTour('home-page');
+
+  const steps = [
+    {
+      target: '.header',
+      content: 'This is the header section, which includes the logo and the user profile dropdown.',
+    },
+    {
+      target: '.search-section',
+      content:
+        'Here you can search for clients by name or devices by key, fetch new data, and toggle the visibility of null values.',
+    },
+    {
+      target: '.offline-info',
+      content:
+        'This section displays the number of devices and clients that are currently offline.',
+    },
+    {
+      target: '.fetch-new-data-button',
+      content: 'Click this button to fetch the latest data from the server.',
+    },
+    {
+      target: '.hide-null-values-toggle',
+      content:
+        'Toggle this switch to hide or show rows with null values for battery percentage and battery voltage.',
+    },
+  ];
+
   return (
     <>
+      <Joyride
+        run={run}
+        steps={steps}
+        continuous={true}
+        scrollToFirstStep={true}
+        showSkipButton={true}
+        styles={{
+          options: {
+            arrowColor: '#fff',
+            backgroundColor: '#fff',
+            primaryColor: '#000',
+            textColor: '#004a14',
+            width: 500,
+            zIndex: 1000,
+          },
+        }}
+      />
+
       {/* Top Blue Header */}
       <div className="bg-gradient-to-b from-cyan-500 to-blue-500 text-white">
-        <div className="container mx-auto flex p-6 justify-between items-center">
+        <div className="header container mx-auto flex p-6 justify-between items-center">
           <Link
             href={'/'}
             className="font-bold flex items-center justify-center gap-x-4"
@@ -160,7 +208,7 @@ HeaderProps) => {
               <div className="container mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                   {(setSearchByClientName || setSearchByDeviceKey) && (
-                    <div className="flex flex-col gap-y-4 sm:flex-row sm:gap-x-8 w-full md:w-auto">
+                    <div className="search-section flex flex-col gap-y-4 sm:flex-row sm:gap-x-8 w-full md:w-auto">
                       {setSearchByClientName && (
                         <input
                           className="border-b-4 rounded-2xl border-gray-100 text-black font-bold py-2 px-4 focus:ring-cyan-300 transition w-full md:w-auto"
@@ -185,12 +233,12 @@ HeaderProps) => {
                     {fetchDataAndUpdate && (
                       <button
                         onClick={handleFetchAndUpdate}
-                        className="focus:outline-none text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:shadow-md transition w-full sm:w-auto"
+                        className="fetch-new-data-button focus:outline-none text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 hover:shadow-md transition w-full sm:w-auto"
                       >
                         Fetch New Data
                       </button>
                     )}
-                    <div className="flex items-center space-x-2 w-full sm:w-auto">
+                    <div className="hide-null-values-toggle flex items-center space-x-2 w-full sm:w-auto">
                       <Switch
                         checked={hideSelected}
                         onCheckedChange={setHideSelected}
@@ -208,7 +256,7 @@ HeaderProps) => {
 
       {/* Quick Info */}
       {totalDevicesOfflineCount && (
-        <div className=" gap-x-4 text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
+        <div className="offline-info gap-x-4 text-md text-center py-4 text-gray-600 mx-auto flex items-center justify-center">
           Devices Offline
           <span className="font-bold p-1 bg-gray-100 border-2 border-bg-cyan-900  hover:text-black transition ">
             {totalDevicesOfflineCount}

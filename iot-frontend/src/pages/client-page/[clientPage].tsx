@@ -16,6 +16,8 @@ import {
 } from '@/utils';
 import Breadcrumb from '@/components/Breadcrumb';
 import Link from 'next/link';
+import Joyride, { Step } from 'react-joyride';
+import { useTour } from '@/hooks/useTour';
 
 function fetchIdAndType() {
   // Fetches ID from URL
@@ -179,6 +181,40 @@ const ClientPage = (data: any) => {
   // Get status counts
   const statusCounts = getStatusCounts(clientData);
 
+  const { run } = useTour('client-page');
+
+  const steps: Step[] = [
+    {
+      target: '.client-details',
+      content:
+        'This section displays the client details, including the client name, ID, and total number of devices.',
+    },
+    {
+      target: '.device-type-counts',
+      content: 'Here you can see the counts of different device types associated with this client.',
+    },
+    {
+      target: '.metrics-section',
+      content:
+        'This section shows the metrics related to the client and its devices. Click on a metric to see the list of devices with that metric.',
+    },
+    {
+      target: '.sites-section',
+      content:
+        'Here you can view the sites associated with this client and the devices at each site.',
+    },
+    {
+      target: '.status-section',
+      content:
+        'This section displays the overall status of the devices associated with this client, including scan, battery, and insitu status.',
+    },
+    {
+      target: '.map-section',
+      content:
+        'This section shows a map view of the locations of the devices associated with this client.',
+    },
+  ];
+
   if (isLoading) {
     return (
       <>
@@ -198,38 +234,57 @@ const ClientPage = (data: any) => {
         <Breadcrumb breadcrumbs={breadcrumbs} />
         <div className="bg-gray-50">
           <div className="container mx-auto p-4">
+            <Joyride
+              run={run}
+              steps={steps}
+              continuous={true}
+              scrollToFirstStep={true}
+              showSkipButton={true}
+              styles={{
+                options: {
+                  arrowColor: '#fff',
+                  backgroundColor: '#fff',
+                  primaryColor: '#000',
+                  textColor: '#004a14',
+                  width: 500,
+                  zIndex: 1000,
+                },
+              }}
+            />
             <h1 className="mb-4 text-4xl font-bold">Client Details</h1>
 
             <div className="rounded-lg bg-white p-6 shadow-md">
               {/* Client Normal Detail */}
-              <div className="mb-4 flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-semibold">Client Name: {clientName}</h2>
-                  <p className="text-gray-500">Client ID: {clientId}</p>
+              <div className="client-details">
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-semibold">Client Name: {clientName}</h2>
+                    <p className="text-gray-500">Client ID: {clientId}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-semibold">Total Devices: {totalDevices}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-lg font-semibold">Total Devices: {totalDevices}</p>
-                </div>
-              </div>
 
-              {/* Device Type Counts */}
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold mb-2">Device Type Counts:</h3>
-                <ul className="list-disc list-inside">
-                  {Object.entries(deviceTypeCounts).map(([deviceType, count]) => (
-                    <li
-                      key={deviceType}
-                      className="text-gray-600"
-                    >
-                      {deviceType}: {count}
-                    </li>
-                  ))}
-                </ul>
+                {/* Device Type Counts */}
+                <div className="mb-4">
+                  <h3 className="text-xl font-semibold mb-2">Device Type Counts:</h3>
+                  <ul className="list-disc list-inside">
+                    {Object.entries(deviceTypeCounts).map(([deviceType, count]) => (
+                      <li
+                        key={deviceType}
+                        className="text-gray-600"
+                      >
+                        {deviceType}: {count}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {/* Metrics */}
-                <div className="rounded-lg bg-white shadow-md p-6">
+                <div className="metrics-section rounded-lg bg-white shadow-md p-6">
                   <h3 className="mb-4 text-2xl font-bold text-gray-800">Metrics</h3>
                   {metricCountsArray.map(({ metricName, count }) => (
                     <div
@@ -287,7 +342,7 @@ const ClientPage = (data: any) => {
                 </div>
 
                 {/* Sites */}
-                <div className="rounded-lg bg-white shadow-md p-6">
+                <div className="sites-section rounded-lg bg-white shadow-md p-6">
                   <h3 className="mb-4 text-2xl font-bold text-gray-800">Sites</h3>
                   {siteCountsArray.map(({ siteName, count }) => {
                     const deviceIds = getDeviceIdsBySite(siteName);
@@ -350,7 +405,7 @@ const ClientPage = (data: any) => {
               </div>
 
               {/* Statuses */}
-              <div>
+              <div className="status-section">
                 <h3 className="mb-4 text-xl font-bold">Status</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                   {/* Scan Status */}
